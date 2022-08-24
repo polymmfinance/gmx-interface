@@ -8,25 +8,31 @@ import { ARBITRUM, AVALANCHE, isAddressZero } from "../Helpers";
 import { arbitrumLeaderboardClient, avalancheLeaderboardClient } from "./common";
 
 export function useLeaderboardStats(chainId, library) {
-  const [data, setData] = useState()
+  const [data, setData] = useState();
 
-  useEffect(async () => {
-    if (!chainId || !library) {
-      return
+  useEffect(() => {
+    async function main() {
+      if (!chainId || !library) {
+        return;
+      }
+
+      const contract = getCompetitionContract(chainId, library);
+      const leaders = await contract.getLeaders();
+      const teams = await Promise.all(leaders.map(contract.getTeam));
+
+      setData(
+        teams.map((team) => ({
+          leader: team.leader,
+          name: team.name,
+          pnl: BigNumber.from("1000000000000000000000000000000000000"),
+        }))
+      );
     }
 
-    const contract = getCompetitionContract(chainId, library)
-    const leaders = await contract.getLeaders()
-    const teams = await Promise.all(leaders.map(contract.getTeam))
+    main();
+  }, [chainId, library]);
 
-    setData(teams.map(team => ({
-      leader: team.leader,
-      name: team.name,
-      pnl: BigNumber.from("1000000000000000000000000000000000000")
-    })))
-  }, [chainId, library])
-
-  return data
+  return data;
   // const ts = periodToTimestamp(period, Math.round(Date.now() / 1000))
 
   // const query = gql(`{
@@ -72,114 +78,115 @@ export function useLeaderboardStats(chainId, library) {
   // return res ? res : null;
 }
 
-export function useTeams(chainId, library)
-{
-  const [data, setData] = useState(null)
+export function useTeams(chainId, library) {
+  const [data, setData] = useState(null);
 
-  useEffect(async () => {
-    const contract = getCompetitionContract(chainId, library)
-    const leaders = await contract.getLeaders()
-    const teams = await Promise.all(leaders.map(contract.getTeam))
-    setData(teams.map(team => ({
-      leader: team.leader,
-      name: team.name,
-      referralCode: team.referralCode
-    })))
-  }, [setData, library, chainId])
-
-  return data
-}
-
-export function useTimes(chainId, library)
-{
-  const [data, setData] = useState(null)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(async () => {
-    if (!library || !chainId) {
-      return
+  useEffect(() => {
+    async function main() {
+      const contract = getCompetitionContract(chainId, library);
+      const leaders = await contract.getLeaders();
+      const teams = await Promise.all(leaders.map(contract.getTeam));
+      setData(
+        teams.map((team) => ({
+          leader: team.leader,
+          name: team.name,
+          referralCode: team.referralCode,
+        }))
+      );
     }
 
-    const contract = getCompetitionContract(chainId, library)
+    main();
+  }, [setData, library, chainId]);
 
-    const times = await Promise.all([
-      contract.registrationStart(),
-      contract.registrationEnd()
-    ])
-
-    const ts = Math.round(Date.now() / 1000)
-    const start = times[0].toNumber()
-    const end = times[1].toNumber()
-
-    setData({
-      start,
-      end,
-      lower: ts < start,
-      greater: ts > end,
-      between: ts >= start && ts < end
-    })
-
-    setLoading(false)
-  }, [setLoading, setData, chainId])
-
-  return { data, loading }
+  return data;
 }
 
-export function useTeam(chainId, library, account)
-{
-  const [data, setData] = useState(null)
-  const [loading, setLoading] = useState(true)
+export function useTimes(chainId, library) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function main() {
+      if (!library || !chainId) {
+        return;
+      }
+
+      const contract = getCompetitionContract(chainId, library);
+
+      const times = await Promise.all([contract.registrationStart(), contract.registrationEnd()]);
+
+      const ts = Math.round(Date.now() / 1000);
+      const start = times[0].toNumber();
+      const end = times[1].toNumber();
+
+      setData({
+        start,
+        end,
+        lower: ts < start,
+        greater: ts > end,
+        between: ts >= start && ts < end,
+      });
+
+      setLoading(false);
+    }
+
+    main();
+  }, [library, setLoading, setData, chainId]);
+
+  return { data, loading };
+}
+
+export function useTeam(chainId, library, account) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(async () => {
     if (!chainId || !library) {
-      return
+      return;
     }
 
     if (!account) {
-      setLoading(false)
-      return
+      setLoading(false);
+      return;
     }
 
-    const contract = getCompetitionContract(chainId, library)
-    const res = await contract.getTeam(account)
+    const contract = getCompetitionContract(chainId, library);
+    const res = await contract.getTeam(account);
 
     if (isAddressZero(res.leader)) {
-      setData(false)
-      setLoading(false)
-      return
+      setData(false);
+      setLoading(false);
+      return;
     }
 
     setData({
       leader: res.leader,
       name: res.name,
-      referralCode: decodeReferralCode(res.referralCode)
-    })
+      referralCode: decodeReferralCode(res.referralCode),
+    });
 
-    setLoading(false)
-  }, [setData, setLoading, account, chainId, library])
+    setLoading(false);
+  }, [setData, setLoading, account, chainId, library]);
 
-  return { data, loading }
+  return { data, loading };
 }
 
-
-export async function registerTeam(chainId, library, name, referral, opts)
-{
-  referral = encodeReferralCode(referral)
-  const contract = getCompetitionContract(chainId, library)
-  return callContract(chainId, contract, "registerTeam", [name, referral], opts)
+export async function registerTeam(chainId, library, name, referral, opts) {
+  referral = encodeReferralCode(referral);
+  const contract = getCompetitionContract(chainId, library);
+  return callContract(chainId, contract, "registerTeam", [name, referral], opts);
 }
 
-function getCompetitionContract(chainId, library)
-{
-  const competitionRegistrationAddress = getContract(chainId, "Competition")
-  return new ethers.Contract(competitionRegistrationAddress, Competition.abi, library.getSigner())
+function getCompetitionContract(chainId, library) {
+  const competitionRegistrationAddress = getContract(chainId, "Competition");
+  return new ethers.Contract(competitionRegistrationAddress, Competition.abi, library.getSigner());
 }
 
-function getLeaderboardGraphClient(chainId) {
-  if (chainId === AVALANCHE) {
-    return avalancheLeaderboardClient;
-  } else if (chainId === ARBITRUM) {
-    return arbitrumLeaderboardClient;
-  }
-  throw new Error(`Unsupported chain ${chainId}`);
-}
+// function getLeaderboardGraphClient(chainId) {
+//   if (chainId === AVALANCHE) {
+//     return avalancheLeaderboardClient;
+//   } else if (chainId === ARBITRUM) {
+//     return arbitrumLeaderboardClient;
+//   }
+//   throw new Error(`Unsupported chain ${chainId}`);
+// }
