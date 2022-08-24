@@ -4,8 +4,7 @@ import { BigNumber, ethers } from "ethers";
 import { callContract } from ".";
 import { decodeReferralCode, encodeReferralCode } from "./referrals";
 import { useEffect, useState } from "react";
-import { ARBITRUM, AVALANCHE, isAddressZero } from "../Helpers";
-import { arbitrumLeaderboardClient, avalancheLeaderboardClient } from "./common";
+import { isAddressZero } from "../Helpers";
 
 export function useLeaderboardStats(chainId, library) {
   const [data, setData] = useState();
@@ -140,32 +139,36 @@ export function useTeam(chainId, library, account) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(async () => {
-    if (!chainId || !library) {
-      return;
-    }
+  useEffect(() => {
+    async function main() {
+      if (!chainId || !library) {
+        return;
+      }
 
-    if (!account) {
+      if (!account) {
+        setLoading(false);
+        return;
+      }
+
+      const contract = getCompetitionContract(chainId, library);
+      const res = await contract.getTeam(account);
+
+      if (isAddressZero(res.leader)) {
+        setData(false);
+        setLoading(false);
+        return;
+      }
+
+      setData({
+        leader: res.leader,
+        name: res.name,
+        referralCode: decodeReferralCode(res.referralCode),
+      });
+
       setLoading(false);
-      return;
     }
 
-    const contract = getCompetitionContract(chainId, library);
-    const res = await contract.getTeam(account);
-
-    if (isAddressZero(res.leader)) {
-      setData(false);
-      setLoading(false);
-      return;
-    }
-
-    setData({
-      leader: res.leader,
-      name: res.name,
-      referralCode: decodeReferralCode(res.referralCode),
-    });
-
-    setLoading(false);
+    main();
   }, [setData, setLoading, account, chainId, library]);
 
   return { data, loading };
@@ -181,12 +184,3 @@ function getCompetitionContract(chainId, library) {
   const competitionRegistrationAddress = getContract(chainId, "Competition");
   return new ethers.Contract(competitionRegistrationAddress, Competition.abi, library.getSigner());
 }
-
-// function getLeaderboardGraphClient(chainId) {
-//   if (chainId === AVALANCHE) {
-//     return avalancheLeaderboardClient;
-//   } else if (chainId === ARBITRUM) {
-//     return arbitrumLeaderboardClient;
-//   }
-//   throw new Error(`Unsupported chain ${chainId}`);
-// }
