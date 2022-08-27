@@ -47,6 +47,7 @@ import {
   isDevelopment,
   DISABLE_ORDER_VALIDATION_KEY,
   shouldShowRedirectModal,
+  POLYGON,
 } from "./Helpers";
 
 import Home from "./views/Home/Home";
@@ -132,6 +133,8 @@ const arbWsProvider = new ethers.providers.WebSocketProvider(getAlchemyWsUrl());
 
 const avaxWsProvider = new ethers.providers.JsonRpcProvider("https://api.avax.network/ext/bc/C/rpc");
 
+const polygonWsProvider = new ethers.providers.JsonRpcProvider("https://polygon-rpc.com");
+
 function getWsProvider(active, chainId) {
   if (!active) {
     return;
@@ -142,6 +145,10 @@ function getWsProvider(active, chainId) {
 
   if (chainId === AVALANCHE) {
     return avaxWsProvider;
+  }
+  
+  if (chainId === POLYGON) {
+    return polygonWsProvider;
   }
 }
 
@@ -218,6 +225,12 @@ function AppHeaderUser({
       label: "Avalanche",
       value: AVALANCHE,
       icon: "ic_avalanche_24.svg",
+      color: "#E841424D",
+    },
+    {
+      label: "Polygon",
+      value: POLYGON,
+      icon: "ic_polygon_24.svg",
       color: "#E841424D",
     },
   ];

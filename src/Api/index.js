@@ -42,6 +42,7 @@ import {
   SWAP,
   INCREASE,
   DECREASE,
+  POLYGON,
 } from "../Helpers";
 import { getTokens, getTokenBySymbol, getWhitelistedTokens } from "../data/Tokens";
 
@@ -56,6 +57,8 @@ function getGmxGraphClient(chainId) {
     return arbitrumGraphClient;
   } else if (chainId === AVALANCHE) {
     return avalancheGraphClient;
+  } else if (chainId === POLYGON) {
+    return avalancheGraphClient; // TODO: need a graph client for polygon
   }
   throw new Error(`Unsupported chain ${chainId}`);
 }
@@ -439,6 +442,10 @@ export function useMinExecutionFee(library, active, chainId, infoTokens) {
 
   // multiplier for Avalanche is just the average gas usage
   if (chainId === AVALANCHE) {
+    multiplier = 700000;
+  }
+
+  if (chainId === POLYGON) {
     multiplier = 700000;
   }
 

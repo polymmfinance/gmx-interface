@@ -312,6 +312,50 @@ const TOKENS = {
       imageUrl: "https://assets.coingecko.com/coins/images/16786/small/mimlogopng.png",
     },
   ],
+  137: [
+    {
+      name: "Matic",
+      symbol: "MATIC",
+      decimals: 18,
+      address: ethers.constants.AddressZero,
+      isNative: true,
+      isShortable: true,
+      imageUrl: "https://assets.coingecko.com/coins/images/12559/small/coin-round-red.png?1604021818",
+    },
+    {
+      name: "Wrapped MATIC",
+      symbol: "WMATIC",
+      decimals: 18,
+      address: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
+      isWrapped: true,
+      baseSymbol: "MATIC",
+      imageUrl: "https://assets.coingecko.com/coins/images/12559/small/coin-round-red.png?1604021818",
+    },
+    {
+      name: "Ethereum",
+      symbol: "ETH",
+      address: "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
+      decimals: 18,
+      isShortable: true,
+      imageUrl: "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880",
+    },
+    {
+      name: "Bitcoin",
+      symbol: "BTC",
+      address: "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6",
+      decimals: 8,
+      isShortable: true,
+      imageUrl: "https://assets.coingecko.com/coins/images/7598/thumb/wrapped_bitcoin_wbtc.png?1548822744",
+    },
+    {
+      name: "USD Coin",
+      symbol: "USDC",
+      address: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+      decimals: 6,
+      isStable: true,
+      imageUrl: "https://assets.coingecko.com/coins/images/6319/thumb/USD_Coin_icon.png?1547042389",
+    },
+  ],
 };
 
 const ADDITIONAL_TOKENS = {
@@ -357,7 +401,7 @@ const ADDITIONAL_TOKENS = {
   ],
 };
 
-const CHAIN_IDS = [56, 97, 42161, 421611, 43114];
+const CHAIN_IDS = [56, 97, 42161, 421611, 43114, 137];
 
 const TOKENS_MAP = {};
 const TOKENS_BY_SYMBOL_MAP = {};

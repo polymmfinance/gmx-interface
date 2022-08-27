@@ -2,7 +2,7 @@ import React from "react";
 import SEO from "../../components/Common/SEO";
 
 import Footer from "../../Footer";
-import { getPageTitle, ARBITRUM, AVALANCHE } from "../../Helpers";
+import { getPageTitle, ARBITRUM, AVALANCHE, POLYGON } from "../../Helpers";
 
 import arbitrumIcon from "../../img/ic_arbitrum_16.svg";
 import avalancheIcon from "../../img/ic_avalanche_16.svg";
@@ -25,25 +25,25 @@ export default function Ecosystem() {
       title: "GMX Governance",
       link: "https://gov.gmx.io/",
       about: "GMX Governance Page",
-      chainIds: [ARBITRUM, AVALANCHE],
+      chainIds: [ARBITRUM, AVALANCHE, POLYGON],
     },
     {
       title: "GMX Stats",
       link: "https://stats.gmx.io/",
       about: "GMX Stats Page",
-      chainIds: [ARBITRUM, AVALANCHE],
+      chainIds: [ARBITRUM, AVALANCHE, POLYGON],
     },
     {
       title: "GMX Proposals",
       link: "https://snapshot.org/#/gmx.eth",
       about: "GMX Proposals Voting page",
-      chainIds: [ARBITRUM, AVALANCHE],
+      chainIds: [ARBITRUM, AVALANCHE, POLYGON],
     },
     {
       title: "GMX Announcements",
       link: "https://t.me/GMX_Announcements",
       about: "GMX Announcements and Updates",
-      chainIds: [ARBITRUM, AVALANCHE],
+      chainIds: [ARBITRUM, AVALANCHE, POLYGON],
     },
   ];
 

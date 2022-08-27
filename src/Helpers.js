@@ -27,6 +27,7 @@ export const UI_VERSION = "1.3";
 export const PLACEHOLDER_ACCOUNT = ethers.Wallet.createRandom().address;
 
 export const MAINNET = 56;
+export const POLYGON = 137;
 export const AVALANCHE = 43114;
 export const TESTNET = 97;
 export const ARBITRUM_TESTNET = 421611;
@@ -44,16 +45,19 @@ const CHAIN_NAMES_MAP = {
   [TESTNET]: "BSC Testnet",
   [ARBITRUM_TESTNET]: "Arbitrum Testnet",
   [ARBITRUM]: "Arbitrum",
+  [POLYGON]: "Polygon",
   [AVALANCHE]: "Avalanche",
 };
 
 const GAS_PRICE_ADJUSTMENT_MAP = {
   [ARBITRUM]: "0",
+  [POLYGON]: "0",
   [AVALANCHE]: "3000000000", // 3 gwei
 };
 
 const MAX_GAS_PRICE_MAP = {
   [AVALANCHE]: "200000000000", // 200 gwei
+  [POLYGON]: "400000000000",
 };
 
 const alchemyWhitelistedDomains = ["gmx.io", "app.gmx.io"];
@@ -77,6 +81,7 @@ export function getAlchemyWsUrl() {
 }
 
 const ARBITRUM_RPC_PROVIDERS = [getDefaultArbitrumRpcUrl()];
+const POLYGON_RPC_PROVIDERS = ["https://polygon-rpc.com"];
 const AVALANCHE_RPC_PROVIDERS = ["https://api.avax.network/ext/bc/C/rpc"];
 export const WALLET_CONNECT_LOCALSTORAGE_KEY = "walletconnect";
 export const WALLET_LINK_LOCALSTORAGE_PREFIX = "-walletlink";
@@ -249,6 +254,46 @@ export const ICONLINKS = {
       avalanche: "https://snowtrace.io/address/0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e",
     },
   },
+  137: {
+    MATIC: {
+      coingecko: "https://www.coingecko.com/en/coins/matic",
+      avalanche: "https://snowtrace.io/address/0x62edc0692bd897d2295872a9ffcac5425011c661",
+    },
+    GMX: {
+      coingecko: "https://www.coingecko.com/en/coins/gmx",
+      avalanche: "https://snowtrace.io/address/0x62edc0692bd897d2295872a9ffcac5425011c661",
+    },
+    GLP: {
+      avalanche: "https://snowtrace.io/address/0x9e295B5B976a184B14aD8cd72413aD846C299660",
+    },
+    AVAX: {
+      coingecko: "https://www.coingecko.com/en/coins/avalanche",
+    },
+    ETH: {
+      coingecko: "https://www.coingecko.com/en/coins/weth",
+      avalanche: "https://snowtrace.io/address/0x49d5c2bdffac6ce2bfdb6640f4f80f226bc10bab",
+    },
+    BTC: {
+      coingecko: "https://www.coingecko.com/en/coins/wrapped-bitcoin",
+      avalanche: "https://snowtrace.io/address/0x50b7545627a5162f82a992c33b87adc75187b218",
+    },
+    "BTC.b": {
+      coingecko: "https://www.coingecko.com/en/coins/wrapped-bitcoin",
+      avalanche: "https://snowtrace.io/address/0x152b9d0FdC40C096757F570A51E494bd4b943E50",
+    },
+    MIM: {
+      coingecko: "https://www.coingecko.com/en/coins/magic-internet-money",
+      avalanche: "https://snowtrace.io/address/0x130966628846bfd36ff31a822705796e8cb8c18d",
+    },
+    "USDC.e": {
+      coingecko: "https://www.coingecko.com/en/coins/usd-coin-avalanche-bridged-usdc-e",
+      avalanche: "https://snowtrace.io/address/0xa7d7079b0fead91f3e65f86e8915cb59c1a4c664",
+    },
+    USDC: {
+      coingecko: "https://www.coingecko.com/en/coins/usd-coin",
+      avalanche: "https://snowtrace.io/address/0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e",
+    },
+  },
 };
 
 export const platformTokens = {
@@ -288,7 +333,7 @@ export const platformTokens = {
   },
 };
 
-const supportedChainIds = [ARBITRUM, AVALANCHE];
+const supportedChainIds = [ARBITRUM, AVALANCHE, POLYGON];
 const injectedConnector = new InjectedConnector({
   supportedChainIds,
 });
@@ -299,6 +344,7 @@ const getWalletConnectConnector = () => {
     rpc: {
       [AVALANCHE]: AVALANCHE_RPC_PROVIDERS[0],
       [ARBITRUM]: ARBITRUM_RPC_PROVIDERS[0],
+      [POLYGON]: POLYGON_RPC_PROVIDERS[0],
     },
     qrcode: true,
     chainId,
@@ -1923,6 +1969,8 @@ export function getExplorerUrl(chainId) {
     return "https://arbiscan.io/";
   } else if (chainId === AVALANCHE) {
     return "https://snowtrace.io/";
+  } else if (chainId === POLYGON) {
+    return "https://polygonscan.io/";
   }
   return "https://etherscan.io/";
 }
@@ -2143,6 +2191,17 @@ const NETWORK_METADATA = {
     rpcUrls: AVALANCHE_RPC_PROVIDERS,
     blockExplorerUrls: [getExplorerUrl(AVALANCHE)],
   },
+  [POLYGON]: {
+    chainId: "0x" + POLYGON.toString(16),
+    chainName: "Polygon",
+    nativeCurrency: {
+      name: "MATIC",
+      symbol: "MATIC",
+      decimals: 18,
+    },
+    rpcUrls: POLYGON_RPC_PROVIDERS,
+    blockExplorerUrls: [getExplorerUrl(POLYGON)],
+  },
 };
 
 export const addBscNetwork = async () => {
@@ -2154,6 +2213,7 @@ export const addNetwork = async (metadata) => {
 };
 
 export const switchNetwork = async (chainId, active) => {
+  console.log({chainId, active})
   if (!active) {
     // chainId in localStorage allows to switch network even if wallet is not connected
     // or there is no wallet at all

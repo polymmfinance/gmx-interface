@@ -15,6 +15,7 @@ function AssetDropdown({ assetSymbol, assetInfo }) {
   const unavailableTokenSymbols = {
     42161: ["ETH"],
     43114: ["AVAX"],
+    137: ["MATIC"],
   };
 
   return (
@@ -48,6 +49,7 @@ function AssetDropdown({ assetSymbol, assetInfo }) {
               </a>
             )}
           </>
+          <div></div>
         </Menu.Item>
         <Menu.Item>
           <>

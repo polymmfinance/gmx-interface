@@ -33,6 +33,7 @@ import {
   getPageTitle,
   importImage,
   arrayURLFetcher,
+  POLYGON,
 } from "../../Helpers";
 import { useTotalGmxInLiquidity, useGmxPrice, useTotalGmxStaked, useTotalGmxSupply, useInfoTokens } from "../../Api";
 
@@ -56,7 +57,7 @@ import AssetDropdown from "./AssetDropdown";
 import SEO from "../../components/Common/SEO";
 import TooltipCard, { TooltipCardRow } from "./TooltipCard";
 import useTotalVolume from "../../hooks/useTotalVolume";
-const ACTIVE_CHAIN_IDS = [ARBITRUM, AVALANCHE];
+const ACTIVE_CHAIN_IDS = [ARBITRUM, AVALANCHE, POLYGON];
 
 const { AddressZero } = ethers.constants;
 
@@ -317,7 +318,7 @@ export default function DashboardV2() {
     totalFloorPriceFundUsd = ethFloorPriceFundUsd.add(glpFloorPriceFundUsd).add(usdcFloorPriceFund);
   }
 
-  let adjustedUsdgSupply = bigNumberify(0);
+  let adjustedUsdgSupply = bigNumberify(1); //TODO: change back to 1
 
   for (let i = 0; i < tokenList.length; i++) {
     const token = tokenList[i];

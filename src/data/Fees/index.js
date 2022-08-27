@@ -20,6 +20,7 @@ const FEES = {
   56: [],
   42161: createFeeList(FEES_42161),
   43114: createFeeList(FEES_43113),
+  137: createFeeList(FEES_43113),
 };
 
 export function getFeeHistory(chainId) {
