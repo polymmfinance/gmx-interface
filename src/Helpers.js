@@ -81,7 +81,7 @@ export function getAlchemyWsUrl() {
 }
 
 const ARBITRUM_RPC_PROVIDERS = [getDefaultArbitrumRpcUrl()];
-const POLYGON_RPC_PROVIDERS = ["https://polygon-rpc.com"];
+const POLYGON_RPC_PROVIDERS = ["https://polygon-rpc.com", "https://rpc-mainnet.matic.quiknode.pro", "https://polygonapi.terminet.io/rpc"];
 const AVALANCHE_RPC_PROVIDERS = ["https://api.avax.network/ext/bc/C/rpc"];
 export const WALLET_CONNECT_LOCALSTORAGE_KEY = "walletconnect";
 export const WALLET_LINK_LOCALSTORAGE_PREFIX = "-walletlink";
@@ -171,6 +171,7 @@ export const GLPPOOLCOLORS = {
 export const HIGH_EXECUTION_FEES_MAP = {
   [ARBITRUM]: 3, // 3 USD
   [AVALANCHE]: 3, // 3 USD
+  [POLYGON]: 3, // 3 USD
 };
 
 export const ICONLINKS = {
