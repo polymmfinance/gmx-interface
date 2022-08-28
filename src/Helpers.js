@@ -51,7 +51,7 @@ const CHAIN_NAMES_MAP = {
 
 const GAS_PRICE_ADJUSTMENT_MAP = {
   [ARBITRUM]: "0",
-  [POLYGON]: "0",
+  [POLYGON]: "50000000000", // 50 gwei
   [AVALANCHE]: "3000000000", // 3 gwei
 };
 
@@ -307,8 +307,8 @@ export const platformTokens = {
       imageUrl: "https://assets.coingecko.com/coins/images/18323/small/arbit.png?1631532468",
     },
     GLP: {
-      name: "GMX LP",
-      symbol: "GLP",
+      name: "MMX LP",
+      symbol: "MLP",
       decimals: 18,
       address: getContract(ARBITRUM, "StakedGlpTracker"), // address of fsGLP token because user only holds fsGLP
       imageUrl: "https://github.com/gmx-io/gmx-assets/blob/main/GMX-Assets/PNG/GLP_LOGO%20ONLY.png?raw=true",
@@ -324,8 +324,8 @@ export const platformTokens = {
       imageUrl: "https://assets.coingecko.com/coins/images/18323/small/arbit.png?1631532468",
     },
     GLP: {
-      name: "GMX LP",
-      symbol: "GLP",
+      name: "MMX LP",
+      symbol: "MLP",
       decimals: 18,
       address: getContract(AVALANCHE, "StakedGlpTracker"), // address of fsGLP token because user only holds fsGLP
       imageUrl: "https://github.com/gmx-io/gmx-assets/blob/main/GMX-Assets/PNG/GLP_LOGO%20ONLY.png?raw=true",
@@ -1970,7 +1970,7 @@ export function getExplorerUrl(chainId) {
   } else if (chainId === AVALANCHE) {
     return "https://snowtrace.io/";
   } else if (chainId === POLYGON) {
-    return "https://polygonscan.io/";
+    return "https://polygonscan.com/";
   }
   return "https://etherscan.io/";
 }
