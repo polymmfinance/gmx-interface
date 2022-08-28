@@ -46,7 +46,7 @@ import {
 } from "../Helpers";
 import { getTokens, getTokenBySymbol, getWhitelistedTokens } from "../data/Tokens";
 
-import { nissohGraphClient, arbitrumGraphClient, avalancheGraphClient } from "./common";
+import { nissohGraphClient, arbitrumGraphClient, avalancheGraphClient, polygonGraphClient } from "./common";
 import { groupBy } from "lodash";
 export * from "./prices";
 
@@ -58,7 +58,7 @@ function getGmxGraphClient(chainId) {
   } else if (chainId === AVALANCHE) {
     return avalancheGraphClient;
   } else if (chainId === POLYGON) {
-    return avalancheGraphClient; // TODO: need a graph client for polygon
+    return polygonGraphClient; // TODO: need a graph client for polygon
   }
   throw new Error(`Unsupported chain ${chainId}`);
 }

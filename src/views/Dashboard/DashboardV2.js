@@ -57,7 +57,8 @@ import AssetDropdown from "./AssetDropdown";
 import SEO from "../../components/Common/SEO";
 import TooltipCard, { TooltipCardRow } from "./TooltipCard";
 import useTotalVolume from "../../hooks/useTotalVolume";
-const ACTIVE_CHAIN_IDS = [ARBITRUM, AVALANCHE, POLYGON];
+// const ACTIVE_CHAIN_IDS = [ARBITRUM, AVALANCHE, POLYGON];
+const ACTIVE_CHAIN_IDS = [ARBITRUM, POLYGON]
 
 const { AddressZero } = ethers.constants;
 
@@ -301,6 +302,7 @@ export default function DashboardV2() {
   }
 
   let tvl;
+  // console.log(glpMarketCap, gmxPrice, totalStakedGmx.toString())
   if (glpMarketCap && gmxPrice && totalStakedGmx) {
     tvl = glpMarketCap.add(gmxPrice.mul(totalStakedGmx).div(expandDecimals(1, GMX_DECIMALS)));
   }
@@ -602,7 +604,7 @@ export default function DashboardV2() {
                         <TooltipCard
                           title="Long Positions"
                           arbitrum={positionStatsInfo?.[ARBITRUM].totalLongPositionSizes}
-                          avax={positionStatsInfo?.[AVALANCHE].totalLongPositionSizes}
+                          // avax={positionStatsInfo?.[AVALANCHE].totalLongPositionSizes}
                           total={positionStatsInfo?.totalLongPositionSizes}
                         />
                       )}
