@@ -862,7 +862,8 @@ export default function SwapBox(props) {
       return ["Enter a price"];
     }
 
-    if (!hasExistingPosition && fromUsdMin && fromUsdMin.lt(expandDecimals(10, USD_DECIMALS))) {
+    // TODO: change limits later again
+    if (!hasExistingPosition && fromUsdMin && fromUsdMin.lt(expandDecimals(1, USD_DECIMALS))) {
       return ["Min order: 10 USD"];
     }
 

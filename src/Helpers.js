@@ -494,7 +494,8 @@ export function getServerBaseUrl(chainId) {
   } else if (chainId === AVALANCHE) {
     return "https://gmx-avax-server.uc.r.appspot.com";
   }
-  return "https://gmx-server-mainnet.uw.r.appspot.com";
+  // return "https://gmx-server-mainnet.uw.r.appspot.com";
+  return "http://localhost:3113"
 }
 
 export function getServerUrl(chainId, path) {
@@ -1301,6 +1302,7 @@ const RPC_PROVIDERS = {
   [MAINNET]: BSC_RPC_PROVIDERS,
   [ARBITRUM]: ARBITRUM_RPC_PROVIDERS,
   [AVALANCHE]: AVALANCHE_RPC_PROVIDERS,
+  [POLYGON]: POLYGON_RPC_PROVIDERS
 };
 
 const FALLBACK_PROVIDERS = {

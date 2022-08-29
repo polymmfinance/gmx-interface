@@ -13,6 +13,7 @@ const FEED_ID_MAP = {
   BTC_USD: "0xae74faa92cb67a95ebcab07358bc222e33a34da7",
   ETH_USD: "0x37bc7498f4ff12c19678ee8fe19d713b87f6a9e6",
   BNB_USD: "0xc45ebd0f901ba6b2b8c7e70b717778f055ef5e6d",
+  MATIC_USD: "0x4b35f7854e1fd8291f4ec714ac3ebb1dea450585",
   LINK_USD: "0xdfd03bfc3465107ce570a0397b247f546a42d0fa",
   UNI_USD: "0x68577f915131087199fe48913d8b416b3984fd38",
   SUSHI_USD: "0x7213536a36094cd8a768a5e45203ec286cba2d74",
@@ -59,8 +60,8 @@ async function getChartPricesFromStats(chainId, symbol, period) {
   } else if (symbol === "BTC.b") {
     symbol = "BTC";
   }
-  const hostname = "https://stats.gmx.io/";
-  // const hostname = 'http://localhost:3113/'
+  // const hostname = "https://stats.gmx.io/";
+  const hostname = 'http://localhost:3113/'
   const timeDiff = CHART_PERIODS[period] * 3000;
   const from = Math.floor(Date.now() / 1000 - timeDiff);
   const url = `${hostname}api/candles/${symbol}?preferableChainId=${chainId}&period=${period}&from=${from}&preferableSource=fast`;
