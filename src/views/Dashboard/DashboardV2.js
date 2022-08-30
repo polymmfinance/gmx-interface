@@ -98,18 +98,18 @@ function getVolumeInfo(hourlyVolumes) {
 }
 
 function getPositionStats(positionStats) {
-  console.log(positionStats)
+
   if (!positionStats || positionStats.length === 0) {
     return null;
   }
-  return positionStats.reduce(
+  let a = positionStats.reduce(
     (acc, cv, i) => {
-      console.log(cv.positionStats)
-      // debugger
       acc.totalLongPositionSizes = acc.totalLongPositionSizes.add(parseInt(cv.positionStats.longOpenInterest));
       acc.totalShortPositionSizes = acc.totalShortPositionSizes.add(parseInt(cv.positionStats.shortOpenInterest));
-      acc[ACTIVE_CHAIN_IDS[i]] = cv.positionStats;
-      console.log(acc)
+      acc[ACTIVE_CHAIN_IDS[i]] = {
+        totalLongPositionSizes: acc.totalLongPositionSizes,
+        totalShortPositionSizes: acc.totalShortPositionSizes
+      };
       return acc;
     },
     {
@@ -117,6 +117,9 @@ function getPositionStats(positionStats) {
       totalShortPositionSizes: bigNumberify(0),
     }
   );
+
+  console.log(a);
+  return a
 }
 
 function getCurrentFeesUsd(tokenAddresses, fees, infoTokens) {
@@ -165,7 +168,7 @@ export default function DashboardV2() {
   const currentVolumeInfo = getVolumeInfo(hourlyVolumes);
 
   const positionStatsInfo = getPositionStats(positionStats);
-  console.log('positionstatsinfo', positionStatsInfo)
+  console.log('positionstatsinfo', chainId)
 
   function getWhitelistedTokenAddresses(chainId) {
     const whitelistedTokens = getWhitelistedTokens(chainId);
@@ -601,7 +604,7 @@ export default function DashboardV2() {
                       className="nowrap"
                       handle={`$${formatAmount(
                         positionStatsInfo?.[chainId].totalLongPositionSizes,
-                        USD_DECIMALS,
+                        0,
                         0,
                         true
                       )}`}
@@ -609,8 +612,8 @@ export default function DashboardV2() {
                         <TooltipCard
                           title="Long Positions"
                           polygon={positionStatsInfo?.[POLYGON].totalLongPositionSizes}
-                          // avax={positionStatsInfo?.[AVALANCHE].totalLongPositionSizes}
                           total={positionStatsInfo?.totalLongPositionSizes}
+                          decimalsForConversion={0}
                         />
                       )}
                     />
@@ -631,8 +634,8 @@ export default function DashboardV2() {
                       renderContent={() => (
                         <TooltipCard
                           title="Short Positions"
-                          arbitrum={positionStatsInfo?.[ARBITRUM].totalShortPositionSizes}
-                          avax={positionStatsInfo?.[AVALANCHE].totalShortPositionSizes}
+                          polygon={positionStatsInfo?.[POLYGON].totalShortPositionSizes}
+                          // avax={positionStatsInfo?.[AVALANCHE].totalShortPositionSizes}
                           total={positionStatsInfo?.totalShortPositionSizes}
                         />
                       )}
