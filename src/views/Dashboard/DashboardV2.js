@@ -58,7 +58,7 @@ import SEO from "../../components/Common/SEO";
 import TooltipCard, { TooltipCardRow } from "./TooltipCard";
 import useTotalVolume from "../../hooks/useTotalVolume";
 // const ACTIVE_CHAIN_IDS = [ARBITRUM, AVALANCHE, POLYGON];
-const ACTIVE_CHAIN_IDS = [ARBITRUM, POLYGON]
+const ACTIVE_CHAIN_IDS = [POLYGON]
 
 const { AddressZero } = ethers.constants;
 
@@ -98,14 +98,18 @@ function getVolumeInfo(hourlyVolumes) {
 }
 
 function getPositionStats(positionStats) {
+  console.log(positionStats)
   if (!positionStats || positionStats.length === 0) {
     return null;
   }
   return positionStats.reduce(
     (acc, cv, i) => {
-      acc.totalLongPositionSizes = acc.totalLongPositionSizes.add(cv.totalLongPositionSizes);
-      acc.totalShortPositionSizes = acc.totalShortPositionSizes.add(cv.totalShortPositionSizes);
-      acc[ACTIVE_CHAIN_IDS[i]] = cv;
+      console.log(cv.positionStats)
+      // debugger
+      acc.totalLongPositionSizes = acc.totalLongPositionSizes.add(parseInt(cv.positionStats.longOpenInterest));
+      acc.totalShortPositionSizes = acc.totalShortPositionSizes.add(parseInt(cv.positionStats.shortOpenInterest));
+      acc[ACTIVE_CHAIN_IDS[i]] = cv.positionStats;
+      console.log(acc)
       return acc;
     },
     {
@@ -143,7 +147,7 @@ export default function DashboardV2() {
   const chainName = getChainName(chainId);
 
   const { data: positionStats } = useSWR(
-    ACTIVE_CHAIN_IDS.map((chainId) => getServerUrl(chainId, "/position_stats")),
+    ACTIVE_CHAIN_IDS.map((chainId) => getServerUrl(chainId, "/api/positionStats")),
     {
       fetcher: arrayURLFetcher,
     }
@@ -161,6 +165,7 @@ export default function DashboardV2() {
   const currentVolumeInfo = getVolumeInfo(hourlyVolumes);
 
   const positionStatsInfo = getPositionStats(positionStats);
+  console.log('positionstatsinfo', positionStatsInfo)
 
   function getWhitelistedTokenAddresses(chainId) {
     const whitelistedTokens = getWhitelistedTokens(chainId);
@@ -603,7 +608,7 @@ export default function DashboardV2() {
                       renderContent={() => (
                         <TooltipCard
                           title="Long Positions"
-                          arbitrum={positionStatsInfo?.[ARBITRUM].totalLongPositionSizes}
+                          polygon={positionStatsInfo?.[POLYGON].totalLongPositionSizes}
                           // avax={positionStatsInfo?.[AVALANCHE].totalLongPositionSizes}
                           total={positionStatsInfo?.totalLongPositionSizes}
                         />

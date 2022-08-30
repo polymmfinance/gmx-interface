@@ -63,7 +63,7 @@ export default function Home({ showRedirectModal, redirectPopupTimestamp }) {
 
   // ARBITRUM
 
-  // const arbitrumPositionStatsUrl = getServerUrl(ARBITRUM, "/position_stats");
+  // const arbitrumPositionStatsUrl = getServerUrl(ARBITRUM, "/api/positionStats");
   // const { data: arbitrumPositionStats } = useSWR([arbitrumPositionStatsUrl], {
   //   fetcher: (...args) => fetch(...args).then((res) => res.json()),
   // });
@@ -75,7 +75,7 @@ export default function Home({ showRedirectModal, redirectPopupTimestamp }) {
 
   // AVALANCHE
 
-  const polygonPositionStatsUrl = getServerUrl(AVALANCHE, "/position_stats");
+  const polygonPositionStatsUrl = getServerUrl(AVALANCHE, "/api/positionStats");
   const { data: polygonPositionStats } = useSWR([polygonPositionStatsUrl], {
     fetcher: (...args) => fetch(...args).then((res) => res.json()),
   });

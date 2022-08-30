@@ -238,7 +238,7 @@ export default function DashboardV1() {
   const { chainId } = useChainId();
   const { library } = useWeb3React();
 
-  const positionStatsUrl = getServerUrl(chainId, "/position_stats");
+  const positionStatsUrl = getServerUrl(chainId, "/api/positionStats");
   const { data: positionStats, mutate: updatePositionStats } = useSWR([positionStatsUrl], {
     fetcher: (...args) => fetch(...args).then((res) => res.json()),
   });

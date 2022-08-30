@@ -4,26 +4,34 @@ export default function TooltipCard({
   title,
   total,
   avax,
+  polygon,
   arbitrum,
   showDollar = true,
   decimalsForConversion = USD_DECIMALS,
 }) {
   return (
     <>
-      <p className="Tooltip-row">
+      {/* <p className="Tooltip-row">
         <span className="label">{title} on Arbitrum:</span>
         <span className="amount">
           {showDollar && "$"}
           {formatAmount(arbitrum, decimalsForConversion, 0, true)}
         </span>
-      </p>
+      </p> */}
       <p className="Tooltip-row">
+        <span className="label">{title} on Polygon:</span>
+        <span className="amount">
+          {showDollar && "$"}
+          {formatAmount(polygon, decimalsForConversion, 0, true)}
+        </span>
+      </p>
+      {/* <p className="Tooltip-row">
         <span className="label">{title} on Avalanche:</span>
         <span className="amount">
           {showDollar && "$"}
           {formatAmount(avax, decimalsForConversion, 0, true)}
         </span>
-      </p>
+      </p> */}
       <div className="Tooltip-divider" />
       <p className="Tooltip-row">
         <span className="label">Total:</span>

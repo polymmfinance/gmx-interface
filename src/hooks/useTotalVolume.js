@@ -1,6 +1,6 @@
 import useSWR from "swr";
-import { ARBITRUM, arrayURLFetcher, AVALANCHE, bigNumberify, getServerUrl, getTotalVolumeSum } from "../Helpers";
-const ACTIVE_CHAIN_IDS = [ARBITRUM, AVALANCHE];
+import { ARBITRUM, arrayURLFetcher, AVALANCHE, bigNumberify, getServerUrl, getTotalVolumeSum, POLYGON } from "../Helpers";
+const ACTIVE_CHAIN_IDS = [POLYGON];
 
 export default function useTotalVolume() {
   const { data: totalVolume } = useSWR(
