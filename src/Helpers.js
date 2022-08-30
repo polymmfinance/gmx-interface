@@ -7,7 +7,7 @@ import {
 import { toast } from "react-toastify";
 import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
 import { useLocalStorage } from "react-use";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { format as formatDateFn } from "date-fns";
 import Token from "./abis/Token.json";
 import _ from "lodash";
@@ -2452,12 +2452,12 @@ export function getTotalVolumeSum(volumes) {
     return;
   }
 
-  let volume = bigNumberify(0);
-  for (let i = 0; i < volumes.length; i++) {
-    volume = volume.add(volumes[i].data.volume);
-  }
-
-  return volume;
+  // let volume = bigNumberify(0);
+  // for (let i = 0; i < volumes.length; i++) {
+  //   volume = volume.add(volumes[i].data.volume);
+  // }
+  // return volume;
+  return BigNumber.from(parseInt(volumes.total))
 }
 
 export function getBalanceAndSupplyData(balances) {

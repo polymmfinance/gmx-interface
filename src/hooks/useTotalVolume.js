@@ -15,6 +15,7 @@ export default function useTotalVolume() {
         const sum = getTotalVolumeSum(totalVolume[index]);
         acc[chainId] = sum;
         acc.total = acc.total.add(sum);
+        // console.log(acc)
         return acc;
       },
       { total: bigNumberify(0) }

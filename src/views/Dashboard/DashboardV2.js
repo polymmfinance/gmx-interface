@@ -117,8 +117,6 @@ function getPositionStats(positionStats) {
       totalShortPositionSizes: bigNumberify(0),
     }
   );
-
-  console.log(a);
   return a
 }
 
@@ -146,11 +144,11 @@ export default function DashboardV2() {
   const { active, library } = useWeb3React();
   const { chainId } = useChainId();
   const totalVolume = useTotalVolume();
-
+console.log("totalValue", totalVolume)
   const chainName = getChainName(chainId);
 
   const { data: positionStats } = useSWR(
-    ACTIVE_CHAIN_IDS.map((chainId) => getServerUrl(chainId, "/api/positionStats")),
+    ACTIVE_CHAIN_IDS.map((chainId) => getServerUrl(chainId, "/api/position_stats")),
     {
       fetcher: arrayURLFetcher,
     }
@@ -168,7 +166,7 @@ export default function DashboardV2() {
   const currentVolumeInfo = getVolumeInfo(hourlyVolumes);
 
   const positionStatsInfo = getPositionStats(positionStats);
-  console.log('positionstatsinfo', chainId)
+  // console.log('positionstatsinfo', chainId)
 
   function getWhitelistedTokenAddresses(chainId) {
     const whitelistedTokens = getWhitelistedTokens(chainId);
@@ -584,12 +582,13 @@ export default function DashboardV2() {
                     <TooltipComponent
                       position="right-bottom"
                       className="nowrap"
-                      handle={`$${formatAmount(currentVolumeInfo?.[chainId]?.totalVolume, USD_DECIMALS, 0, true)}`}
+                      handle={`$${formatAmount(currentVolumeInfo?.[chainId]?.totalVolume, 0, 0, true)}`}
                       renderContent={() => (
                         <TooltipCard
                           title="Volume"
-                          arbitrum={currentVolumeInfo?.[ARBITRUM].totalVolume}
-                          avax={currentVolumeInfo?.[AVALANCHE].totalVolume}
+                          polygon={currentVolumeInfo?.[POLYGON].totalVolume}
+                          // avax={currentVolumeInfo?.[AVALANCHE].totalVolume}
+                          decimalsForConversion={0}
                           total={currentVolumeInfo?.totalVolume}
                         />
                       )}
@@ -693,13 +692,15 @@ export default function DashboardV2() {
                     <TooltipComponent
                       position="right-bottom"
                       className="nowrap"
-                      handle={`$${formatAmount(totalVolume?.[chainId], USD_DECIMALS, 0, true)}`}
+                      handle={`$${formatAmount(totalVolume?.[chainId], 0, 0, true)}`}
                       renderContent={() => (
                         <TooltipCard
                           title="Total Volume"
-                          arbitrum={totalVolume?.[ARBITRUM]}
-                          avax={totalVolume?.[AVALANCHE]}
+                          // arbitrum={totalVolume?.[ARBITRUM]}
+                          // avax={totalVolume?.[AVALANCHE]}
+                          polygon={totalVolume?.[POLYGON]}
                           total={totalVolume?.total}
+                          decimalsForConversion={0}
                         />
                       )}
                     />
