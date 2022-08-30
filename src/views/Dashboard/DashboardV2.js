@@ -6,7 +6,7 @@ import { PieChart, Pie, Cell, Tooltip } from "recharts";
 import TooltipComponent from "../../components/Tooltip/Tooltip";
 
 import hexToRgba from "hex-to-rgba";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 
 import { getWhitelistedTokens, getTokenBySymbol } from "../../data/Tokens";
 import { getFeeHistory } from "../../data/Fees";
@@ -63,38 +63,41 @@ const ACTIVE_CHAIN_IDS = [POLYGON]
 const { AddressZero } = ethers.constants;
 
 function getVolumeInfo(hourlyVolumes) {
-  if (!hourlyVolumes || hourlyVolumes.length === 0) {
+  if (!hourlyVolumes) {
     return {};
   }
-  const dailyVolumes = hourlyVolumes.map((hourlyVolume) => {
-    const secondsPerHour = 60 * 60;
-    const minTime = parseInt(Date.now() / 1000 / secondsPerHour) * secondsPerHour - 24 * secondsPerHour;
-    const info = {};
-    let totalVolume = bigNumberify(0);
-    for (let i = 0; i < hourlyVolume.length; i++) {
-      const item = hourlyVolume[i].data;
-      if (parseInt(item.timestamp) < minTime) {
-        break;
-      }
+  return {
+    totalVolume: BigNumber.from(parseInt(hourlyVolumes[0].total))
+  }
+  // const dailyVolumes = hourlyVolumes.map((hourlyVolume) => {
+  //   const secondsPerHour = 60 * 60;
+  //   const minTime = parseInt(Date.now() / 1000 / secondsPerHour) * secondsPerHour - 24 * secondsPerHour;
+  //   const info = {};
+  //   let totalVolume = bigNumberify(0);
+  //   for (let i = 0; i < hourlyVolume.length; i++) {
+  //     const item = hourlyVolume[i].data;
+  //     if (parseInt(item.timestamp) < minTime) {
+  //       break;
+  //     }
 
-      if (!info[item.token]) {
-        info[item.token] = bigNumberify(0);
-      }
+  //     if (!info[item.token]) {
+  //       info[item.token] = bigNumberify(0);
+  //     }
 
-      info[item.token] = info[item.token].add(item.volume);
-      totalVolume = totalVolume.add(item.volume);
-    }
-    info.totalVolume = totalVolume;
-    return info;
-  });
-  return dailyVolumes.reduce(
-    (acc, cv, index) => {
-      acc.totalVolume = acc.totalVolume.add(cv.totalVolume);
-      acc[ACTIVE_CHAIN_IDS[index]] = cv;
-      return acc;
-    },
-    { totalVolume: bigNumberify(0) }
-  );
+  //     info[item.token] = info[item.token].add(item.volume);
+  //     totalVolume = totalVolume.add(item.volume);
+  //   }
+  //   info.totalVolume = totalVolume;
+  //   return info;
+  // });
+  // return dailyVolumes.reduce(
+  //   (acc, cv, index) => {
+  //     acc.totalVolume = acc.totalVolume.add(cv.totalVolume);
+  //     acc[ACTIVE_CHAIN_IDS[index]] = cv;
+  //     return acc;
+  //   },
+  //   { totalVolume: bigNumberify(0) }
+  // );
 }
 
 function getPositionStats(positionStats) {
@@ -144,7 +147,6 @@ export default function DashboardV2() {
   const { active, library } = useWeb3React();
   const { chainId } = useChainId();
   const totalVolume = useTotalVolume();
-console.log("totalValue", totalVolume)
   const chainName = getChainName(chainId);
 
   const { data: positionStats } = useSWR(
@@ -155,7 +157,7 @@ console.log("totalValue", totalVolume)
   );
 
   const { data: hourlyVolumes } = useSWR(
-    ACTIVE_CHAIN_IDS.map((chainId) => getServerUrl(chainId, "/hourly_volume")),
+    ACTIVE_CHAIN_IDS.map((chainId) => getServerUrl(chainId, "/daily_volume")),
     {
       fetcher: arrayURLFetcher,
     }
@@ -166,7 +168,6 @@ console.log("totalValue", totalVolume)
   const currentVolumeInfo = getVolumeInfo(hourlyVolumes);
 
   const positionStatsInfo = getPositionStats(positionStats);
-  // console.log('positionstatsinfo', chainId)
 
   function getWhitelistedTokenAddresses(chainId) {
     const whitelistedTokens = getWhitelistedTokens(chainId);
@@ -582,11 +583,11 @@ console.log("totalValue", totalVolume)
                     <TooltipComponent
                       position="right-bottom"
                       className="nowrap"
-                      handle={`$${formatAmount(currentVolumeInfo?.[chainId]?.totalVolume, 0, 0, true)}`}
+                      handle={`$${formatAmount(currentVolumeInfo?.totalVolume, 0, 0, true)}`}
                       renderContent={() => (
                         <TooltipCard
                           title="Volume"
-                          polygon={currentVolumeInfo?.[POLYGON].totalVolume}
+                          polygon={currentVolumeInfo?.totalVolume}
                           // avax={currentVolumeInfo?.[AVALANCHE].totalVolume}
                           decimalsForConversion={0}
                           total={currentVolumeInfo?.totalVolume}
