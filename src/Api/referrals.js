@@ -15,13 +15,14 @@ import {
   fetcher,
   isHashZero,
   REFERRAL_CODE_KEY,
+  POLYGON,
 } from "../Helpers";
 import { arbitrumReferralsGraphClient, avalancheReferralsGraphClient } from "./common";
 import { getContract } from "../Addresses";
 import { callContract } from ".";
 import { REGEX_VERIFY_BYTES32 } from "../components/Referrals/referralsHelper";
 
-const ACTIVE_CHAINS = [ARBITRUM, AVALANCHE];
+const ACTIVE_CHAINS = [ARBITRUM, AVALANCHE, POLYGON];
 const DISTRIBUTION_TYPE_REBATES = "1";
 const DISTRIBUTION_TYPE_DISCOUNT = "2";
 
@@ -29,6 +30,9 @@ function getGraphClient(chainId) {
   if (chainId === ARBITRUM) {
     return arbitrumReferralsGraphClient;
   } else if (chainId === AVALANCHE) {
+    return avalancheReferralsGraphClient;
+  } else if (chainId === POLYGON) {
+    // TODO: @jerry need replace this referral graph client
     return avalancheReferralsGraphClient;
   }
   throw new Error(`Unsupported chain ${chainId}`);

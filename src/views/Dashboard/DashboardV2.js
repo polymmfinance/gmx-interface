@@ -709,11 +709,12 @@ export default function DashboardV2() {
               Tokens {chainId === AVALANCHE && <img src={avalanche24Icon} alt="avalanche24Icon" />}
               {chainId === ARBITRUM && <img src={arbitrum24Icon} alt="arbitrum24Icon" />}
             </div>
-            <div className="Page-description">Platform and MLP index tokens.</div>
+            <div className="Page-description">MLP index token statistics.</div>
           </div>
           <div className="DashboardV2-token-cards">
             <div className="stats-wrapper stats-wrapper--gmx">
-              <div className="App-card">
+              {/* TODO: Let's build one stat here to show liquid-staking stats */}
+              {/* <div className="App-card">
                 <div className="stats-block">
                   <div className="App-card-title">
                     <div className="App-card-title-mark">
@@ -829,7 +830,7 @@ export default function DashboardV2() {
                     </PieChart>
                   )}
                 </div>
-              </div>
+              </div> */}
               <div className="App-card">
                 <div className="stats-block">
                   <div className="App-card-title">
