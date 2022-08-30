@@ -311,7 +311,8 @@ export default function DashboardV2() {
   let tvl;
   // console.log(glpMarketCap, gmxPrice, totalStakedGmx.toString())
   if (glpMarketCap && gmxPrice && totalStakedGmx) {
-    tvl = glpMarketCap.add(gmxPrice.mul(totalStakedGmx).div(expandDecimals(1, GMX_DECIMALS)));
+    // tvl = glpMarketCap.add(gmxPrice.mul(totalStakedGmx).div(expandDecimals(1, GMX_DECIMALS)));
+    tvl = glpMarketCap
   }
 
   const ethFloorPriceFund = expandDecimals(350 + 148 + 384, 18);
@@ -678,8 +679,9 @@ export default function DashboardV2() {
                       renderContent={() => (
                         <TooltipCard
                           title="Total Fees"
-                          arbitrum={totalFees?.[ARBITRUM]}
-                          avax={totalFees?.[AVALANCHE]}
+                          // arbitrum={totalFees?.[ARBITRUM]}
+                          // avax={totalFees?.[AVALANCHE]}
+                          polygon={totalFees?.[POLYGON]}
                           total={totalFees?.total}
                           decimalsForConversion={0}
                         />
