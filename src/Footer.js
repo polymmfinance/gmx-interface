@@ -12,23 +12,23 @@ import { isHomeSite, getAppBaseUrl, shouldShowRedirectModal } from "./Helpers";
 
 const footerLinks = {
   home: [
-    { text: "Terms and Conditions", link: "/terms-and-conditions" },
-    { text: "Referral Terms", link: "/referral-terms" },
-    { text: "Media Kit", link: "https://gmxio.gitbook.io/gmx/media-kit", external: true },
+    // { text: "Terms and Conditions", link: "/terms-and-conditions" },
+    // { text: "Referral Terms", link: "/referral-terms" },
+    // { text: "Media Kit", link: "https://gmxio.gitbook.io/gmx/media-kit", external: true },
     // { text: "Jobs", link: "/jobs", isAppLink: true },
   ],
   app: [
-    { text: "Media Kit", link: "https://gmxio.gitbook.io/gmx/media-kit", external: true },
+    // { text: "Media Kit", link: "https://gmxio.gitbook.io/gmx/media-kit", external: true },
     // { text: "Jobs", link: "/jobs" },
   ],
 };
 
 const socialLinks = [
-  { link: "https://twitter.com/GMX_IO", name: "Twitter", icon: twitterIcon },
-  { link: "https://medium.com/@gmx.io", name: "Medium", icon: mediumIcon },
-  { link: "https://github.com/gmx-io", name: "Github", icon: githubIcon },
-  { link: "https://t.me/GMX_IO", name: "Telegram", icon: telegramIcon },
-  { link: "https://discord.gg/cxjZYR4gQK", name: "Discord", icon: discordIcon },
+  { link: "https://twitter.com/MMFcrypto", name: "Twitter", icon: twitterIcon },
+  { link: "https://medium.com/@MMFinance", name: "Medium", icon: mediumIcon },
+  // { link: "https://github.com/gmx-io", name: "Github", icon: githubIcon },
+  { link: "https://discord.com/invite/madmeerkat", name: "Discord", icon: discordIcon },
+  { link: "https://t.me/MMFcrypto", name: "Telegram", icon: telegramIcon },
 ];
 
 export default function Footer({ showRedirectModal, redirectPopupTimestamp }) {
@@ -55,7 +55,7 @@ export default function Footer({ showRedirectModal, redirectPopupTimestamp }) {
             );
           })}
         </div>
-        <div className="Footer-links">
+        {/* <div className="Footer-links">
           {footerLinks[isHome ? "home" : "app"].map(({ external, text, link, isAppLink }) => {
             if (external) {
               return (
@@ -86,7 +86,7 @@ export default function Footer({ showRedirectModal, redirectPopupTimestamp }) {
               </NavLink>
             );
           })}
-        </div>
+        </div> */}
       </div>
     </div>
   );

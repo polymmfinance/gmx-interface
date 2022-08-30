@@ -129,9 +129,9 @@ const Zoom = cssTransition({
   duration: 200,
 });
 
-const arbWsProvider = new ethers.providers.WebSocketProvider(getAlchemyWsUrl());
+// const arbWsProvider = new ethers.providers.WebSocketProvider(getAlchemyWsUrl());
 
-const avaxWsProvider = new ethers.providers.JsonRpcProvider("https://api.avax.network/ext/bc/C/rpc");
+// const avaxWsProvider = new ethers.providers.JsonRpcProvider("https://api.avax.network/ext/bc/C/rpc");
 
 const polygonWsProvider = new ethers.providers.JsonRpcProvider("https://polygon-rpc.com");
 
@@ -139,14 +139,14 @@ function getWsProvider(active, chainId) {
   if (!active) {
     return;
   }
-  if (chainId === ARBITRUM) {
-    return arbWsProvider;
-  }
+  // if (chainId === ARBITRUM) {
+  //   return arbWsProvider;
+  // }
 
-  if (chainId === AVALANCHE) {
-    return avaxWsProvider;
-  }
-  
+  // if (chainId === AVALANCHE) {
+  //   return avaxWsProvider;
+  // }
+
   if (chainId === POLYGON) {
     return polygonWsProvider;
   }
@@ -215,23 +215,23 @@ function AppHeaderUser({
   const showConnectionOptions = !isHomeSite();
 
   const networkOptions = [
-    {
-      label: "Arbitrum",
-      value: ARBITRUM,
-      icon: "ic_arbitrum_24.svg",
-      color: "#264f79",
-    },
-    {
-      label: "Avalanche",
-      value: AVALANCHE,
-      icon: "ic_avalanche_24.svg",
-      color: "#E841424D",
-    },
+    // {
+    //   label: "Arbitrum",
+    //   value: ARBITRUM,
+    //   icon: "ic_arbitrum_24.svg",
+    //   color: "#264f79",
+    // },
+    // {
+    //   label: "Avalanche",
+    //   value: AVALANCHE,
+    //   icon: "ic_avalanche_24.svg",
+    //   color: "#E841424D",
+    // },
     {
       label: "Polygon",
       value: POLYGON,
       icon: "ic_polygon_24.svg",
-      color: "#E841424D",
+      color: "#7740dc",
     },
   ];
 

@@ -9,7 +9,7 @@
 .Selector .Modal-backdrop {
   height: 100vh;
   backdrop-filter: blur(4px);
-  background: #101124aa;
+  background: #0a0012aa;
 }
 
 .Selector-box {
@@ -128,7 +128,7 @@
   width: 100%;
   max-width: 29.6rem;
   margin: auto;
-  background: #16182e 0% 0% no-repeat padding-box;
+  background: #22162e 0% 0% no-repeat padding-box;
   border: 1px solid #262638;
   border-radius: 0.4rem;
 }

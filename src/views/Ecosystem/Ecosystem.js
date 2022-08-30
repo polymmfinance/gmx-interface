@@ -340,10 +340,10 @@ export default function Ecosystem() {
               );
             })}
           </div>
-          <div className="Tab-title-section">
+          {/* <div className="Tab-title-section">
             <div className="Page-title">Community Projects</div>
             <div className="Page-description">Projects developed by the MMX community.</div>
-          </div>
+          </div> */}
           {/* <div className="DashboardV2-projects">
             {communityProjects.map((item) => {
               const linkLabel = item.linkLabel ? item.linkLabel : item.link;
@@ -384,10 +384,10 @@ export default function Ecosystem() {
               );
             })}
           </div> */}
-          <div className="Tab-title-section">
+          {/* <div className="Tab-title-section">
             <div className="Page-title">Dashboards</div>
             <div className="Page-description">MMX dashboards and analytics.</div>
-          </div>
+          </div> */}
           {/* <div className="DashboardV2-projects">
             {dashboardProjects.map((item) => {
               const linkLabel = item.linkLabel ? item.linkLabel : item.link;
@@ -429,10 +429,10 @@ export default function Ecosystem() {
               );
             })}
           </div> */}
-          <div className="Tab-title-section">
+          {/* <div className="Tab-title-section">
             <div className="Page-title">Partnerships and Integrations</div>
             <div className="Page-description">Projects integrated with MMX.</div>
-          </div>
+          </div> */}
           {/* <div className="DashboardV2-projects">
             {integrations.map((item) => {
               const linkLabel = item.linkLabel ? item.linkLabel : item.link;
@@ -473,7 +473,6 @@ export default function Ecosystem() {
               );
             })}
           </div> */}
-          
         </div>
         <Footer />
       </div>

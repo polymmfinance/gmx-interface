@@ -13,12 +13,12 @@ import { useLockBodyScroll } from "react-use";
 
 function getDotColor(network) {
   switch (network) {
-    case "Arbitrum":
-      return "#4275a8";
-    case "Avalanche":
-      return "#E84142";
+    // case "Arbitrum":
+    //   return "#4275a8";
+    // case "Avalanche":
+    //   return "#E84142";
     case "Polygon":
-      return "#E84142";
+      return "#7740dc";
     default:
       return "";
   }
@@ -96,7 +96,7 @@ export default function NetworkSelector(props) {
 
   const customStyles = {
     option: (provided, state) => {
-      const backgroundColor = "#16182e";
+      const backgroundColor = "#22162e";
       return {
         ...provided,
         margin: 0,
@@ -131,7 +131,7 @@ export default function NetworkSelector(props) {
     }),
     menu: (provided) => ({
       ...provided,
-      background: "#16182E",
+      background: "#22162e",
       boxShadow: "0px 5px 12px #00000052",
       border: "1px solid #32344C",
       borderRadius: 4,
