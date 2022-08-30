@@ -401,7 +401,7 @@ const ADDITIONAL_TOKENS = {
   ],
 };
 
-const CHAIN_IDS = [56, 97, 42161, 421611, 43114, 137];
+const CHAIN_IDS = [56, 97, 137, 42161, 421611, 43114, 137];
 
 const TOKENS_MAP = {};
 const TOKENS_BY_SYMBOL_MAP = {};

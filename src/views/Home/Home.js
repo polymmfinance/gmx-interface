@@ -63,71 +63,71 @@ export default function Home({ showRedirectModal, redirectPopupTimestamp }) {
 
   // ARBITRUM
 
-  const arbitrumPositionStatsUrl = getServerUrl(ARBITRUM, "/position_stats");
-  const { data: arbitrumPositionStats } = useSWR([arbitrumPositionStatsUrl], {
-    fetcher: (...args) => fetch(...args).then((res) => res.json()),
-  });
+  // const arbitrumPositionStatsUrl = getServerUrl(ARBITRUM, "/position_stats");
+  // const { data: arbitrumPositionStats } = useSWR([arbitrumPositionStatsUrl], {
+  //   fetcher: (...args) => fetch(...args).then((res) => res.json()),
+  // });
 
-  const arbitrumTotalVolumeUrl = getServerUrl(ARBITRUM, "/total_volume");
-  const { data: arbitrumTotalVolume } = useSWR([arbitrumTotalVolumeUrl], {
-    fetcher: (...args) => fetch(...args).then((res) => res.json()),
-  });
+  // const arbitrumTotalVolumeUrl = getServerUrl(ARBITRUM, "/total_volume");
+  // const { data: arbitrumTotalVolume } = useSWR([arbitrumTotalVolumeUrl], {
+  //   fetcher: (...args) => fetch(...args).then((res) => res.json()),
+  // });
 
   // AVALANCHE
 
-  const avalanchePositionStatsUrl = getServerUrl(AVALANCHE, "/position_stats");
-  const { data: avalanchePositionStats } = useSWR([avalanchePositionStatsUrl], {
+  const polygonPositionStatsUrl = getServerUrl(AVALANCHE, "/position_stats");
+  const { data: polygonPositionStats } = useSWR([polygonPositionStatsUrl], {
     fetcher: (...args) => fetch(...args).then((res) => res.json()),
   });
 
-  const avalancheTotalVolumeUrl = getServerUrl(AVALANCHE, "/total_volume");
-  const { data: avalancheTotalVolume } = useSWR([avalancheTotalVolumeUrl], {
+  const polygonTotalVolumeUrl = getServerUrl(AVALANCHE, "/total_volume");
+  const { data: polygonTotalVolume } = useSWR([polygonTotalVolumeUrl], {
     fetcher: (...args) => fetch(...args).then((res) => res.json()),
   });
 
   // Total Volume
 
-  const arbitrumTotalVolumeSum = getTotalVolumeSum(arbitrumTotalVolume);
-  const avalancheTotalVolumeSum = getTotalVolumeSum(avalancheTotalVolume);
+  // const arbitrumTotalVolumeSum = getTotalVolumeSum(arbitrumTotalVolume);
+  const polygonTotalVolumeSum = getTotalVolumeSum(polygonTotalVolume);
 
   let totalVolumeSum = bigNumberify(0);
-  if (arbitrumTotalVolumeSum && avalancheTotalVolumeSum) {
-    totalVolumeSum = totalVolumeSum.add(arbitrumTotalVolumeSum);
-    totalVolumeSum = totalVolumeSum.add(avalancheTotalVolumeSum);
+  if (polygonTotalVolumeSum) {
+    // totalVolumeSum = totalVolumeSum.add(arbitrumTotalVolumeSum);
+    totalVolumeSum = totalVolumeSum.add(polygonTotalVolumeSum);
   }
 
   // Open Interest
 
   let openInterest = bigNumberify(0);
-  if (
-    arbitrumPositionStats &&
-    arbitrumPositionStats.totalLongPositionSizes &&
-    arbitrumPositionStats.totalShortPositionSizes
-  ) {
-    openInterest = openInterest.add(arbitrumPositionStats.totalLongPositionSizes);
-    openInterest = openInterest.add(arbitrumPositionStats.totalShortPositionSizes);
-  }
+  // if (
+  //   arbitrumPositionStats &&
+  //   arbitrumPositionStats.totalLongPositionSizes &&
+  //   arbitrumPositionStats.totalShortPositionSizes
+  // ) {
+  //   openInterest = openInterest.add(arbitrumPositionStats.totalLongPositionSizes);
+  //   openInterest = openInterest.add(arbitrumPositionStats.totalShortPositionSizes);
+  // }
 
   if (
-    avalanchePositionStats &&
-    avalanchePositionStats.totalLongPositionSizes &&
-    avalanchePositionStats.totalShortPositionSizes
+    polygonPositionStats &&
+    polygonPositionStats.totalLongPositionSizes &&
+    polygonPositionStats.totalShortPositionSizes
   ) {
-    openInterest = openInterest.add(avalanchePositionStats.totalLongPositionSizes);
-    openInterest = openInterest.add(avalanchePositionStats.totalShortPositionSizes);
+    openInterest = openInterest.add(polygonPositionStats.totalLongPositionSizes);
+    openInterest = openInterest.add(polygonPositionStats.totalShortPositionSizes);
   }
 
   // user stat
   const arbitrumUserStats = useUserStat(ARBITRUM);
-  const avalancheUserStats = useUserStat(AVALANCHE);
+  const polygonUserStats = useUserStat(AVALANCHE);
   let totalUsers = 0;
 
   if (arbitrumUserStats && arbitrumUserStats.uniqueCount) {
     totalUsers += arbitrumUserStats.uniqueCount;
   }
 
-  if (avalancheUserStats && avalancheUserStats.uniqueCount) {
-    totalUsers += avalancheUserStats.uniqueCount;
+  if (polygonUserStats && polygonUserStats.uniqueCount) {
+    totalUsers += polygonUserStats.uniqueCount;
   }
 
   const LaunchExchangeButton = () => {

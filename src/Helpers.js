@@ -81,7 +81,7 @@ export function getAlchemyWsUrl() {
 }
 
 const ARBITRUM_RPC_PROVIDERS = [getDefaultArbitrumRpcUrl()];
-const POLYGON_RPC_PROVIDERS = ["https://polygon-rpc.com"];
+const POLYGON_RPC_PROVIDERS = ["https://polygon-rpc.com", "https://rpc-mainnet.matic.quiknode.pro", "https://polygonapi.terminet.io/rpc"];
 const AVALANCHE_RPC_PROVIDERS = ["https://api.avax.network/ext/bc/C/rpc"];
 export const WALLET_CONNECT_LOCALSTORAGE_KEY = "walletconnect";
 export const WALLET_LINK_LOCALSTORAGE_PREFIX = "-walletlink";
@@ -171,6 +171,7 @@ export const GLPPOOLCOLORS = {
 export const HIGH_EXECUTION_FEES_MAP = {
   [ARBITRUM]: 3, // 3 USD
   [AVALANCHE]: 3, // 3 USD
+  [POLYGON]: 3, // 3 USD
 };
 
 export const ICONLINKS = {
@@ -484,16 +485,17 @@ export function getServerBaseUrl(chainId) {
       return fromLocalStorage;
     }
   }
-  if (chainId === MAINNET) {
-    return "https://gambit-server-staging.uc.r.appspot.com";
-  } else if (chainId === ARBITRUM_TESTNET) {
-    return "https://gambit-l2.as.r.appspot.com";
-  } else if (chainId === ARBITRUM) {
-    return "https://gmx-server-mainnet.uw.r.appspot.com";
-  } else if (chainId === AVALANCHE) {
-    return "https://gmx-avax-server.uc.r.appspot.com";
-  }
-  return "https://gmx-server-mainnet.uw.r.appspot.com";
+  // if (chainId === MAINNET) {
+  //   return "https://gambit-server-staging.uc.r.appspot.com";
+  // } else if (chainId === ARBITRUM_TESTNET) {
+  //   return "https://gambit-l2.as.r.appspot.com";
+  // } else if (chainId === ARBITRUM) {
+  //   return "https://gmx-server-mainnet.uw.r.appspot.com";
+  // } else if (chainId === AVALANCHE) {
+  //   return "https://gmx-avax-server.uc.r.appspot.com";
+  // }
+  // return "https://gmx-server-mainnet.uw.r.appspot.com";
+  return "http://localhost:3113"
 }
 
 export function getServerUrl(chainId, path) {
@@ -1300,6 +1302,7 @@ const RPC_PROVIDERS = {
   [MAINNET]: BSC_RPC_PROVIDERS,
   [ARBITRUM]: ARBITRUM_RPC_PROVIDERS,
   [AVALANCHE]: AVALANCHE_RPC_PROVIDERS,
+  [POLYGON]: POLYGON_RPC_PROVIDERS
 };
 
 const FALLBACK_PROVIDERS = {

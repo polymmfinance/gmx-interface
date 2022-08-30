@@ -57,7 +57,8 @@ import AssetDropdown from "./AssetDropdown";
 import SEO from "../../components/Common/SEO";
 import TooltipCard, { TooltipCardRow } from "./TooltipCard";
 import useTotalVolume from "../../hooks/useTotalVolume";
-const ACTIVE_CHAIN_IDS = [ARBITRUM, AVALANCHE, POLYGON];
+// const ACTIVE_CHAIN_IDS = [ARBITRUM, AVALANCHE, POLYGON];
+const ACTIVE_CHAIN_IDS = [ARBITRUM, POLYGON]
 
 const { AddressZero } = ethers.constants;
 
@@ -301,6 +302,7 @@ export default function DashboardV2() {
   }
 
   let tvl;
+  // console.log(glpMarketCap, gmxPrice, totalStakedGmx.toString())
   if (glpMarketCap && gmxPrice && totalStakedGmx) {
     tvl = glpMarketCap.add(gmxPrice.mul(totalStakedGmx).div(expandDecimals(1, GMX_DECIMALS)));
   }
@@ -524,7 +526,7 @@ export default function DashboardV2() {
             </div>
             <div className="Page-description">
               {chainName} Total Stats start from {totalStatsStartDate}.<br /> For detailed stats:{" "}
-              {chainId === ARBITRUM && (
+              {chainId === POLYGON && (
                 <a href="https://stats.gmx.io" target="_blank" rel="noopener noreferrer">
                   https://stats.gmx.io
                 </a>
@@ -602,7 +604,7 @@ export default function DashboardV2() {
                         <TooltipCard
                           title="Long Positions"
                           arbitrum={positionStatsInfo?.[ARBITRUM].totalLongPositionSizes}
-                          avax={positionStatsInfo?.[AVALANCHE].totalLongPositionSizes}
+                          // avax={positionStatsInfo?.[AVALANCHE].totalLongPositionSizes}
                           total={positionStatsInfo?.totalLongPositionSizes}
                         />
                       )}
@@ -707,11 +709,12 @@ export default function DashboardV2() {
               Tokens {chainId === AVALANCHE && <img src={avalanche24Icon} alt="avalanche24Icon" />}
               {chainId === ARBITRUM && <img src={arbitrum24Icon} alt="arbitrum24Icon" />}
             </div>
-            <div className="Page-description">Platform and MLP index tokens.</div>
+            <div className="Page-description">MLP index token statistics.</div>
           </div>
           <div className="DashboardV2-token-cards">
             <div className="stats-wrapper stats-wrapper--gmx">
-              <div className="App-card">
+              {/* TODO: Let's build one stat here to show liquid-staking stats */}
+              {/* <div className="App-card">
                 <div className="stats-block">
                   <div className="App-card-title">
                     <div className="App-card-title-mark">
@@ -827,7 +830,7 @@ export default function DashboardV2() {
                     </PieChart>
                   )}
                 </div>
-              </div>
+              </div> */}
               <div className="App-card">
                 <div className="stats-block">
                   <div className="App-card-title">
