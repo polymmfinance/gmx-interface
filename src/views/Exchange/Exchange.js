@@ -151,15 +151,6 @@ export function getPositions(
   pendingPositions,
   updatedPositions
 ) {
-  console.log(  chainId,
-    positionQuery,
-    positionData,
-    infoTokens,
-    includeDelta,
-    showPnlAfterFees,
-    account,
-    pendingPositions,
-    updatedPositions)
   const propsLength = getConstant(chainId, "positionReaderPropsLength");
   const positions = [];
   const positionsMap = {};
