@@ -709,10 +709,10 @@ export default function DashboardV2() {
                     />
                   </div>
                 </div>
-                <div className="App-card-row">
+                {/* <div className="App-card-row">
                   <div className="label">Floor Price Fund</div>
                   <div>${formatAmount(totalFloorPriceFundUsd, 30, 0, true)}</div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
