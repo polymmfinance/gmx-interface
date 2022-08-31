@@ -73,7 +73,7 @@ export default function TokenCard({ showRedirectModal }) {
               </BuyLink>
             </div>
             <a
-              href="https://gmxio.gitbook.io/gmx/tokenomics"
+              href="https://mmfinance.gitbook.io/docs/mmx/tokenomics"
               target="_blank"
               rel="noreferrer"
               className="default-btn read-more"
@@ -105,7 +105,7 @@ export default function TokenCard({ showRedirectModal }) {
               </BuyLink>
             </div>
             <a
-              href="https://gmxio.gitbook.io/gmx/glp"
+              href="https://mmfinance.gitbook.io/docs/mmx/glp"
               target="_blank"
               rel="noreferrer"
               className="default-btn read-more"

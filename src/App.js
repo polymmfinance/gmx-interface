@@ -186,7 +186,7 @@ function AppHeaderLinks({ HeaderLink, small, openSettings, clickCloseIcon }) {
         <HeaderLink to="/ecosystem">Ecosystem</HeaderLink>
       </div>
       <div className="App-header-link-container">
-        <a href="https://gmxio.gitbook.io/gmx/" target="_blank" rel="noopener noreferrer">
+        <a href="https://mmfinance.gitbook.io/docs/mmx/" target="_blank" rel="noopener noreferrer">
           About
         </a>
       </div>

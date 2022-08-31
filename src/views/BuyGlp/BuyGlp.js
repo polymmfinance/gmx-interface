@@ -31,7 +31,7 @@ export default function BuyGlp(props) {
           <div className="Page-title">Buy / Sell GLP</div>
           <div className="Page-description">
             Purchase{" "}
-            <a href="https://gmxio.gitbook.io/gmx/glp" target="_blank" rel="noopener noreferrer">
+            <a href="https://mmfinance.gitbook.io/docs/mmx/glp" target="_blank" rel="noopener noreferrer">
               GLP tokens
             </a>{" "}
             to earn {nativeTokenSymbol} fees from swaps and leverages trading.

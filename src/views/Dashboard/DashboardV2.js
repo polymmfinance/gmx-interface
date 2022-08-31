@@ -58,7 +58,7 @@ import SEO from "../../components/Common/SEO";
 import TooltipCard, { TooltipCardRow } from "./TooltipCard";
 import useTotalVolume from "../../hooks/useTotalVolume";
 // const ACTIVE_CHAIN_IDS = [ARBITRUM, AVALANCHE, POLYGON];
-const ACTIVE_CHAIN_IDS = [POLYGON]
+const ACTIVE_CHAIN_IDS = [POLYGON];
 
 const { AddressZero } = ethers.constants;
 
@@ -67,8 +67,8 @@ function getVolumeInfo(hourlyVolumes) {
     return {};
   }
   return {
-    totalVolume: BigNumber.from(parseInt(hourlyVolumes[0].total))
-  }
+    totalVolume: BigNumber.from(parseInt(hourlyVolumes[0].total)),
+  };
   // const dailyVolumes = hourlyVolumes.map((hourlyVolume) => {
   //   const secondsPerHour = 60 * 60;
   //   const minTime = parseInt(Date.now() / 1000 / secondsPerHour) * secondsPerHour - 24 * secondsPerHour;
@@ -101,7 +101,6 @@ function getVolumeInfo(hourlyVolumes) {
 }
 
 function getPositionStats(positionStats) {
-
   if (!positionStats || positionStats.length === 0) {
     return null;
   }
@@ -111,7 +110,7 @@ function getPositionStats(positionStats) {
       acc.totalShortPositionSizes = acc.totalShortPositionSizes.add(parseInt(cv.positionStats.shortOpenInterest));
       acc[ACTIVE_CHAIN_IDS[i]] = {
         totalLongPositionSizes: acc.totalLongPositionSizes,
-        totalShortPositionSizes: acc.totalShortPositionSizes
+        totalShortPositionSizes: acc.totalShortPositionSizes,
       };
       return acc;
     },
@@ -120,7 +119,7 @@ function getPositionStats(positionStats) {
       totalShortPositionSizes: bigNumberify(0),
     }
   );
-  return a
+  return a;
 }
 
 function getCurrentFeesUsd(tokenAddresses, fees, infoTokens) {
@@ -312,7 +311,7 @@ export default function DashboardV2() {
   // console.log(glpMarketCap, gmxPrice, totalStakedGmx.toString())
   if (glpMarketCap && gmxPrice && totalStakedGmx) {
     // tvl = glpMarketCap.add(gmxPrice.mul(totalStakedGmx).div(expandDecimals(1, GMX_DECIMALS)));
-    tvl = glpMarketCap
+    tvl = glpMarketCap;
   }
 
   const ethFloorPriceFund = expandDecimals(350 + 148 + 384, 18);
@@ -408,7 +407,7 @@ export default function DashboardV2() {
               )}
               <br />
               <div>
-                <a href="https://gmxio.gitbook.io/gmx/glp" target="_blank" rel="noopener noreferrer">
+                <a href="https://mmfinance.gitbook.io/docs/mmx/glp" target="_blank" rel="noopener noreferrer">
                   More Info
                 </a>
               </div>
@@ -603,12 +602,7 @@ export default function DashboardV2() {
                     <TooltipComponent
                       position="right-bottom"
                       className="nowrap"
-                      handle={`$${formatAmount(
-                        positionStatsInfo?.[chainId].totalLongPositionSizes,
-                        0,
-                        0,
-                        true
-                      )}`}
+                      handle={`$${formatAmount(positionStatsInfo?.[chainId].totalLongPositionSizes, 0, 0, true)}`}
                       renderContent={() => (
                         <TooltipCard
                           title="Long Positions"

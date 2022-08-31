@@ -43,7 +43,7 @@ export function RedirectPopupModal({
       <br />
       <br />
       Alternative links can be found in the{" "}
-      <a href="https://gmxio.gitbook.io/gmx/app-links" target="_blank" rel="noopener noreferrer">
+      <a href="https://mmfinance.gitbook.io/docs/mmx/app-links" target="_blank" rel="noopener noreferrer">
         docs
       </a>
       .

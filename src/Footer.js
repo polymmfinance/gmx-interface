@@ -14,11 +14,11 @@ const footerLinks = {
   home: [
     // { text: "Terms and Conditions", link: "/terms-and-conditions" },
     // { text: "Referral Terms", link: "/referral-terms" },
-    // { text: "Media Kit", link: "https://gmxio.gitbook.io/gmx/media-kit", external: true },
+    // { text: "Media Kit", link: "https://mmfinance.gitbook.io/docs/mmx/", external: true },
     // { text: "Jobs", link: "/jobs", isAppLink: true },
   ],
   app: [
-    // { text: "Media Kit", link: "https://gmxio.gitbook.io/gmx/media-kit", external: true },
+    // { text: "Media Kit", link: "https://mmfinance.gitbook.io/docs/mmx/", external: true },
     // { text: "Jobs", link: "/jobs" },
   ],
 };

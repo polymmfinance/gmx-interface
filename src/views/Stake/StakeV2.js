@@ -310,7 +310,7 @@ function UnstakeModal(props) {
         {burnAmount && burnAmount.gt(0) && rewardReductionBasisPoints && rewardReductionBasisPoints.gt(0) && (
           <div className="Modal-note">
             Unstaking will burn&nbsp;
-            <a href="https://gmxio.gitbook.io/gmx/rewards" target="_blank" rel="noopener noreferrer">
+            <a href="https://mmfinance.gitbook.io/docs/mmx/rewards" target="_blank" rel="noopener noreferrer">
               {formatAmount(burnAmount, 18, 4, true)} Multiplier Points
             </a>
             .&nbsp;
@@ -1285,7 +1285,11 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
           return (
             <>
               Boost your rewards with Multiplier Points.&nbsp;
-              <a href="https://gmxio.gitbook.io/gmx/rewards#multiplier-points" rel="noreferrer" target="_blank">
+              <a
+                href="https://mmfinance.gitbook.io/docs/mmx/rewards#multiplier-points"
+                rel="noreferrer"
+                target="_blank"
+              >
                 More info
               </a>
               .
@@ -1425,11 +1429,11 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
           <div className="Page-title">Earn</div>
           <div className="Page-description">
             Stake{" "}
-            <a href="https://gmxio.gitbook.io/gmx/tokenomics" target="_blank" rel="noopener noreferrer">
+            <a href="https://mmfinance.gitbook.io/docs/mmx/tokenomics" target="_blank" rel="noopener noreferrer">
               GMX
             </a>{" "}
             and{" "}
-            <a href="https://gmxio.gitbook.io/gmx/glp" target="_blank" rel="noopener noreferrer">
+            <a href="https://mmfinance.gitbook.io/docs/mmx/glp" target="_blank" rel="noopener noreferrer">
               GLP
             </a>{" "}
             to earn rewards.
@@ -1946,7 +1950,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
             Convert esGMX tokens to GMX tokens.
             <br />
             Please read the{" "}
-            <a href="https://gmxio.gitbook.io/gmx/rewards#vesting" target="_blank" rel="noopener noreferrer">
+            <a href="https://mmfinance.gitbook.io/docs/mmx/rewards#vesting" target="_blank" rel="noopener noreferrer">
               vesting details
             </a>{" "}
             before using the vaults.

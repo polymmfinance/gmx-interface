@@ -88,8 +88,8 @@ export default function ReferralTerms() {
               <p className="body-text">
                 The Rebates and Discounts percentages for the default tier Tier 1, and instructions to upgrade to Tier 2
                 and Tier 3, are contained in{" "}
-                <a target="_blank" rel="noopener noreferrer" href="https://gmxio.gitbook.io/gmx/referrals">
-                  https://gmxio.gitbook.io/gmx/referrals.
+                <a target="_blank" rel="noopener noreferrer" href="https://mmfinance.gitbook.io/docs/mmx/referrals">
+                  https://mmfinance.gitbook.io/docs/mmx/referrals.
                 </a>
               </p>
             </div>
