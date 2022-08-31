@@ -119,12 +119,12 @@ export default function GlpSwap(props) {
   const rewardReaderAddress = getContract(chainId, "RewardReader");
   const vaultAddress = getContract(chainId, "Vault");
   const nativeTokenAddress = getContract(chainId, "NATIVE_TOKEN");
-  const stakedGlpTrackerAddress = getContract(chainId, "StakedGlpTracker");
+  const glpAddress = getContract(chainId, "MLP");
   const feeGlpTrackerAddress = getContract(chainId, "FeeGlpTracker");
   const usdgAddress = getContract(chainId, "USDG");
   const glpManagerAddress = getContract(chainId, "GlpManager");
   const rewardRouterAddress = getContract(chainId, "RewardRouter");
-  const tokensForBalanceAndSupplyQuery = [stakedGlpTrackerAddress, usdgAddress];
+  const tokensForBalanceAndSupplyQuery = [glpAddress, usdgAddress];
 
   const tokenAddresses = tokens.map((token) => token.address);
   const { data: tokenBalances } = useSWR(
@@ -190,7 +190,7 @@ export default function GlpSwap(props) {
 
   const { gmxPrice } = useGmxPrice(chainId, { arbitrum: chainId === ARBITRUM ? library : undefined }, active);
 
-  const rewardTrackersForStakingInfo = [stakedGlpTrackerAddress, feeGlpTrackerAddress];
+  const rewardTrackersForStakingInfo = [glpAddress, feeGlpTrackerAddress];
   const { data: stakingInfo } = useSWR(
     [`GlpSwap:stakingInfo:${active}`, chainId, rewardReaderAddress, "getStakingInfo", account || PLACEHOLDER_ACCOUNT],
     {
