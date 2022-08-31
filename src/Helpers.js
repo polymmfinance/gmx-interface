@@ -158,6 +158,7 @@ export const TRIGGER_PREFIX_BELOW = "<";
 export const MIN_PROFIT_BIPS = 0;
 
 export const GLPPOOLCOLORS = {
+  MATIC: "#b638e8",
   ETH: "#6062a6",
   BTC: "#F7931A",
   "BTC.b": "#F7931A",
