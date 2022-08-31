@@ -261,42 +261,29 @@ export const ICONLINKS = {
   },
   137: {
     MATIC: {
-      coingecko: "https://www.coingecko.com/en/coins/matic",
-      avalanche: "https://snowtrace.io/address/0x62edc0692bd897d2295872a9ffcac5425011c661",
+      coingecko: "https://www.coingecko.com/en/coins/polygon",
+      polygon: "https://polygonscan.com/token/0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
     },
-    GMX: {
-      coingecko: "https://www.coingecko.com/en/coins/gmx",
-      avalanche: "https://snowtrace.io/address/0x62edc0692bd897d2295872a9ffcac5425011c661",
-    },
+    // GMX: {
+    //   coingecko: "https://www.coingecko.com/en/coins/gmx",
+    //   avalanche: "https://snowtrace.io/address/0x62edc0692bd897d2295872a9ffcac5425011c661",
+    //   polygon: "https://polygonscan.com/token/",
+    // },
     MLP: {
-      avalanche: "https://snowtrace.io/address/0x9e295B5B976a184B14aD8cd72413aD846C299660",
-    },
-    AVAX: {
-      coingecko: "https://www.coingecko.com/en/coins/avalanche",
+      coingecko: "https://www.coingecko.com/",
+      polygon: "https://polygonscan.com",
     },
     ETH: {
       coingecko: "https://www.coingecko.com/en/coins/weth",
-      avalanche: "https://snowtrace.io/address/0x49d5c2bdffac6ce2bfdb6640f4f80f226bc10bab",
+      polygon: "https://polygonscan.com/token/0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
     },
     BTC: {
       coingecko: "https://www.coingecko.com/en/coins/wrapped-bitcoin",
-      avalanche: "https://snowtrace.io/address/0x50b7545627a5162f82a992c33b87adc75187b218",
-    },
-    "BTC.b": {
-      coingecko: "https://www.coingecko.com/en/coins/wrapped-bitcoin",
-      avalanche: "https://snowtrace.io/address/0x152b9d0FdC40C096757F570A51E494bd4b943E50",
-    },
-    MIM: {
-      coingecko: "https://www.coingecko.com/en/coins/magic-internet-money",
-      avalanche: "https://snowtrace.io/address/0x130966628846bfd36ff31a822705796e8cb8c18d",
-    },
-    "USDC.e": {
-      coingecko: "https://www.coingecko.com/en/coins/usd-coin-avalanche-bridged-usdc-e",
-      avalanche: "https://snowtrace.io/address/0xa7d7079b0fead91f3e65f86e8915cb59c1a4c664",
+      polygon: "https://polygonscan.com/token/0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6",
     },
     USDC: {
       coingecko: "https://www.coingecko.com/en/coins/usd-coin",
-      avalanche: "https://snowtrace.io/address/0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e",
+      polygon: "https://polygonscan.com/token/0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
     },
   },
 };

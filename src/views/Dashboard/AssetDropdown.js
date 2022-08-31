@@ -11,7 +11,7 @@ import { useWeb3React } from "@web3-react/core";
 function AssetDropdown({ assetSymbol, assetInfo }) {
   const { active } = useWeb3React();
   const { chainId } = useChainId();
-  let { coingecko, arbitrum, avalanche } = ICONLINKS[chainId][assetSymbol];
+  let { coingecko, arbitrum, avalanche, polygon } = ICONLINKS[chainId][assetSymbol];
   const unavailableTokenSymbols = {
     42161: ["ETH"],
     43114: ["AVAX"],
@@ -36,20 +36,19 @@ function AssetDropdown({ assetSymbol, assetInfo }) {
         </Menu.Item>
         <Menu.Item>
           <>
-            {arbitrum && (
+            {/* {arbitrum && (
               <a href={arbitrum} className="asset-item" target="_blank" rel="noopener noreferrer">
                 <img src={arbitrumIcon} alt="Open in explorer" />
                 <p>Open in Explorer</p>
               </a>
-            )}
-            {avalanche && (
-              <a target="_blank" rel="noopener noreferrer" href={avalanche} className="asset-item">
+            )} */}
+            {polygon && (
+              <a target="_blank" rel="noopener noreferrer" href={polygon} className="asset-item">
                 <img src={polygonIcon} alt="Open in explorer" />
                 <p>Open in Explorer</p>
               </a>
             )}
           </>
-          <div></div>
         </Menu.Item>
         <Menu.Item>
           <>
@@ -59,6 +58,7 @@ function AssetDropdown({ assetSymbol, assetInfo }) {
                   let token = assetInfo
                     ? { ...assetInfo, image: assetInfo.imageUrl }
                     : platformTokens[chainId][assetSymbol];
+
                   addTokenToMetamask(token);
                 }}
                 className="asset-item"
