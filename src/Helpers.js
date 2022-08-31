@@ -33,7 +33,7 @@ export const TESTNET = 97;
 export const ARBITRUM_TESTNET = 421611;
 export const ARBITRUM = 42161;
 // TODO take it from web3
-export const DEFAULT_CHAIN_ID = ARBITRUM;
+export const DEFAULT_CHAIN_ID = POLYGON;
 export const CHAIN_ID = DEFAULT_CHAIN_ID;
 
 export const MIN_PROFIT_TIME = 0;
@@ -147,7 +147,7 @@ export const IS_PNL_IN_LEVERAGE_KEY = "Exchange-swap-is-pnl-in-leverage";
 export const SHOW_PNL_AFTER_FEES_KEY = "Exchange-swap-show-pnl-after-fees";
 export const DISABLE_ORDER_VALIDATION_KEY = "disable-order-validation";
 export const SHOULD_SHOW_POSITION_LINES_KEY = "Exchange-swap-should-show-position-lines";
-export const REFERRAL_CODE_KEY = "GMX-referralCode";
+export const REFERRAL_CODE_KEY = "MMX-referralCode";
 export const REFERRAL_CODE_QUERY_PARAM = "ref";
 export const REFERRALS_SELECTED_TAB_KEY = "Referrals-selected-tab";
 export const MAX_REFERRAL_CODE_LENGTH = 20;
@@ -338,7 +338,8 @@ export const platformTokens = {
   },
 };
 
-const supportedChainIds = [ARBITRUM, AVALANCHE, POLYGON];
+// const supportedChainIds = [ARBITRUM, AVALANCHE, POLYGON];
+const supportedChainIds = [POLYGON];
 const injectedConnector = new InjectedConnector({
   supportedChainIds,
 });

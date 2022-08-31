@@ -196,15 +196,15 @@ export default function SwapBox(props) {
   const isShort = swapOption === SHORT;
   const isSwap = swapOption === SWAP;
 
-  const getLeaderboardLink = () => {
-    if (chainId === ARBITRUM) {
-      return "https://www.gmx.house/arbitrum/leaderboard";
-    }
-    if (chainId === AVALANCHE) {
-      return "https://www.gmx.house/avalanche/leaderboard";
-    }
-    return "https://www.gmx.house";
-  };
+  // const getLeaderboardLink = () => {
+  //   if (chainId === ARBITRUM) {
+  //     return "https://www.gmx.house/arbitrum/leaderboard";
+  //   }
+  //   if (chainId === AVALANCHE) {
+  //     return "https://www.gmx.house/avalanche/leaderboard";
+  //   }
+  //   return "https://www.gmx.house";
+  // };
 
   function getTokenLabel() {
     switch (true) {
@@ -2368,13 +2368,13 @@ export default function SwapBox(props) {
             </a>
           </div>
         </div>
-        <div className="Exchange-info-row">
+        {/* <div className="Exchange-info-row">
           <div className="Exchange-info-label-button">
             <a href={getLeaderboardLink()} target="_blank" rel="noopener noreferrer">
               Leaderboard
             </a>
           </div>
-        </div>
+        </div> */}
         <div className="Exchange-info-row">
           <div className="Exchange-info-label-button">
             <a

@@ -25,8 +25,9 @@ import {
   getServerUrl,
   USD_DECIMALS,
   ARBITRUM,
-  AVALANCHE,
+  // AVALANCHE,
   getTotalVolumeSum,
+  POLYGON,
 } from "../../Helpers";
 
 import { useUserStat } from "../../Api";
@@ -75,12 +76,12 @@ export default function Home({ showRedirectModal, redirectPopupTimestamp }) {
 
   // AVALANCHE
 
-  const polygonPositionStatsUrl = getServerUrl(AVALANCHE, "/api/position_stats");
+  const polygonPositionStatsUrl = getServerUrl(POLYGON, "/api/position_stats");
   const { data: polygonPositionStats } = useSWR([polygonPositionStatsUrl], {
     fetcher: (...args) => fetch(...args).then((res) => res.json()),
   });
 
-  const polygonTotalVolumeUrl = getServerUrl(AVALANCHE, "/total_volume");
+  const polygonTotalVolumeUrl = getServerUrl(POLYGON, "/total_volume");
   const { data: polygonTotalVolume } = useSWR([polygonTotalVolumeUrl], {
     fetcher: (...args) => fetch(...args).then((res) => res.json()),
   });
@@ -119,7 +120,7 @@ export default function Home({ showRedirectModal, redirectPopupTimestamp }) {
 
   // user stat
   const arbitrumUserStats = useUserStat(ARBITRUM);
-  const polygonUserStats = useUserStat(AVALANCHE);
+  const polygonUserStats = useUserStat(POLYGON);
   let totalUsers = 0;
 
   if (arbitrumUserStats && arbitrumUserStats.uniqueCount) {

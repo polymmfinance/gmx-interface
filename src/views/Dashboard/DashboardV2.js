@@ -212,10 +212,10 @@ export default function DashboardV2() {
 
   const { infoTokens } = useInfoTokens(library, chainId, active, undefined, undefined);
   const { infoTokens: infoTokensArbitrum } = useInfoTokens(null, ARBITRUM, active, undefined, undefined);
-  const { infoTokens: infoTokensAvax } = useInfoTokens(null, AVALANCHE, active, undefined, undefined);
+  const { infoTokens: infoTokensPolygon } = useInfoTokens(null, POLYGON, active, undefined, undefined);
 
   const { data: currentFees } = useSWR(
-    infoTokensArbitrum[AddressZero].contractMinPrice && infoTokensAvax[AddressZero].contractMinPrice
+    infoTokensArbitrum[AddressZero].contractMinPrice && infoTokensPolygon[AddressZero].contractMinPrice
       ? "Dashboard:currentFees"
       : null,
     {
@@ -236,7 +236,7 @@ export default function DashboardV2() {
               const feeUSD = getCurrentFeesUsd(
                 getWhitelistedTokenAddresses(ACTIVE_CHAIN_IDS[i]),
                 cv,
-                ACTIVE_CHAIN_IDS[i] === ARBITRUM ? infoTokensArbitrum : infoTokensAvax
+                ACTIVE_CHAIN_IDS[i] === ARBITRUM ? infoTokensArbitrum : infoTokensPolygon
               );
               acc[ACTIVE_CHAIN_IDS[i]] = feeUSD;
               acc.total = acc.total.add(feeUSD);
@@ -450,7 +450,7 @@ export default function DashboardV2() {
     },
   ];
 
-  const totalStatsStartDate = chainId === AVALANCHE ? "06 Jan 2022" : "01 Sep 2021";
+  const totalStatsStartDate = chainId === POLYGON ? "06 Jan 2022" : "01 Sep 2021";
 
   let stableGlp = 0;
   let totalGlp = 0;
@@ -650,7 +650,7 @@ export default function DashboardV2() {
                           <TooltipCard
                             title="Fees"
                             arbitrum={currentFees?.[ARBITRUM]}
-                            avax={currentFees?.[AVALANCHE]}
+                            polygon={currentFees?.[POLYGON]}
                             total={currentFees?.total}
                           />
                         )}
