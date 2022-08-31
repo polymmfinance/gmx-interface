@@ -162,7 +162,7 @@ export default function DashboardV2() {
     }
   );
 
-  let { total: totalGmxSupply } = useTotalGmxSupply();
+  // let { total: totalGmxSupply } = useTotalGmxSupply();
 
   const currentVolumeInfo = getVolumeInfo(hourlyVolumes);
 
@@ -276,19 +276,19 @@ export default function DashboardV2() {
     active
   );
 
-  let { total: totalGmxInLiquidity } = useTotalGmxInLiquidity(chainId, active);
+  // let { total: totalGmxInLiquidity } = useTotalGmxInLiquidity(chainId, active);
 
-  let { avax: avaxStakedGmx, arbitrum: arbitrumStakedGmx, total: totalStakedGmx } = useTotalGmxStaked();
+  // let { avax: avaxStakedGmx, arbitrum: arbitrumStakedGmx, total: totalStakedGmx } = useTotalGmxStaked();
 
-  let gmxMarketCap;
-  if (gmxPrice && totalGmxSupply) {
-    gmxMarketCap = gmxPrice.mul(totalGmxSupply).div(expandDecimals(1, GMX_DECIMALS));
-  }
+  // let gmxMarketCap;
+  // if (gmxPrice && totalGmxSupply) {
+  //   gmxMarketCap = gmxPrice.mul(totalGmxSupply).div(expandDecimals(1, GMX_DECIMALS));
+  // }
 
-  let stakedGmxSupplyUsd;
-  if (gmxPrice && totalStakedGmx) {
-    stakedGmxSupplyUsd = totalStakedGmx.mul(gmxPrice).div(expandDecimals(1, GMX_DECIMALS));
-  }
+  // let stakedGmxSupplyUsd;
+  // if (gmxPrice && totalStakedGmx) {
+  //   stakedGmxSupplyUsd = totalStakedGmx.mul(gmxPrice).div(expandDecimals(1, GMX_DECIMALS));
+  // }
 
   let aum;
   if (aums && aums.length > 0) {
@@ -309,7 +309,7 @@ export default function DashboardV2() {
 
   let tvl;
   // console.log(glpMarketCap, gmxPrice, totalStakedGmx.toString())
-  if (glpMarketCap && gmxPrice && totalStakedGmx) {
+  if (glpMarketCap) {
     // tvl = glpMarketCap.add(gmxPrice.mul(totalStakedGmx).div(expandDecimals(1, GMX_DECIMALS)));
     tvl = glpMarketCap;
   }
@@ -420,15 +420,15 @@ export default function DashboardV2() {
 
   let stakedPercent = 0;
 
-  if (totalGmxSupply && !totalGmxSupply.isZero() && !totalStakedGmx.isZero()) {
-    stakedPercent = totalStakedGmx.mul(100).div(totalGmxSupply).toNumber();
-  }
+  // if (totalGmxSupply && !totalGmxSupply.isZero() && !totalStakedGmx.isZero()) {
+  //   stakedPercent = totalStakedGmx.mul(100).div(totalGmxSupply).toNumber();
+  // }
 
   let liquidityPercent = 0;
 
-  if (totalGmxSupply && !totalGmxSupply.isZero() && totalGmxInLiquidity) {
-    liquidityPercent = totalGmxInLiquidity.mul(100).div(totalGmxSupply).toNumber();
-  }
+  // if (totalGmxSupply && !totalGmxSupply.isZero() && totalGmxInLiquidity) {
+  //   liquidityPercent = totalGmxInLiquidity.mul(100).div(totalGmxSupply).toNumber();
+  // }
 
   let notStakedPercent = 100 - stakedPercent - liquidityPercent;
 

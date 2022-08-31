@@ -60,13 +60,15 @@ const MAX_GAS_PRICE_MAP = {
   [POLYGON]: "400000000000",
 };
 
-const alchemyWhitelistedDomains = ["gmx.io", "app.gmx.io"];
+const alchemyWhitelistedDomains = [];
 
 export function getDefaultArbitrumRpcUrl() {
+  return ""
   return "https://arb1.arbitrum.io/rpc";
 }
 
 export function getAlchemyHttpUrl() {
+  return ""
   if (alchemyWhitelistedDomains.includes(window.location.host)) {
     return "https://arb-mainnet.g.alchemy.com/v2/ha7CFsr1bx5ZItuR6VZBbhKozcKDY4LZ";
   }
@@ -74,6 +76,7 @@ export function getAlchemyHttpUrl() {
 }
 
 export function getAlchemyWsUrl() {
+  return ""
   if (alchemyWhitelistedDomains.includes(window.location.host)) {
     return "wss://arb-mainnet.g.alchemy.com/v2/ha7CFsr1bx5ZItuR6VZBbhKozcKDY4LZ";
   }
@@ -86,7 +89,7 @@ const POLYGON_RPC_PROVIDERS = [
   "https://rpc-mainnet.matic.quiknode.pro",
   "https://polygonapi.terminet.io/rpc",
 ];
-const AVALANCHE_RPC_PROVIDERS = ["https://api.avax.network/ext/bc/C/rpc"];
+const AVALANCHE_RPC_PROVIDERS = [""];
 export const WALLET_CONNECT_LOCALSTORAGE_KEY = "walletconnect";
 export const WALLET_LINK_LOCALSTORAGE_PREFIX = "-walletlink";
 export const SHOULD_EAGER_CONNECT_LOCALSTORAGE_KEY = "eagerconnect";
@@ -347,8 +350,8 @@ const getWalletConnectConnector = () => {
   const chainId = localStorage.getItem(SELECTED_NETWORK_LOCAL_STORAGE_KEY) || DEFAULT_CHAIN_ID;
   return new WalletConnectConnector({
     rpc: {
-      [AVALANCHE]: AVALANCHE_RPC_PROVIDERS[0],
-      [ARBITRUM]: ARBITRUM_RPC_PROVIDERS[0],
+      // [AVALANCHE]: AVALANCHE_RPC_PROVIDERS[0],
+      // [ARBITRUM]: ARBITRUM_RPC_PROVIDERS[0],
       [POLYGON]: POLYGON_RPC_PROVIDERS[0],
     },
     qrcode: true,
@@ -1310,8 +1313,8 @@ const RPC_PROVIDERS = {
 };
 
 const FALLBACK_PROVIDERS = {
-  [ARBITRUM]: [getAlchemyHttpUrl()],
-  [AVALANCHE]: ["https://avax-mainnet.gateway.pokt.network/v1/lb/626f37766c499d003aada23b"],
+  [ARBITRUM]: [""],
+  [AVALANCHE]: [""],
 };
 
 export function shortenAddress(address, length) {
@@ -1412,16 +1415,16 @@ export function useChainId() {
 export function useENS(address) {
   const [ensName, setENSName] = useState();
 
-  useEffect(() => {
-    async function resolveENS() {
-      if (address) {
-        const provider = new ethers.providers.JsonRpcProvider("https://rpc.ankr.com/eth");
-        const name = await provider.lookupAddress(address.toLowerCase());
-        if (name) setENSName(name);
-      }
-    }
-    resolveENS();
-  }, [address]);
+  // useEffect(() => {
+  //   async function resolveENS() {
+  //     if (address) {
+  //       const provider = new ethers.providers.JsonRpcProvider("https://rpc.ankr.com/eth");
+  //       const name = await provider.lookupAddress(address.toLowerCase());
+  //       if (name) setENSName(name);
+  //     }
+  //   }
+  //   resolveENS();
+  // }, [address]);
 
   return { ensName };
 }
@@ -2365,7 +2368,7 @@ export function getInfoTokens(
 
   for (let i = 0; i < whitelistedTokens.length; i++) {
     const token = JSON.parse(JSON.stringify(whitelistedTokens[i]));
-    if (vaultTokenInfo) {
+    if (vaultTokenInfo && vaultTokenInfo.length) {
       token.poolAmount = vaultTokenInfo[i * vaultPropsLength];
       token.reservedAmount = vaultTokenInfo[i * vaultPropsLength + 1];
       token.availableAmount = token.poolAmount.sub(token.reservedAmount);
