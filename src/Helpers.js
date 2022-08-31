@@ -81,7 +81,11 @@ export function getAlchemyWsUrl() {
 }
 
 const ARBITRUM_RPC_PROVIDERS = [getDefaultArbitrumRpcUrl()];
-const POLYGON_RPC_PROVIDERS = ["https://polygon-rpc.com", "https://rpc-mainnet.matic.quiknode.pro", "https://polygonapi.terminet.io/rpc"];
+const POLYGON_RPC_PROVIDERS = [
+  "https://polygon-rpc.com",
+  "https://rpc-mainnet.matic.quiknode.pro",
+  "https://polygonapi.terminet.io/rpc",
+];
 const AVALANCHE_RPC_PROVIDERS = ["https://api.avax.network/ext/bc/C/rpc"];
 export const WALLET_CONNECT_LOCALSTORAGE_KEY = "walletconnect";
 export const WALLET_LINK_LOCALSTORAGE_PREFIX = "-walletlink";
@@ -180,7 +184,7 @@ export const ICONLINKS = {
       coingecko: "https://www.coingecko.com/en/coins/gmx",
       arbitrum: "https://arbiscan.io/address/0xfc5a1a6eb076a2c7ad06ed22c90d7e710e35ad0a",
     },
-    GLP: {
+    MLP: {
       arbitrum: "https://arbiscan.io/token/0x1aDDD80E6039594eE970E5872D247bf0414C8903",
     },
     ETH: {
@@ -224,7 +228,7 @@ export const ICONLINKS = {
       coingecko: "https://www.coingecko.com/en/coins/gmx",
       avalanche: "https://snowtrace.io/address/0x62edc0692bd897d2295872a9ffcac5425011c661",
     },
-    GLP: {
+    MLP: {
       avalanche: "https://snowtrace.io/address/0x9e295B5B976a184B14aD8cd72413aD846C299660",
     },
     AVAX: {
@@ -264,7 +268,7 @@ export const ICONLINKS = {
       coingecko: "https://www.coingecko.com/en/coins/gmx",
       avalanche: "https://snowtrace.io/address/0x62edc0692bd897d2295872a9ffcac5425011c661",
     },
-    GLP: {
+    MLP: {
       avalanche: "https://snowtrace.io/address/0x9e295B5B976a184B14aD8cd72413aD846C299660",
     },
     AVAX: {
@@ -307,7 +311,7 @@ export const platformTokens = {
       address: getContract(ARBITRUM, "GMX"),
       imageUrl: "https://assets.coingecko.com/coins/images/18323/small/arbit.png?1631532468",
     },
-    GLP: {
+    MLP: {
       name: "MMX LP",
       symbol: "MLP",
       decimals: 18,
@@ -324,7 +328,7 @@ export const platformTokens = {
       address: getContract(AVALANCHE, "GMX"),
       imageUrl: "https://assets.coingecko.com/coins/images/18323/small/arbit.png?1631532468",
     },
-    GLP: {
+    MLP: {
       name: "MMX LP",
       symbol: "MLP",
       decimals: 18,
@@ -495,7 +499,7 @@ export function getServerBaseUrl(chainId) {
   //   return "https://gmx-avax-server.uc.r.appspot.com";
   // }
   // return "https://gmx-server-mainnet.uw.r.appspot.com";
-  return "http://localhost:3113"
+  return "http://localhost:3113";
 }
 
 export function getServerUrl(chainId, path) {
@@ -1302,7 +1306,7 @@ const RPC_PROVIDERS = {
   [MAINNET]: BSC_RPC_PROVIDERS,
   [ARBITRUM]: ARBITRUM_RPC_PROVIDERS,
   [AVALANCHE]: AVALANCHE_RPC_PROVIDERS,
-  [POLYGON]: POLYGON_RPC_PROVIDERS
+  [POLYGON]: POLYGON_RPC_PROVIDERS,
 };
 
 const FALLBACK_PROVIDERS = {
@@ -2216,7 +2220,7 @@ export const addNetwork = async (metadata) => {
 };
 
 export const switchNetwork = async (chainId, active) => {
-  console.log({chainId, active})
+  console.log({ chainId, active });
   if (!active) {
     // chainId in localStorage allows to switch network even if wallet is not connected
     // or there is no wallet at all
@@ -2457,7 +2461,7 @@ export function getTotalVolumeSum(volumes) {
   //   volume = volume.add(volumes[i].data.volume);
   // }
   // return volume;
-  return BigNumber.from(parseInt(volumes.total))
+  return BigNumber.from(parseInt(volumes.total));
 }
 
 export function getBalanceAndSupplyData(balances) {

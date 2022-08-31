@@ -374,8 +374,8 @@ const ADDITIONAL_TOKENS = {
     },
     {
       name: "GMX LP",
-      symbol: "GLP",
-      address: getContract(42161, "GLP"),
+      symbol: "MLP",
+      address: getContract(42161, "MLP"),
       decimals: 18,
     },
   ],
@@ -394,8 +394,8 @@ const ADDITIONAL_TOKENS = {
     },
     {
       name: "GMX LP",
-      symbol: "GLP",
-      address: getContract(42161, "GLP"),
+      symbol: "MLP",
+      address: getContract(42161, "MLP"),
       decimals: 18,
     },
   ],

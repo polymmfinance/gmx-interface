@@ -3,7 +3,7 @@ import { FiChevronDown } from "react-icons/fi";
 import "./AssetDropdown.css";
 import coingeckoIcon from "../../img/ic_coingecko_16.svg";
 import arbitrumIcon from "../../img/ic_arbitrum_16.svg";
-import avalancheIcon from "../../img/ic_avalanche_16.svg";
+import polygonIcon from "../../img/ic_polygon_16.svg";
 import metamaskIcon from "../../img/ic_metamask_16.svg";
 import { addTokenToMetamask, ICONLINKS, platformTokens, useChainId } from "../../Helpers";
 import { useWeb3React } from "@web3-react/core";
@@ -44,7 +44,7 @@ function AssetDropdown({ assetSymbol, assetInfo }) {
             )}
             {avalanche && (
               <a target="_blank" rel="noopener noreferrer" href={avalanche} className="asset-item">
-                <img src={avalancheIcon} alt="Open in explorer" />
+                <img src={polygonIcon} alt="Open in explorer" />
                 <p>Open in Explorer</p>
               </a>
             )}

@@ -932,7 +932,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
   const gmxAddress = getContract(chainId, "GMX");
   const esGmxAddress = getContract(chainId, "ES_GMX");
   const bnGmxAddress = getContract(chainId, "BN_GMX");
-  const glpAddress = getContract(chainId, "GLP");
+  const glpAddress = getContract(chainId, "MLP");
 
   const stakedGmxTrackerAddress = getContract(chainId, "StakedGmxTracker");
   const bonusGmxTrackerAddress = getContract(chainId, "BonusGmxTracker");
@@ -1192,8 +1192,8 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
     }
 
     setIsVesterDepositModalVisible(true);
-    setVesterDepositTitle("GLP Vault");
-    setVesterDepositStakeTokenLabel("staked GLP");
+    setVesterDepositTitle("MLP Vault");
+    setVesterDepositStakeTokenLabel("staked MLP");
     setVesterDepositMaxAmount(remainingVestableAmount);
     setVesterDepositBalance(processedData.esGmxBalance);
     setVesterDepositEscrowedBalance(vestingData.glpVester.escrowedBalance);
@@ -1224,7 +1224,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
     }
 
     setIsVesterWithdrawModalVisible(true);
-    setVesterWithdrawTitle("Withdraw from GLP Vault");
+    setVesterWithdrawTitle("Withdraw from MLP Vault");
     setVesterWithdrawAddress(glpVesterAddress);
   };
 
@@ -1316,7 +1316,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
     }
     let glpStr;
     if (processedData.glpBalance && processedData.glpBalance.gt(0)) {
-      glpStr = formatAmount(processedData.glpBalance, 18, 2, true) + " GLP";
+      glpStr = formatAmount(processedData.glpBalance, 18, 2, true) + " MLP";
     }
     const amountStr = [gmxAmountStr, esGmxAmountStr, mpAmountStr, glpStr].filter((s) => s).join(", ");
     earnMsg = (
@@ -1429,12 +1429,12 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
           <div className="Page-title">Earn</div>
           <div className="Page-description">
             Stake{" "}
-            <a href="https://mmfinance.gitbook.io/docs/mmx/tokenomics" target="_blank" rel="noopener noreferrer">
+            {/* <a href="https://mmfinance.gitbook.io/docs/mmx/tokenomics" target="_blank" rel="noopener noreferrer">
               GMX
             </a>{" "}
-            and{" "}
-            <a href="https://mmfinance.gitbook.io/docs/mmx/glp" target="_blank" rel="noopener noreferrer">
-              GLP
+            and{" "} */}
+            <a href="https://mmfinance.gitbook.io/docs/mmx/mlp" target="_blank" rel="noopener noreferrer">
+              MLP
             </a>{" "}
             to earn rewards.
           </div>
@@ -1443,7 +1443,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
       </div>
       <div className="StakeV2-content">
         <div className="StakeV2-cards">
-          <div className="App-card StakeV2-gmx-card">
+          {/* <div className="App-card StakeV2-gmx-card">
             <div className="App-card-title">GMX</div>
             <div className="App-card-divider"></div>
             <div className="App-card-content">
@@ -1647,8 +1647,8 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
                 )}
               </div>
             </div>
-          </div>
-          <div className="App-card primary StakeV2-total-rewards-card">
+          </div> */}
+          {/* <div className="App-card primary StakeV2-total-rewards-card">
             <div className="App-card-title">Total Rewards</div>
             <div className="App-card-divider"></div>
             <div className="App-card-content">
@@ -1723,9 +1723,9 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
           <div className="App-card">
-            <div className="App-card-title">GLP ({chainName})</div>
+            <div className="App-card-title">MLP ({chainName})</div>
             <div className="App-card-divider"></div>
             <div className="App-card-content">
               <div className="App-card-row">
@@ -1735,14 +1735,14 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
               <div className="App-card-row">
                 <div className="label">Wallet</div>
                 <div>
-                  {formatKeyAmount(processedData, "glpBalance", GLP_DECIMALS, 2, true)} GLP ($
+                  {formatKeyAmount(processedData, "glpBalance", GLP_DECIMALS, 2, true)} MLP ($
                   {formatKeyAmount(processedData, "glpBalanceUsd", USD_DECIMALS, 2, true)})
                 </div>
               </div>
               <div className="App-card-row">
                 <div className="label">Staked</div>
                 <div>
-                  {formatKeyAmount(processedData, "glpBalance", GLP_DECIMALS, 2, true)} GLP ($
+                  {formatKeyAmount(processedData, "glpBalance", GLP_DECIMALS, 2, true)} MLP ($
                   {formatKeyAmount(processedData, "glpBalanceUsd", USD_DECIMALS, 2, true)})
                 </div>
               </div>
@@ -1762,10 +1762,10 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
                             </span>
                             <span>{formatKeyAmount(processedData, "glpAprForNativeToken", 2, 2, true)}%</span>
                           </div>
-                          <div className="Tooltip-row">
+                          {/* <div className="Tooltip-row">
                             <span className="label">Escrowed GMX APR</span>
                             <span>{formatKeyAmount(processedData, "glpAprForEsGmx", 2, 2, true)}%</span>
-                          </div>
+                          </div> */}
                           <br />
                           <div className="muted">
                             APRs are updated weekly on Wednesday and will depend on the fees collected for the week.
@@ -1794,13 +1794,13 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
                               {formatKeyAmount(processedData, "feeGlpTrackerRewardsUsd", USD_DECIMALS, 2, true)})
                             </span>
                           </div>
-                          <div className="Tooltip-row">
+                          {/* <div className="Tooltip-row">
                             <span className="label">Escrowed GMX</span>
                             <span>
                               {formatKeyAmount(processedData, "stakedGlpTrackerRewards", 18, 4)} ($
                               {formatKeyAmount(processedData, "stakedGlpTrackerRewardsUsd", USD_DECIMALS, 2, true)})
                             </span>
-                          </div>
+                          </div> */}
                         </>
                       );
                     }}
@@ -1811,26 +1811,26 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
               <div className="App-card-row">
                 <div className="label">Total Staked</div>
                 <div>
-                  {formatKeyAmount(processedData, "glpSupply", 18, 2, true)} GLP ($
+                  {formatKeyAmount(processedData, "glpSupply", 18, 2, true)} MLP ($
                   {formatKeyAmount(processedData, "glpSupplyUsd", USD_DECIMALS, 2, true)})
                 </div>
               </div>
               <div className="App-card-row">
                 <div className="label">Total Supply</div>
                 <div>
-                  {formatKeyAmount(processedData, "glpSupply", 18, 2, true)} GLP ($
+                  {formatKeyAmount(processedData, "glpSupply", 18, 2, true)} MLP ($
                   {formatKeyAmount(processedData, "glpSupplyUsd", USD_DECIMALS, 2, true)})
                 </div>
               </div>
               <div className="App-card-divider"></div>
               <div className="App-card-options">
-                <Link className="App-button-option App-card-option" to="/buy_glp">
-                  Buy GLP
+                <Link className="App-button-option App-card-option" to="/buy_mlp">
+                  Buy MLP
                 </Link>
-                <Link className="App-button-option App-card-option" to="/buy_glp#redeem">
-                  Sell GLP
+                <Link className="App-button-option App-card-option" to="/buy_mlp#redeem">
+                  Sell MLP
                 </Link>
-                {hasInsurance && (
+                {/* {hasInsurance && (
                   <a
                     className="App-button-option App-card-option"
                     href="https://app.insurace.io/Insurance/Cart?id=124&referrer=545066382753150189457177837072918687520318754040"
@@ -1839,11 +1839,11 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
                   >
                     Purchase Insurance
                   </a>
-                )}
+                )} */}
               </div>
             </div>
           </div>
-          <div className="App-card">
+          {/* <div className="App-card">
             <div className="App-card-title">Escrowed GMX</div>
             <div className="App-card-divider"></div>
             <div className="App-card-content">
@@ -1939,11 +1939,11 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
                 )}
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
 
-      <div>
+      {/* <div>
         <div className="Tab-title-section">
           <div className="Page-title">Vest</div>
           <div className="Page-description">
@@ -2053,12 +2053,12 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
               </div>
             </div>
             <div className="App-card StakeV2-gmx-card">
-              <div className="App-card-title">GLP Vault</div>
+              <div className="App-card-title">MLP Vault</div>
               <div className="App-card-divider"></div>
               <div className="App-card-content">
                 <div className="App-card-row">
                   <div className="label">Staked Tokens</div>
-                  <div>{formatAmount(processedData.glpBalance, 18, 2, true)} GLP</div>
+                  <div>{formatAmount(processedData.glpBalance, 18, 2, true)} MLP</div>
                 </div>
                 <div className="App-card-row">
                   <div className="label">Reserved for Vesting</div>
@@ -2132,7 +2132,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
       <Footer />
     </div>
   );

@@ -48,10 +48,10 @@ import "./DashboardV2.css";
 
 import gmx40Icon from "../../img/ic_gmx_40.svg";
 import glp40Icon from "../../img/ic_glp_40.svg";
-import avalanche16Icon from "../../img/ic_avalanche_16.svg";
+import polygon16Icon from "../../img/ic_polygon_16.svg";
 import arbitrum16Icon from "../../img/ic_arbitrum_16.svg";
 import arbitrum24Icon from "../../img/ic_arbitrum_24.svg";
-import avalanche24Icon from "../../img/ic_avalanche_24.svg";
+import polygon24Icon from "../../img/ic_polygon_24.svg";
 
 import AssetDropdown from "./AssetDropdown";
 import SEO from "../../components/Common/SEO";
@@ -183,7 +183,7 @@ export default function DashboardV2() {
   const glpManagerAddress = getContract(chainId, "GlpManager");
 
   const gmxAddress = getContract(chainId, "GMX");
-  const glpAddress = getContract(chainId, "GLP");
+  const glpAddress = getContract(chainId, "MLP");
   const usdgAddress = getContract(chainId, "USDG");
 
   const tokensForSupplyQuery = [gmxAddress, glpAddress, usdgAddress];
@@ -383,8 +383,8 @@ export default function DashboardV2() {
                   <br />
                   <br />
                   Get lower fees to{" "}
-                  <Link to="/buy_glp" target="_blank" rel="noopener noreferrer">
-                    buy GLP
+                  <Link to="/buy_mlp" target="_blank" rel="noopener noreferrer">
+                    buy MLP
                   </Link>{" "}
                   with {tokenInfo.symbol},&nbsp; and to{" "}
                   <Link to="/trade" target="_blank" rel="noopener noreferrer">
@@ -407,7 +407,7 @@ export default function DashboardV2() {
               )}
               <br />
               <div>
-                <a href="https://mmfinance.gitbook.io/docs/mmx/glp" target="_blank" rel="noopener noreferrer">
+                <a href="https://mmfinance.gitbook.io/docs/mmx/mlp" target="_blank" rel="noopener noreferrer">
                   More Info
                 </a>
               </div>
@@ -528,21 +528,21 @@ export default function DashboardV2() {
           <div className="section-title-icon"></div>
           <div className="section-title-content">
             <div className="Page-title">
-              Stats {chainId === AVALANCHE && <img src={avalanche24Icon} alt="avalanche24Icon" />}
+              Stats {chainId === POLYGON && <img src={polygon24Icon} alt="polygon24Icon" />}
               {chainId === ARBITRUM && <img src={arbitrum24Icon} alt="arbitrum24Icon" />}
             </div>
             <div className="Page-description">
               {chainName} Total Stats start from {totalStatsStartDate}.<br /> For detailed stats:{" "}
               {chainId === POLYGON && (
-                <a href="https://stats.gmx.io" target="_blank" rel="noopener noreferrer">
-                  https://stats.gmx.io
+                <a href="https://stats.madmex.io" target="_blank" rel="noopener noreferrer">
+                  https://stats.madmex.io
                 </a>
               )}
-              {chainId === AVALANCHE && (
-                <a href="https://stats.gmx.io/avalanche" target="_blank" rel="noopener noreferrer">
-                  https://stats.gmx.io/avalanche
+              {/* {chainId === AVALANCHE && (
+                <a href="https://stats.madmex.io/avalanche" target="_blank" rel="noopener noreferrer">
+                  https://stats.madmex.io/avalanche
                 </a>
-              )}
+              )} */}
               .
             </div>
           </div>
@@ -560,19 +560,20 @@ export default function DashboardV2() {
                       handle={`$${formatAmount(tvl, USD_DECIMALS, 0, true)}`}
                       position="right-bottom"
                       renderContent={() => (
-                        <span className="label">{`Assets Under Management: GMX staked (All chains) + GLP pool (${chainName})`}</span>
+                        <span className="label">{`Assets Under Management: MLP pool (${chainName})`}</span>
+                        // <span className="label">{`Assets Under Management: GMX staked (All chains) + MLP pool (${chainName})`}</span>
                       )}
                     />
                   </div>
                 </div>
                 <div className="App-card-row">
-                  <div className="label">GLP Pool</div>
+                  <div className="label">MLP Pool</div>
                   <div>
                     <TooltipComponent
                       handle={`$${formatAmount(aum, USD_DECIMALS, 0, true)}`}
                       position="right-bottom"
                       renderContent={() => (
-                        <span className="label">{`Total value of tokens in GLP pool (${chainName})`}</span>
+                        <span className="label">{`Total value of tokens in MLP pool (${chainName})`}</span>
                       )}
                     />
                   </div>
@@ -712,7 +713,7 @@ export default function DashboardV2() {
           </div>
           <div className="Tab-title-section">
             <div className="Page-title">
-              Tokens {chainId === AVALANCHE && <img src={avalanche24Icon} alt="avalanche24Icon" />}
+              Tokens {chainId === POLYGON && <img src={polygon24Icon} alt="polygon24Icon" />}
               {chainId === ARBITRUM && <img src={arbitrum24Icon} alt="arbitrum24Icon" />}
             </div>
             <div className="Page-description">MLP index token statistics.</div>
@@ -846,15 +847,15 @@ export default function DashboardV2() {
                         {chainId === ARBITRUM ? (
                           <img src={arbitrum16Icon} alt="arbitrum16Icon" className="selected-network-symbol" />
                         ) : (
-                          <img src={avalanche16Icon} alt="avalanche16Icon" className="selected-network-symbol" />
+                          <img src={polygon16Icon} alt="polygon16Icon" className="selected-network-symbol" />
                         )}
                       </div>
                       <div className="App-card-title-mark-info">
-                        <div className="App-card-title-mark-title">GLP</div>
-                        <div className="App-card-title-mark-subtitle">GLP</div>
+                        <div className="App-card-title-mark-title">MLP</div>
+                        <div className="App-card-title-mark-subtitle">MLP</div>
                       </div>
                       <div>
-                        <AssetDropdown assetSymbol="GLP" />
+                        <AssetDropdown assetSymbol="MLP" />
                       </div>
                     </div>
                   </div>
@@ -866,7 +867,7 @@ export default function DashboardV2() {
                     </div>
                     <div className="App-card-row">
                       <div className="label">Supply</div>
-                      <div>{formatAmount(glpSupply, GLP_DECIMALS, 0, true)} GLP</div>
+                      <div>{formatAmount(glpSupply, GLP_DECIMALS, 0, true)} MLP</div>
                     </div>
                     <div className="App-card-row">
                       <div className="label">Total Staked</div>
@@ -917,7 +918,7 @@ export default function DashboardV2() {
                         ))}
                       </Pie>
                       <text x={"50%"} y={"50%"} fill="white" textAnchor="middle" dominantBaseline="middle">
-                        GLP Pool
+                        MLP Pool
                       </text>
                       <Tooltip content={<CustomTooltip />} />
                     </PieChart>
@@ -927,7 +928,8 @@ export default function DashboardV2() {
             </div>
             <div className="token-table-wrapper App-card">
               <div className="App-card-title">
-                MLP Index Composition {chainId === AVALANCHE && <img src={avalanche16Icon} alt="avalanche16Icon" />}
+                MLP Index Composition{" "}
+                {chainId === POLYGON && <img src={polygon16Icon} alt="avapolygon16Iconlanche16Icon" />}
                 {chainId === ARBITRUM && <img src={arbitrum16Icon} alt="arbitrum16Icon" />}
               </div>
               <div className="App-card-divider"></div>
