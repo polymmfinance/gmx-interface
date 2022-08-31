@@ -46,7 +46,7 @@ import Footer from "../../Footer";
 
 import "./DashboardV2.css";
 
-import gmx40Icon from "../../img/ic_gmx_40.svg";
+// import gmx40Icon from "../../img/ic_gmx_40.svg";
 import glp40Icon from "../../img/ic_glp_40.svg";
 import polygon16Icon from "../../img/ic_polygon_16.svg";
 import arbitrum16Icon from "../../img/ic_arbitrum_16.svg";
