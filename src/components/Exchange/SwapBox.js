@@ -1170,7 +1170,7 @@ export default function SwapBox(props) {
       return "Enable Orders";
     }
 
-    if (!isMarketOrder) return `Create ${orderOption.charAt(0) + orderOption.substring(1).toLowerCase()} Order`;
+    if (!isMarketOrder) return `Create ${orderOption.charAt(0) + orderOption.substring(10).toLowerCase()} Order`;
 
     if (isSwap) {
       if (toUsdMax && toUsdMax.lt(fromUsdMin.mul(95).div(100))) {
