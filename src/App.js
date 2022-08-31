@@ -84,8 +84,8 @@ import "./App.css";
 import "./Input.css";
 import "./AppOrder.css";
 
-import logoImg from "./img/logo_GMX.svg";
-import logoSmallImg from "./img/logo_GMX_small.svg";
+import logoImg from "./img/logo_MMX.svg";
+import logoSmallImg from "./img/logo_MMX_small.svg";
 import connectWalletImg from "./img/ic_wallet_24.svg";
 
 import metamaskImg from "./img/metamask.png";
@@ -833,12 +833,12 @@ function FullApp() {
                   connectWallet={connectWallet}
                 />
               </Route>
-              <Route exact path="/jobs">
+              {/* <Route exact path="/jobs">
                 <Jobs />
-              </Route>
-              <Route exact path="/buy_gmx">
+              </Route> */}
+              {/* <Route exact path="/buy_gmx">
                 <BuyGMX />
-              </Route>
+              </Route> */}
               {/* <Route exact path="/ecosystem">
                 <Ecosystem />
               </Route> */}
