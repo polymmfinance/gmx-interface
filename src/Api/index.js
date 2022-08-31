@@ -98,20 +98,21 @@ export function useInfoTokens(library, chainId, active, tokenBalances, fundingRa
   const whitelistedTokens = getWhitelistedTokens(chainId);
   const whitelistedTokenAddresses = whitelistedTokens.map((token) => token.address);
 
-  // const { data: vaultTokenInfo } = useSWR(
-  //   [`useInfoTokens:${active}`, chainId, vaultReaderAddress, "getVaultTokenInfoV4"],
-  //   {
-  //     fetcher: fetcher(library, VaultReader, [
-  //       vaultAddress,
-  //       positionRouterAddress,
-  //       nativeTokenAddress,
-  //       expandDecimals(1, 18),
-  //       whitelistedTokenAddresses,
-  //     ]),
-  //   }
-  // );
+  const { data: vaultTokenInfo } = useSWR(
+    [`useInfoTokens:${active}`, chainId, vaultReaderAddress, "getVaultTokenInfoV4"],
+    {
+      fetcher: fetcher(library, VaultReader, [
+        vaultAddress,
+        positionRouterAddress,
+        nativeTokenAddress,
+        expandDecimals(1, 18),
+        whitelistedTokenAddresses,
+      ]),
+    }
+  );
 
-  const vaultTokenInfo = []
+  console.log(vaultTokenInfo)
+  // const vaultTokenInfo = []
   const indexPricesUrl = getServerUrl(chainId, "/prices");
   const { data: indexPrices } = useSWR([indexPricesUrl], {
     fetcher: (...args) => fetch(...args).then((res) => res.json()),

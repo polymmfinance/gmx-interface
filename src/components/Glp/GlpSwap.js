@@ -1000,6 +1000,7 @@ export default function GlpSwap(props) {
                 tokenFeeBps = feeBps;
               }
               const tokenInfo = getTokenInfo(infoTokens, token.address);
+              // console.log(tokenInfo)
               let managedUsd;
               if (tokenInfo && tokenInfo.managedUsd) {
                 managedUsd = tokenInfo.managedUsd;
@@ -1027,7 +1028,7 @@ export default function GlpSwap(props) {
                 const swapUrl =
                   chainId === ARBITRUM
                     ? `https://app.uniswap.org/#/swap?inputCurrency=${token.address}`
-                    : `https://traderjoexyz.com/trade?inputCurrency=${token.address}`;
+                    : `https://polymm.finance/trade?inputCurrency=${token.address}`;
                 switch (true) {
                   case (isBuying && isCapReached) || (!isBuying && managedUsd?.lt(1)):
                     return (

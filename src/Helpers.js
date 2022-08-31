@@ -2128,6 +2128,7 @@ export const shouldRaiseGasError = (token, amount) => {
 };
 
 export const getTokenInfo = (infoTokens, tokenAddress, replaceNative, nativeTokenAddress) => {
+  // console.log(infoTokens, tokenAddress, replaceNative, nativeTokenAddress)
   if (replaceNative && tokenAddress === nativeTokenAddress) {
     return infoTokens[AddressZero];
   }
@@ -2337,6 +2338,7 @@ export function getInfoTokens(
   indexPrices,
   nativeTokenAddress
 ) {
+  // debugger
   if (!vaultPropsLength) {
     vaultPropsLength = 15;
   }
