@@ -535,15 +535,15 @@ export default function DashboardV2() {
             <div className="Page-description">
               {chainName} Total Stats start from {totalStatsStartDate}.<br /> For detailed stats:{" "}
               {chainId === POLYGON && (
-                <a href="https://stats.gmx.io" target="_blank" rel="noopener noreferrer">
-                  https://stats.gmx.io
+                <a href="https://stats.madmex.io" target="_blank" rel="noopener noreferrer">
+                  https://stats.madmex.io
                 </a>
               )}
-              {chainId === AVALANCHE && (
+              {/* {chainId === AVALANCHE && (
                 <a href="https://stats.gmx.io/avalanche" target="_blank" rel="noopener noreferrer">
                   https://stats.gmx.io/avalanche
                 </a>
-              )}
+              )} */}
               .
             </div>
           </div>
