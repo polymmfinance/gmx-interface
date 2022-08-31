@@ -84,8 +84,8 @@ import "./App.css";
 import "./Input.css";
 import "./AppOrder.css";
 
-import logoImg from "./img/logo_GMX.svg";
-import logoSmallImg from "./img/logo_GMX_small.svg";
+import logoImg from "./img/logo_MMX.svg";
+import logoSmallImg from "./img/logo_MMX_small.svg";
 import connectWalletImg from "./img/ic_wallet_24.svg";
 
 import metamaskImg from "./img/metamask.png";
@@ -183,10 +183,13 @@ function AppHeaderLinks({ HeaderLink, small, openSettings, clickCloseIcon }) {
         <HeaderLink to="/referrals">Referrals</HeaderLink>
       </div>
       <div className="App-header-link-container">
-        <HeaderLink to="/ecosystem">Ecosystem</HeaderLink>
+        {/* <HeaderLink to="/ecosystem">Ecosystem</HeaderLink> */}
+        <a href="https://stats.madmex.io" target="_blank" rel="noopener noreferrer">
+          Analytics
+        </a>
       </div>
       <div className="App-header-link-container">
-        <a href="https://gmxio.gitbook.io/gmx/" target="_blank" rel="noopener noreferrer">
+        <a href="https://mmfinance.gitbook.io/docs/mmx/" target="_blank" rel="noopener noreferrer">
           About
         </a>
       </div>
@@ -706,8 +709,8 @@ function FullApp() {
             <div className="App-header large">
               <div className="App-header-container-left">
                 <HeaderLink isHomeLink={true} exact={true} className="App-header-link-main" to="/">
-                  <img src={logoImg} className="big" alt="GMX Logo" />
-                  <img src={logoSmallImg} className="small" alt="GMX Logo" />
+                  <img src={logoImg} className="big" alt="MMX Logo" />
+                  <img src={logoSmallImg} className="small" alt="MMX Logo" />
                 </HeaderLink>
                 <AppHeaderLinks HeaderLink={HeaderLink} />
               </div>
@@ -735,8 +738,8 @@ function FullApp() {
                     {isDrawerVisible && <FaTimes className="App-header-menu-icon" />}
                   </div>
                   <div className="App-header-link-main clickable" onClick={() => setIsDrawerVisible(!isDrawerVisible)}>
-                    <img src={logoImg} className="big" alt="GMX Logo" />
-                    <img src={logoSmallImg} className="small" alt="GMX Logo" />
+                    <img src={logoImg} className="big" alt="MMX Logo" />
+                    <img src={logoSmallImg} className="small" alt="MMX Logo" />
                   </div>
                 </div>
                 <div className="App-header-container-right">
@@ -823,22 +826,22 @@ function FullApp() {
                   connectWallet={connectWallet}
                 />
               </Route>
-              <Route exact path="/buy_glp">
+              <Route exact path="/buy_mlp">
                 <BuyGlp
                   savedSlippageAmount={savedSlippageAmount}
                   setPendingTxns={setPendingTxns}
                   connectWallet={connectWallet}
                 />
               </Route>
-              <Route exact path="/jobs">
+              {/* <Route exact path="/jobs">
                 <Jobs />
-              </Route>
-              <Route exact path="/buy_gmx">
+              </Route> */}
+              {/* <Route exact path="/buy_gmx">
                 <BuyGMX />
-              </Route>
-              <Route exact path="/ecosystem">
+              </Route> */}
+              {/* <Route exact path="/ecosystem">
                 <Ecosystem />
-              </Route>
+              </Route> */}
               <Route exact path="/referrals">
                 <Referrals pendingTxns={pendingTxns} connectWallet={connectWallet} setPendingTxns={setPendingTxns} />
               </Route>

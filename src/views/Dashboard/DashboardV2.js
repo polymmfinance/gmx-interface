@@ -46,19 +46,19 @@ import Footer from "../../Footer";
 
 import "./DashboardV2.css";
 
-import gmx40Icon from "../../img/ic_gmx_40.svg";
+// import gmx40Icon from "../../img/ic_gmx_40.svg";
 import glp40Icon from "../../img/ic_glp_40.svg";
-import avalanche16Icon from "../../img/ic_avalanche_16.svg";
+import polygon16Icon from "../../img/ic_polygon_16.svg";
 import arbitrum16Icon from "../../img/ic_arbitrum_16.svg";
 import arbitrum24Icon from "../../img/ic_arbitrum_24.svg";
-import avalanche24Icon from "../../img/ic_avalanche_24.svg";
+import polygon24Icon from "../../img/ic_polygon_24.svg";
 
 import AssetDropdown from "./AssetDropdown";
 import SEO from "../../components/Common/SEO";
 import TooltipCard, { TooltipCardRow } from "./TooltipCard";
 import useTotalVolume from "../../hooks/useTotalVolume";
 // const ACTIVE_CHAIN_IDS = [ARBITRUM, AVALANCHE, POLYGON];
-const ACTIVE_CHAIN_IDS = [POLYGON]
+const ACTIVE_CHAIN_IDS = [POLYGON];
 
 const { AddressZero } = ethers.constants;
 
@@ -67,8 +67,8 @@ function getVolumeInfo(hourlyVolumes) {
     return {};
   }
   return {
-    totalVolume: BigNumber.from(parseInt(hourlyVolumes[0].total))
-  }
+    totalVolume: BigNumber.from(parseInt(hourlyVolumes[0].total)),
+  };
   // const dailyVolumes = hourlyVolumes.map((hourlyVolume) => {
   //   const secondsPerHour = 60 * 60;
   //   const minTime = parseInt(Date.now() / 1000 / secondsPerHour) * secondsPerHour - 24 * secondsPerHour;
@@ -101,7 +101,6 @@ function getVolumeInfo(hourlyVolumes) {
 }
 
 function getPositionStats(positionStats) {
-
   if (!positionStats || positionStats.length === 0) {
     return null;
   }
@@ -111,7 +110,7 @@ function getPositionStats(positionStats) {
       acc.totalShortPositionSizes = acc.totalShortPositionSizes.add(parseInt(cv.positionStats.shortOpenInterest));
       acc[ACTIVE_CHAIN_IDS[i]] = {
         totalLongPositionSizes: acc.totalLongPositionSizes,
-        totalShortPositionSizes: acc.totalShortPositionSizes
+        totalShortPositionSizes: acc.totalShortPositionSizes,
       };
       return acc;
     },
@@ -120,7 +119,7 @@ function getPositionStats(positionStats) {
       totalShortPositionSizes: bigNumberify(0),
     }
   );
-  return a
+  return a;
 }
 
 function getCurrentFeesUsd(tokenAddresses, fees, infoTokens) {
@@ -163,7 +162,7 @@ export default function DashboardV2() {
     }
   );
 
-  let { total: totalGmxSupply } = useTotalGmxSupply();
+  // let { total: totalGmxSupply } = useTotalGmxSupply();
 
   const currentVolumeInfo = getVolumeInfo(hourlyVolumes);
 
@@ -184,7 +183,7 @@ export default function DashboardV2() {
   const glpManagerAddress = getContract(chainId, "GlpManager");
 
   const gmxAddress = getContract(chainId, "GMX");
-  const glpAddress = getContract(chainId, "GLP");
+  const glpAddress = getContract(chainId, "MLP");
   const usdgAddress = getContract(chainId, "USDG");
 
   const tokensForSupplyQuery = [gmxAddress, glpAddress, usdgAddress];
@@ -213,10 +212,10 @@ export default function DashboardV2() {
 
   const { infoTokens } = useInfoTokens(library, chainId, active, undefined, undefined);
   const { infoTokens: infoTokensArbitrum } = useInfoTokens(null, ARBITRUM, active, undefined, undefined);
-  const { infoTokens: infoTokensAvax } = useInfoTokens(null, AVALANCHE, active, undefined, undefined);
+  const { infoTokens: infoTokensPolygon } = useInfoTokens(null, POLYGON, active, undefined, undefined);
 
   const { data: currentFees } = useSWR(
-    infoTokensArbitrum[AddressZero].contractMinPrice && infoTokensAvax[AddressZero].contractMinPrice
+    infoTokensArbitrum[AddressZero].contractMinPrice && infoTokensPolygon[AddressZero].contractMinPrice
       ? "Dashboard:currentFees"
       : null,
     {
@@ -237,7 +236,7 @@ export default function DashboardV2() {
               const feeUSD = getCurrentFeesUsd(
                 getWhitelistedTokenAddresses(ACTIVE_CHAIN_IDS[i]),
                 cv,
-                ACTIVE_CHAIN_IDS[i] === ARBITRUM ? infoTokensArbitrum : infoTokensAvax
+                ACTIVE_CHAIN_IDS[i] === ARBITRUM ? infoTokensArbitrum : infoTokensPolygon
               );
               acc[ACTIVE_CHAIN_IDS[i]] = feeUSD;
               acc.total = acc.total.add(feeUSD);
@@ -277,19 +276,19 @@ export default function DashboardV2() {
     active
   );
 
-  let { total: totalGmxInLiquidity } = useTotalGmxInLiquidity(chainId, active);
+  // let { total: totalGmxInLiquidity } = useTotalGmxInLiquidity(chainId, active);
 
-  let { avax: avaxStakedGmx, arbitrum: arbitrumStakedGmx, total: totalStakedGmx } = useTotalGmxStaked();
+  // let { avax: avaxStakedGmx, arbitrum: arbitrumStakedGmx, total: totalStakedGmx } = useTotalGmxStaked();
 
-  let gmxMarketCap;
-  if (gmxPrice && totalGmxSupply) {
-    gmxMarketCap = gmxPrice.mul(totalGmxSupply).div(expandDecimals(1, GMX_DECIMALS));
-  }
+  // let gmxMarketCap;
+  // if (gmxPrice && totalGmxSupply) {
+  //   gmxMarketCap = gmxPrice.mul(totalGmxSupply).div(expandDecimals(1, GMX_DECIMALS));
+  // }
 
-  let stakedGmxSupplyUsd;
-  if (gmxPrice && totalStakedGmx) {
-    stakedGmxSupplyUsd = totalStakedGmx.mul(gmxPrice).div(expandDecimals(1, GMX_DECIMALS));
-  }
+  // let stakedGmxSupplyUsd;
+  // if (gmxPrice && totalStakedGmx) {
+  //   stakedGmxSupplyUsd = totalStakedGmx.mul(gmxPrice).div(expandDecimals(1, GMX_DECIMALS));
+  // }
 
   let aum;
   if (aums && aums.length > 0) {
@@ -310,9 +309,9 @@ export default function DashboardV2() {
 
   let tvl;
   // console.log(glpMarketCap, gmxPrice, totalStakedGmx.toString())
-  if (glpMarketCap && gmxPrice && totalStakedGmx) {
+  if (glpMarketCap) {
     // tvl = glpMarketCap.add(gmxPrice.mul(totalStakedGmx).div(expandDecimals(1, GMX_DECIMALS)));
-    tvl = glpMarketCap
+    tvl = glpMarketCap;
   }
 
   const ethFloorPriceFund = expandDecimals(350 + 148 + 384, 18);
@@ -384,8 +383,8 @@ export default function DashboardV2() {
                   <br />
                   <br />
                   Get lower fees to{" "}
-                  <Link to="/buy_glp" target="_blank" rel="noopener noreferrer">
-                    buy GLP
+                  <Link to="/buy_mlp" target="_blank" rel="noopener noreferrer">
+                    buy MLP
                   </Link>{" "}
                   with {tokenInfo.symbol},&nbsp; and to{" "}
                   <Link to="/trade" target="_blank" rel="noopener noreferrer">
@@ -408,7 +407,7 @@ export default function DashboardV2() {
               )}
               <br />
               <div>
-                <a href="https://gmxio.gitbook.io/gmx/glp" target="_blank" rel="noopener noreferrer">
+                <a href="https://mmfinance.gitbook.io/docs/mmx/mlp" target="_blank" rel="noopener noreferrer">
                   More Info
                 </a>
               </div>
@@ -421,15 +420,15 @@ export default function DashboardV2() {
 
   let stakedPercent = 0;
 
-  if (totalGmxSupply && !totalGmxSupply.isZero() && !totalStakedGmx.isZero()) {
-    stakedPercent = totalStakedGmx.mul(100).div(totalGmxSupply).toNumber();
-  }
+  // if (totalGmxSupply && !totalGmxSupply.isZero() && !totalStakedGmx.isZero()) {
+  //   stakedPercent = totalStakedGmx.mul(100).div(totalGmxSupply).toNumber();
+  // }
 
   let liquidityPercent = 0;
 
-  if (totalGmxSupply && !totalGmxSupply.isZero() && totalGmxInLiquidity) {
-    liquidityPercent = totalGmxInLiquidity.mul(100).div(totalGmxSupply).toNumber();
-  }
+  // if (totalGmxSupply && !totalGmxSupply.isZero() && totalGmxInLiquidity) {
+  //   liquidityPercent = totalGmxInLiquidity.mul(100).div(totalGmxSupply).toNumber();
+  // }
 
   let notStakedPercent = 100 - stakedPercent - liquidityPercent;
 
@@ -451,7 +450,7 @@ export default function DashboardV2() {
     },
   ];
 
-  const totalStatsStartDate = chainId === AVALANCHE ? "06 Jan 2022" : "01 Sep 2021";
+  const totalStatsStartDate = chainId === POLYGON ? "06 Jan 2022" : "01 Sep 2021";
 
   let stableGlp = 0;
   let totalGlp = 0;
@@ -529,7 +528,7 @@ export default function DashboardV2() {
           <div className="section-title-icon"></div>
           <div className="section-title-content">
             <div className="Page-title">
-              Stats {chainId === AVALANCHE && <img src={avalanche24Icon} alt="avalanche24Icon" />}
+              Stats {chainId === POLYGON && <img src={polygon24Icon} alt="polygon24Icon" />}
               {chainId === ARBITRUM && <img src={arbitrum24Icon} alt="arbitrum24Icon" />}
             </div>
             <div className="Page-description">
@@ -540,8 +539,8 @@ export default function DashboardV2() {
                 </a>
               )}
               {/* {chainId === AVALANCHE && (
-                <a href="https://stats.gmx.io/avalanche" target="_blank" rel="noopener noreferrer">
-                  https://stats.gmx.io/avalanche
+                <a href="https://stats.madmex.io/avalanche" target="_blank" rel="noopener noreferrer">
+                  https://stats.madmex.io/avalanche
                 </a>
               )} */}
               .
@@ -561,19 +560,20 @@ export default function DashboardV2() {
                       handle={`$${formatAmount(tvl, USD_DECIMALS, 0, true)}`}
                       position="right-bottom"
                       renderContent={() => (
-                        <span className="label">{`Assets Under Management: GMX staked (All chains) + GLP pool (${chainName})`}</span>
+                        <span className="label">{`Assets Under Management: MLP pool (${chainName})`}</span>
+                        // <span className="label">{`Assets Under Management: GMX staked (All chains) + MLP pool (${chainName})`}</span>
                       )}
                     />
                   </div>
                 </div>
                 <div className="App-card-row">
-                  <div className="label">GLP Pool</div>
+                  <div className="label">MLP Pool</div>
                   <div>
                     <TooltipComponent
                       handle={`$${formatAmount(aum, USD_DECIMALS, 0, true)}`}
                       position="right-bottom"
                       renderContent={() => (
-                        <span className="label">{`Total value of tokens in GLP pool (${chainName})`}</span>
+                        <span className="label">{`Total value of tokens in MLP pool (${chainName})`}</span>
                       )}
                     />
                   </div>
@@ -603,12 +603,7 @@ export default function DashboardV2() {
                     <TooltipComponent
                       position="right-bottom"
                       className="nowrap"
-                      handle={`$${formatAmount(
-                        positionStatsInfo?.[chainId].totalLongPositionSizes,
-                        0,
-                        0,
-                        true
-                      )}`}
+                      handle={`$${formatAmount(positionStatsInfo?.[chainId].totalLongPositionSizes, 0, 0, true)}`}
                       renderContent={() => (
                         <TooltipCard
                           title="Long Positions"
@@ -655,7 +650,7 @@ export default function DashboardV2() {
                           <TooltipCard
                             title="Fees"
                             arbitrum={currentFees?.[ARBITRUM]}
-                            avax={currentFees?.[AVALANCHE]}
+                            polygon={currentFees?.[POLYGON]}
                             total={currentFees?.total}
                           />
                         )}
@@ -718,7 +713,7 @@ export default function DashboardV2() {
           </div>
           <div className="Tab-title-section">
             <div className="Page-title">
-              Tokens {chainId === AVALANCHE && <img src={avalanche24Icon} alt="avalanche24Icon" />}
+              Tokens {chainId === POLYGON && <img src={polygon24Icon} alt="polygon24Icon" />}
               {chainId === ARBITRUM && <img src={arbitrum24Icon} alt="arbitrum24Icon" />}
             </div>
             <div className="Page-description">MLP index token statistics.</div>
@@ -852,15 +847,15 @@ export default function DashboardV2() {
                         {chainId === ARBITRUM ? (
                           <img src={arbitrum16Icon} alt="arbitrum16Icon" className="selected-network-symbol" />
                         ) : (
-                          <img src={avalanche16Icon} alt="avalanche16Icon" className="selected-network-symbol" />
+                          <img src={polygon16Icon} alt="polygon16Icon" className="selected-network-symbol" />
                         )}
                       </div>
                       <div className="App-card-title-mark-info">
-                        <div className="App-card-title-mark-title">GLP</div>
-                        <div className="App-card-title-mark-subtitle">GLP</div>
+                        <div className="App-card-title-mark-title">MLP</div>
+                        <div className="App-card-title-mark-subtitle">MLP</div>
                       </div>
                       <div>
-                        <AssetDropdown assetSymbol="GLP" />
+                        <AssetDropdown assetSymbol="MLP" />
                       </div>
                     </div>
                   </div>
@@ -872,7 +867,7 @@ export default function DashboardV2() {
                     </div>
                     <div className="App-card-row">
                       <div className="label">Supply</div>
-                      <div>{formatAmount(glpSupply, GLP_DECIMALS, 0, true)} GLP</div>
+                      <div>{formatAmount(glpSupply, GLP_DECIMALS, 0, true)} MLP</div>
                     </div>
                     <div className="App-card-row">
                       <div className="label">Total Staked</div>
@@ -923,7 +918,7 @@ export default function DashboardV2() {
                         ))}
                       </Pie>
                       <text x={"50%"} y={"50%"} fill="white" textAnchor="middle" dominantBaseline="middle">
-                        GLP Pool
+                        MLP Pool
                       </text>
                       <Tooltip content={<CustomTooltip />} />
                     </PieChart>
@@ -933,7 +928,8 @@ export default function DashboardV2() {
             </div>
             <div className="token-table-wrapper App-card">
               <div className="App-card-title">
-                MLP Index Composition {chainId === AVALANCHE && <img src={avalanche16Icon} alt="avalanche16Icon" />}
+                MLP Index Composition{" "}
+                {chainId === POLYGON && <img src={polygon16Icon} alt="avapolygon16Iconlanche16Icon" />}
                 {chainId === ARBITRUM && <img src={arbitrum16Icon} alt="arbitrum16Icon" />}
               </div>
               <div className="App-card-divider"></div>

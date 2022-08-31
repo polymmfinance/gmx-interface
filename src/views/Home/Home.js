@@ -11,7 +11,7 @@ import liquidityIcon from "../../img/ic_liquidity.svg";
 import totaluserIcon from "../../img/ic_totaluser.svg";
 
 import arbitrumIcon from "../../img/ic_arbitrum_96.svg";
-import avaIcon from "../../img/ic_avalanche_96.svg";
+import polyIcon from "../../img/ic_polygon_96.svg";
 
 import statsIcon from "../../img/ic_stats.svg";
 import tradingIcon from "../../img/ic_trading.svg";
@@ -25,8 +25,9 @@ import {
   getServerUrl,
   USD_DECIMALS,
   ARBITRUM,
-  AVALANCHE,
+  // AVALANCHE,
   getTotalVolumeSum,
+  POLYGON,
 } from "../../Helpers";
 
 import { useUserStat } from "../../Api";
@@ -45,8 +46,8 @@ export default function Home({ showRedirectModal, redirectPopupTimestamp }) {
   //   answer: "The GMX token is the governance token of the GMX ecosystem, it provides the token owner voting rights on the direction of the GMX platform.<br><br>Additionally, when GMX is staked you will earn 30% of the platform-generated fees, you will also earn Escrowed GMX tokens and Multiplier Points."
   // }, {
   //   id: 3,
-  //   question: "What is the GLP Token? ",
-  //   answer: "The GLP token represents the liquidity users provide to the GMX platform for Swaps and Margin Trading.<br><br>To provide liquidity to GLP you <a href='https://gmx.io/buy_glp' target='_blank'>trade</a> your crypto asset BTC, ETH, LINK, UNI, USDC, USDT, MIM, or FRAX to the liquidity pool, in exchange, you gain exposure to a diversified index of tokens while earning 50% of the platform trading fees and esGMX."
+  //   question: "What is the MLP Token? ",
+  //   answer: "The MLP token represents the liquidity users provide to the GMX platform for Swaps and Margin Trading.<br><br>To provide liquidity to MLP you <a href='https://madmex.io/buy_mlp' target='_blank'>trade</a> your crypto asset BTC, ETH, LINK, UNI, USDC, USDT, MIM, or FRAX to the liquidity pool, in exchange, you gain exposure to a diversified index of tokens while earning 50% of the platform trading fees and esGMX."
   // }, {
   //   id: 4,
   //   question: "What can I trade on GMX? ",
@@ -75,12 +76,12 @@ export default function Home({ showRedirectModal, redirectPopupTimestamp }) {
 
   // AVALANCHE
 
-  const polygonPositionStatsUrl = getServerUrl(AVALANCHE, "/api/position_stats");
+  const polygonPositionStatsUrl = getServerUrl(POLYGON, "/api/position_stats");
   const { data: polygonPositionStats } = useSWR([polygonPositionStatsUrl], {
     fetcher: (...args) => fetch(...args).then((res) => res.json()),
   });
 
-  const polygonTotalVolumeUrl = getServerUrl(AVALANCHE, "/total_volume");
+  const polygonTotalVolumeUrl = getServerUrl(POLYGON, "/total_volume");
   const { data: polygonTotalVolume } = useSWR([polygonTotalVolumeUrl], {
     fetcher: (...args) => fetch(...args).then((res) => res.json()),
   });
@@ -119,7 +120,7 @@ export default function Home({ showRedirectModal, redirectPopupTimestamp }) {
 
   // user stat
   const arbitrumUserStats = useUserStat(ARBITRUM);
-  const polygonUserStats = useUserStat(AVALANCHE);
+  const polygonUserStats = useUserStat(POLYGON);
   let totalUsers = 0;
 
   if (arbitrumUserStats && arbitrumUserStats.uniqueCount) {
@@ -233,7 +234,7 @@ export default function Home({ showRedirectModal, redirectPopupTimestamp }) {
             </div>
             <div className="Home-cta-option Home-cta-option-ava">
               <div className="Home-cta-option-icon">
-                <img src={avaIcon} alt="ava" />
+                <img src={polyIcon} alt="ava" />
               </div>
               <div className="Home-cta-option-info">
                 <div className="Home-cta-option-title">Avalanche</div>
@@ -266,7 +267,7 @@ export default function Home({ showRedirectModal, redirectPopupTimestamp }) {
           <div className="Home-faqs-introduction">
             <div className="Home-faqs-introduction__title">FAQs</div>
             <div className="Home-faqs-introduction__description">Most asked questions. If you wish to learn more, please head to our Documentation page.</div>
-            <a href="https://gmxio.gitbook.io/gmx/" className="default-btn Home-faqs-documentation">Documentation</a>
+            <a href="https://mmfinance.gitbook.io/docs/mmx/" className="default-btn Home-faqs-documentation">Documentation</a>
           </div>
           <div className="Home-faqs-content-block">
             {

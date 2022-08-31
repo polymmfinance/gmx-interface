@@ -26,7 +26,7 @@ import Checkbox from "../../components/Checkbox/Checkbox";
 import "./ClaimEsGmx.css";
 
 import arbitrumIcon from "../../img/ic_arbitrum_96.svg";
-import avaIcon from "../../img/ic_avalanche_96.svg";
+import polyIcon from "../../img/ic_polygon_96.svg";
 
 const VEST_WITH_GMX_ARB = "VEST_WITH_GMX_ARB";
 const VEST_WITH_GLP_ARB = "VEST_WITH_GLP_ARB";
@@ -229,7 +229,7 @@ export default function ClaimEsGmx({ setPendingTxns }) {
         result);
     }
 
-    stakingToken = "GLP";
+    stakingToken = "MLP";
   }
 
   if (selectedOption === VEST_WITH_GMX_AVAX && avaxVestingData) {
@@ -257,7 +257,7 @@ export default function ClaimEsGmx({ setPendingTxns }) {
         result);
     }
 
-    stakingToken = "GLP";
+    stakingToken = "MLP";
   }
 
   const getError = () => {
@@ -387,7 +387,7 @@ export default function ClaimEsGmx({ setPendingTxns }) {
                 isChecked={selectedOption === VEST_WITH_GLP_ARB}
                 setIsChecked={() => setSelectedOption(VEST_WITH_GLP_ARB)}
               >
-                <div className="ClaimEsGmx-option-label">Vest with GLP on Arbitrum</div>
+                <div className="ClaimEsGmx-option-label">Vest with MLP on Arbitrum</div>
                 <img src={arbitrumIcon} alt="arbitrum" />
               </Checkbox>
               <Checkbox
@@ -396,15 +396,15 @@ export default function ClaimEsGmx({ setPendingTxns }) {
                 setIsChecked={() => setSelectedOption(VEST_WITH_GMX_AVAX)}
               >
                 <div className="ClaimEsGmx-option-label">Vest with GMX on Avalanche</div>
-                <img src={avaIcon} alt="avalanche" />
+                <img src={polyIcon} alt="polygon" />
               </Checkbox>
               <Checkbox
                 className="avalanche btn btn-primary btn-left btn-lg"
                 isChecked={selectedOption === VEST_WITH_GLP_AVAX}
                 setIsChecked={() => setSelectedOption(VEST_WITH_GLP_AVAX)}
               >
-                <div className="ClaimEsGmx-option-label avalanche">Vest with GLP on Avalanche</div>
-                <img src={avaIcon} alt="avalanche" />
+                <div className="ClaimEsGmx-option-label avalanche">Vest with MLP on Avalanche</div>
+                <img src={polyIcon} alt="polygon" />
               </Checkbox>
             </div>
             <br />

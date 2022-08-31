@@ -53,11 +53,12 @@ export * from "./prices";
 const { AddressZero } = ethers.constants;
 
 function getGmxGraphClient(chainId) {
-  if (chainId === ARBITRUM) {
-    return arbitrumGraphClient;
-  } else if (chainId === AVALANCHE) {
-    return avalancheGraphClient;
-  } else if (chainId === POLYGON) {
+  // if (chainId === ARBITRUM) {
+  //   return arbitrumGraphClient;
+  // } else if (chainId === AVALANCHE) {
+  //   return avalancheGraphClient;
+  // }
+  if (chainId === POLYGON) {
     return polygonGraphClient; // TODO: need a graph client for polygon
   }
   throw new Error(`Unsupported chain ${chainId}`);
@@ -97,19 +98,20 @@ export function useInfoTokens(library, chainId, active, tokenBalances, fundingRa
   const whitelistedTokens = getWhitelistedTokens(chainId);
   const whitelistedTokenAddresses = whitelistedTokens.map((token) => token.address);
 
-  const { data: vaultTokenInfo } = useSWR(
-    [`useInfoTokens:${active}`, chainId, vaultReaderAddress, "getVaultTokenInfoV4"],
-    {
-      fetcher: fetcher(library, VaultReader, [
-        vaultAddress,
-        positionRouterAddress,
-        nativeTokenAddress,
-        expandDecimals(1, 18),
-        whitelistedTokenAddresses,
-      ]),
-    }
-  );
+  // const { data: vaultTokenInfo } = useSWR(
+  //   [`useInfoTokens:${active}`, chainId, vaultReaderAddress, "getVaultTokenInfoV4"],
+  //   {
+  //     fetcher: fetcher(library, VaultReader, [
+  //       vaultAddress,
+  //       positionRouterAddress,
+  //       nativeTokenAddress,
+  //       expandDecimals(1, 18),
+  //       whitelistedTokenAddresses,
+  //     ]),
+  //   }
+  // );
 
+  const vaultTokenInfo = []
   const indexPricesUrl = getServerUrl(chainId, "/prices");
   const { data: indexPrices } = useSWR([indexPricesUrl], {
     fetcher: (...args) => fetch(...args).then((res) => res.json()),
@@ -521,6 +523,11 @@ export function useHasOutdatedUi() {
 }
 
 export function useGmxPrice(chainId, libraries, active) {
+  return {
+    gmxPrice: bigNumberify(0),
+    gmxPriceFromArbitrum: bigNumberify(0),
+    gmxPriceFromAvalanch: bigNumberify(0)
+  }
   const arbitrumLibrary = libraries && libraries.arbitrum ? libraries.arbitrum : undefined;
   const { data: gmxPriceFromArbitrum, mutate: mutateFromArbitrum } = useGmxPriceFromArbitrum(arbitrumLibrary, active);
   const { data: gmxPriceFromAvalanche, mutate: mutateFromAvalanche } = useGmxPriceFromAvalanche();

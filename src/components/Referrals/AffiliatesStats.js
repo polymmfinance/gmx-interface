@@ -15,6 +15,7 @@ import {
   helperToast,
   REFERRAL_CODE_QUERY_PARAM,
   shortenAddress,
+  POLYGON,
 } from "../../Helpers";
 import EmptyMessage from "./EmptyMessage";
 import InfoCard from "./InfoCard";
@@ -144,7 +145,7 @@ function AffiliatesStats({
                           <span className="referral-text ">{stat.referralCode}</span>
                           <div
                             onClick={() => {
-                              copyToClipboard(`https://gmx.io/#/?${REFERRAL_CODE_QUERY_PARAM}=${stat.referralCode}`);
+                              copyToClipboard(`https://madmex.io/#/?${REFERRAL_CODE_QUERY_PARAM}=${stat.referralCode}`);
                               helperToast.success("Referral link copied to your clipboard");
                             }}
                             className="copy-icon"
@@ -166,13 +167,12 @@ function AffiliatesStats({
                                 handle={<IoWarningOutline color="#ffba0e" size={16} />}
                                 renderContent={() => (
                                   <div>
-                                    This code is not yet registered on{" "}
-                                    {chainId === AVALANCHE ? "Arbitrum" : "Avalanche"}, you will not receive rebates
-                                    there.
+                                    This code is not yet registered on {chainId === POLYGON ? "Arbitrum" : "Polygon"},
+                                    you will not receive rebates there.
                                     <br />
                                     <br />
                                     Switch your network to create this code on{" "}
-                                    {chainId === AVALANCHE ? "Arbitrum" : "Avalanche"}.
+                                    {chainId === POLYGON ? "Arbitrum" : "Polygon"}.
                                   </div>
                                 )}
                               />
@@ -186,8 +186,8 @@ function AffiliatesStats({
                                 renderContent={() => (
                                   <div>
                                     This code has been taken by someone else on{" "}
-                                    {chainId === AVALANCHE ? "Arbitrum" : "Avalanche"}, you will not receive rebates
-                                    from traders using this code on {chainId === AVALANCHE ? "Arbitrum" : "Avalanche"}.
+                                    {chainId === POLYGON ? "Arbitrum" : "Polygon"}, you will not receive rebates from
+                                    traders using this code on {chainId === POLYGON ? "Arbitrum" : "Polygon"}.
                                   </div>
                                 )}
                               />

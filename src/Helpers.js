@@ -60,13 +60,15 @@ const MAX_GAS_PRICE_MAP = {
   [POLYGON]: "400000000000",
 };
 
-const alchemyWhitelistedDomains = ["gmx.io", "app.gmx.io"];
+const alchemyWhitelistedDomains = ["madmex.io", "app.madmex.io"];
 
 export function getDefaultArbitrumRpcUrl() {
+  return ""
   return "https://arb1.arbitrum.io/rpc";
 }
 
 export function getAlchemyHttpUrl() {
+  return ""
   if (alchemyWhitelistedDomains.includes(window.location.host)) {
     return "https://arb-mainnet.g.alchemy.com/v2/ha7CFsr1bx5ZItuR6VZBbhKozcKDY4LZ";
   }
@@ -74,6 +76,7 @@ export function getAlchemyHttpUrl() {
 }
 
 export function getAlchemyWsUrl() {
+  return ""
   if (alchemyWhitelistedDomains.includes(window.location.host)) {
     return "wss://arb-mainnet.g.alchemy.com/v2/ha7CFsr1bx5ZItuR6VZBbhKozcKDY4LZ";
   }
@@ -81,8 +84,12 @@ export function getAlchemyWsUrl() {
 }
 
 const ARBITRUM_RPC_PROVIDERS = [getDefaultArbitrumRpcUrl()];
-const POLYGON_RPC_PROVIDERS = ["https://polygon-rpc.com", "https://rpc-mainnet.matic.quiknode.pro", "https://polygonapi.terminet.io/rpc"];
-const AVALANCHE_RPC_PROVIDERS = ["https://api.avax.network/ext/bc/C/rpc"];
+const POLYGON_RPC_PROVIDERS = [
+  "https://polygon-rpc.com",
+  "https://rpc-mainnet.matic.quiknode.pro",
+  "https://polygonapi.terminet.io/rpc",
+];
+const AVALANCHE_RPC_PROVIDERS = [""];
 export const WALLET_CONNECT_LOCALSTORAGE_KEY = "walletconnect";
 export const WALLET_LINK_LOCALSTORAGE_PREFIX = "-walletlink";
 export const SHOULD_EAGER_CONNECT_LOCALSTORAGE_KEY = "eagerconnect";
@@ -143,7 +150,7 @@ export const IS_PNL_IN_LEVERAGE_KEY = "Exchange-swap-is-pnl-in-leverage";
 export const SHOW_PNL_AFTER_FEES_KEY = "Exchange-swap-show-pnl-after-fees";
 export const DISABLE_ORDER_VALIDATION_KEY = "disable-order-validation";
 export const SHOULD_SHOW_POSITION_LINES_KEY = "Exchange-swap-should-show-position-lines";
-export const REFERRAL_CODE_KEY = "GMX-referralCode";
+export const REFERRAL_CODE_KEY = "MMX-referralCode";
 export const REFERRAL_CODE_QUERY_PARAM = "ref";
 export const REFERRALS_SELECTED_TAB_KEY = "Referrals-selected-tab";
 export const MAX_REFERRAL_CODE_LENGTH = 20;
@@ -154,6 +161,7 @@ export const TRIGGER_PREFIX_BELOW = "<";
 export const MIN_PROFIT_BIPS = 0;
 
 export const GLPPOOLCOLORS = {
+  MATIC: "#b638e8",
   ETH: "#6062a6",
   BTC: "#F7931A",
   "BTC.b": "#F7931A",
@@ -180,7 +188,7 @@ export const ICONLINKS = {
       coingecko: "https://www.coingecko.com/en/coins/gmx",
       arbitrum: "https://arbiscan.io/address/0xfc5a1a6eb076a2c7ad06ed22c90d7e710e35ad0a",
     },
-    GLP: {
+    MLP: {
       arbitrum: "https://arbiscan.io/token/0x1aDDD80E6039594eE970E5872D247bf0414C8903",
     },
     ETH: {
@@ -224,7 +232,7 @@ export const ICONLINKS = {
       coingecko: "https://www.coingecko.com/en/coins/gmx",
       avalanche: "https://snowtrace.io/address/0x62edc0692bd897d2295872a9ffcac5425011c661",
     },
-    GLP: {
+    MLP: {
       avalanche: "https://snowtrace.io/address/0x9e295B5B976a184B14aD8cd72413aD846C299660",
     },
     AVAX: {
@@ -257,42 +265,29 @@ export const ICONLINKS = {
   },
   137: {
     MATIC: {
-      coingecko: "https://www.coingecko.com/en/coins/matic",
-      avalanche: "https://snowtrace.io/address/0x62edc0692bd897d2295872a9ffcac5425011c661",
+      coingecko: "https://www.coingecko.com/en/coins/polygon",
+      polygon: "https://polygonscan.com/token/0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
     },
-    GMX: {
-      coingecko: "https://www.coingecko.com/en/coins/gmx",
-      avalanche: "https://snowtrace.io/address/0x62edc0692bd897d2295872a9ffcac5425011c661",
-    },
-    GLP: {
-      avalanche: "https://snowtrace.io/address/0x9e295B5B976a184B14aD8cd72413aD846C299660",
-    },
-    AVAX: {
-      coingecko: "https://www.coingecko.com/en/coins/avalanche",
+    // GMX: {
+    //   coingecko: "https://www.coingecko.com/en/coins/gmx",
+    //   avalanche: "https://snowtrace.io/address/0x62edc0692bd897d2295872a9ffcac5425011c661",
+    //   polygon: "https://polygonscan.com/token/",
+    // },
+    MLP: {
+      coingecko: "https://www.coingecko.com/",
+      polygon: "https://polygonscan.com",
     },
     ETH: {
       coingecko: "https://www.coingecko.com/en/coins/weth",
-      avalanche: "https://snowtrace.io/address/0x49d5c2bdffac6ce2bfdb6640f4f80f226bc10bab",
+      polygon: "https://polygonscan.com/token/0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
     },
     BTC: {
       coingecko: "https://www.coingecko.com/en/coins/wrapped-bitcoin",
-      avalanche: "https://snowtrace.io/address/0x50b7545627a5162f82a992c33b87adc75187b218",
-    },
-    "BTC.b": {
-      coingecko: "https://www.coingecko.com/en/coins/wrapped-bitcoin",
-      avalanche: "https://snowtrace.io/address/0x152b9d0FdC40C096757F570A51E494bd4b943E50",
-    },
-    MIM: {
-      coingecko: "https://www.coingecko.com/en/coins/magic-internet-money",
-      avalanche: "https://snowtrace.io/address/0x130966628846bfd36ff31a822705796e8cb8c18d",
-    },
-    "USDC.e": {
-      coingecko: "https://www.coingecko.com/en/coins/usd-coin-avalanche-bridged-usdc-e",
-      avalanche: "https://snowtrace.io/address/0xa7d7079b0fead91f3e65f86e8915cb59c1a4c664",
+      polygon: "https://polygonscan.com/token/0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6",
     },
     USDC: {
       coingecko: "https://www.coingecko.com/en/coins/usd-coin",
-      avalanche: "https://snowtrace.io/address/0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e",
+      polygon: "https://polygonscan.com/token/0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
     },
   },
 };
@@ -307,7 +302,7 @@ export const platformTokens = {
       address: getContract(ARBITRUM, "GMX"),
       imageUrl: "https://assets.coingecko.com/coins/images/18323/small/arbit.png?1631532468",
     },
-    GLP: {
+    MLP: {
       name: "MMX LP",
       symbol: "MLP",
       decimals: 18,
@@ -324,7 +319,7 @@ export const platformTokens = {
       address: getContract(AVALANCHE, "GMX"),
       imageUrl: "https://assets.coingecko.com/coins/images/18323/small/arbit.png?1631532468",
     },
-    GLP: {
+    MLP: {
       name: "MMX LP",
       symbol: "MLP",
       decimals: 18,
@@ -334,7 +329,8 @@ export const platformTokens = {
   },
 };
 
-const supportedChainIds = [ARBITRUM, AVALANCHE, POLYGON];
+// const supportedChainIds = [ARBITRUM, AVALANCHE, POLYGON];
+const supportedChainIds = [POLYGON];
 const injectedConnector = new InjectedConnector({
   supportedChainIds,
 });
@@ -343,8 +339,8 @@ const getWalletConnectConnector = () => {
   const chainId = localStorage.getItem(SELECTED_NETWORK_LOCAL_STORAGE_KEY) || DEFAULT_CHAIN_ID;
   return new WalletConnectConnector({
     rpc: {
-      [AVALANCHE]: AVALANCHE_RPC_PROVIDERS[0],
-      [ARBITRUM]: ARBITRUM_RPC_PROVIDERS[0],
+      // [AVALANCHE]: AVALANCHE_RPC_PROVIDERS[0],
+      // [ARBITRUM]: ARBITRUM_RPC_PROVIDERS[0],
       [POLYGON]: POLYGON_RPC_PROVIDERS[0],
     },
     qrcode: true,
@@ -495,7 +491,7 @@ export function getServerBaseUrl(chainId) {
   //   return "https://gmx-avax-server.uc.r.appspot.com";
   // }
   // return "https://gmx-server-mainnet.uw.r.appspot.com";
-  return "http://localhost:3113"
+  return "http://localhost:3113";
 }
 
 export function getServerUrl(chainId, path) {
@@ -1302,12 +1298,12 @@ const RPC_PROVIDERS = {
   [MAINNET]: BSC_RPC_PROVIDERS,
   [ARBITRUM]: ARBITRUM_RPC_PROVIDERS,
   [AVALANCHE]: AVALANCHE_RPC_PROVIDERS,
-  [POLYGON]: POLYGON_RPC_PROVIDERS
+  [POLYGON]: POLYGON_RPC_PROVIDERS,
 };
 
 const FALLBACK_PROVIDERS = {
-  [ARBITRUM]: [getAlchemyHttpUrl()],
-  [AVALANCHE]: ["https://avax-mainnet.gateway.pokt.network/v1/lb/626f37766c499d003aada23b"],
+  [ARBITRUM]: [""],
+  [AVALANCHE]: [""],
 };
 
 export function shortenAddress(address, length) {
@@ -1408,16 +1404,16 @@ export function useChainId() {
 export function useENS(address) {
   const [ensName, setENSName] = useState();
 
-  useEffect(() => {
-    async function resolveENS() {
-      if (address) {
-        const provider = new ethers.providers.JsonRpcProvider("https://rpc.ankr.com/eth");
-        const name = await provider.lookupAddress(address.toLowerCase());
-        if (name) setENSName(name);
-      }
-    }
-    resolveENS();
-  }, [address]);
+  // useEffect(() => {
+  //   async function resolveENS() {
+  //     if (address) {
+  //       const provider = new ethers.providers.JsonRpcProvider("https://rpc.ankr.com/eth");
+  //       const name = await provider.lookupAddress(address.toLowerCase());
+  //       if (name) setENSName(name);
+  //     }
+  //   }
+  //   resolveENS();
+  // }, [address]);
 
   return { ensName };
 }
@@ -2216,7 +2212,7 @@ export const addNetwork = async (metadata) => {
 };
 
 export const switchNetwork = async (chainId, active) => {
-  console.log({chainId, active})
+  console.log({ chainId, active });
   if (!active) {
     // chainId in localStorage allows to switch network even if wallet is not connected
     // or there is no wallet at all
@@ -2361,7 +2357,7 @@ export function getInfoTokens(
 
   for (let i = 0; i < whitelistedTokens.length; i++) {
     const token = JSON.parse(JSON.stringify(whitelistedTokens[i]));
-    if (vaultTokenInfo) {
+    if (vaultTokenInfo && vaultTokenInfo.length) {
       token.poolAmount = vaultTokenInfo[i * vaultPropsLength];
       token.reservedAmount = vaultTokenInfo[i * vaultPropsLength + 1];
       token.availableAmount = token.poolAmount.sub(token.reservedAmount);
@@ -2457,7 +2453,7 @@ export function getTotalVolumeSum(volumes) {
   //   volume = volume.add(volumes[i].data.volume);
   // }
   // return volume;
-  return BigNumber.from(parseInt(volumes.total))
+  return BigNumber.from(parseInt(volumes.total));
 }
 
 export function getBalanceAndSupplyData(balances) {
@@ -2764,7 +2760,7 @@ export function useDebounce(value, delay) {
 }
 
 export function isDevelopment() {
-  return !window.location.host?.includes("gmx.io") && !window.location.host?.includes("ipfs.io");
+  return !window.location.host?.includes("madmex.io") && !window.location.host?.includes("ipfs.io");
 }
 
 export function isLocal() {
@@ -2776,7 +2772,7 @@ export function getHomeUrl() {
     return "http://localhost:3010";
   }
 
-  return "https://gmx.io";
+  return "https://madmex.io";
 }
 
 export function getAppBaseUrl() {
@@ -2784,7 +2780,7 @@ export function getAppBaseUrl() {
     return "http://localhost:3011/#";
   }
 
-  return "https://app.gmx.io/#";
+  return "https://app.madmex.io/#";
 }
 
 export function getRootShareApiUrl() {
@@ -2792,7 +2788,7 @@ export function getRootShareApiUrl() {
     return "https://gmxs.vercel.app";
   }
 
-  return "https://share.gmx.io";
+  return "https://share.madmex.io";
 }
 
 export function getTradePageUrl() {
@@ -2800,7 +2796,7 @@ export function getTradePageUrl() {
     return "http://localhost:3011/#/trade";
   }
 
-  return "https://app.gmx.io/#/trade";
+  return "https://app.madmex.io/#/trade";
 }
 
 export function importImage(name) {

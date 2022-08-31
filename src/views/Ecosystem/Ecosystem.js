@@ -5,18 +5,18 @@ import Footer from "../../Footer";
 import { getPageTitle, ARBITRUM, AVALANCHE, POLYGON } from "../../Helpers";
 
 import arbitrumIcon from "../../img/ic_arbitrum_16.svg";
-import avalancheIcon from "../../img/ic_avalanche_16.svg";
+import polygonIcon from "../../img/ic_polygon_16.svg";
 
 import "./Ecosystem.css";
 
 const NETWORK_ICONS = {
   [ARBITRUM]: arbitrumIcon,
-  [AVALANCHE]: avalancheIcon,
+  [POLYGON]: polygonIcon,
 };
 
 const NETWORK_ICON_ALTS = {
   [ARBITRUM]: "Arbitrum Icon",
-  [AVALANCHE]: "Avalanche Icon",
+  [POLYGON]: "Polygon Icon",
 };
 
 export default function Ecosystem() {
@@ -100,7 +100,7 @@ export default function Ecosystem() {
       title: "MMX Returns Calculator",
       link: "https://docs.google.com/spreadsheets/u/4/d/1mQZlztz_NpTg5qQiYIzc_Ls1OTLfMOUtmEQN-WW8jj4/copy",
       linkLabel: "Google Spreadsheet",
-      about: "Returns calculator for MMX and GLP",
+      about: "Returns calculator for MMX and MLP",
       creatorLabel: "@AStoicTrader1",
       creatorLink: "https://twitter.com/AStoicTrader1",
       chainIds: [ARBITRUM, AVALANCHE],

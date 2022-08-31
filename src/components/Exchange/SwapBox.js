@@ -196,15 +196,15 @@ export default function SwapBox(props) {
   const isShort = swapOption === SHORT;
   const isSwap = swapOption === SWAP;
 
-  const getLeaderboardLink = () => {
-    if (chainId === ARBITRUM) {
-      return "https://www.gmx.house/arbitrum/leaderboard";
-    }
-    if (chainId === AVALANCHE) {
-      return "https://www.gmx.house/avalanche/leaderboard";
-    }
-    return "https://www.gmx.house";
-  };
+  // const getLeaderboardLink = () => {
+  //   if (chainId === ARBITRUM) {
+  //     return "https://www.gmx.house/arbitrum/leaderboard";
+  //   }
+  //   if (chainId === AVALANCHE) {
+  //     return "https://www.gmx.house/avalanche/leaderboard";
+  //   }
+  //   return "https://www.gmx.house";
+  // };
 
   function getTokenLabel() {
     switch (true) {
@@ -1170,7 +1170,7 @@ export default function SwapBox(props) {
       return "Enable Orders";
     }
 
-    if (!isMarketOrder) return `Create ${orderOption.charAt(0) + orderOption.substring(1).toLowerCase()} Order`;
+    if (!isMarketOrder) return `Create ${orderOption.charAt(0) + orderOption.substring(10).toLowerCase()} Order`;
 
     if (isSwap) {
       if (toUsdMax && toUsdMax.lt(fromUsdMin.mul(95).div(100))) {
@@ -2163,7 +2163,7 @@ export default function SwapBox(props) {
             <br />
             For screenshots and more information, please see the{" "}
             <a
-              href="https://gmxio.gitbook.io/gmx/trading#stop-loss-take-profit-orders"
+              href="https://mmfinance.gitbook.io/docs/mmx/trading#stop-loss-take-profit-orders"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -2251,7 +2251,7 @@ export default function SwapBox(props) {
                       <br />
                       <br />
                       <a
-                        href="https://gmxio.gitbook.io/gmx/trading#opening-a-position"
+                        href="https://mmfinance.gitbook.io/docs/mmx/trading#opening-a-position"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -2280,7 +2280,7 @@ export default function SwapBox(props) {
                       <br />
                       <br />
                       <a
-                        href="https://gmxio.gitbook.io/gmx/trading#opening-a-position"
+                        href="https://mmfinance.gitbook.io/docs/mmx/trading#opening-a-position"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -2317,7 +2317,7 @@ export default function SwapBox(props) {
                       )}
                       <br />
                       <a
-                        href="https://gmxio.gitbook.io/gmx/trading#opening-a-position"
+                        href="https://mmfinance.gitbook.io/docs/mmx/trading#opening-a-position"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -2363,21 +2363,25 @@ export default function SwapBox(props) {
         <div className="App-card-divider"></div>
         <div className="Exchange-info-row">
           <div className="Exchange-info-label-button">
-            <a href="https://gmxio.gitbook.io/gmx/trading" target="_blank" rel="noopener noreferrer">
+            <a href="https://mmfinance.gitbook.io/docs/mmx/trading" target="_blank" rel="noopener noreferrer">
               Trading guide
             </a>
           </div>
         </div>
-        <div className="Exchange-info-row">
+        {/* <div className="Exchange-info-row">
           <div className="Exchange-info-label-button">
             <a href={getLeaderboardLink()} target="_blank" rel="noopener noreferrer">
               Leaderboard
             </a>
           </div>
-        </div>
+        </div> */}
         <div className="Exchange-info-row">
           <div className="Exchange-info-label-button">
-            <a href="https://gmxio.gitbook.io/gmx/trading#backup-rpc-urls" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://mmfinance.gitbook.io/docs/mmx/trading#backup-rpc-urls"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Speed up page loading
             </a>
           </div>

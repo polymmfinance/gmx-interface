@@ -28,7 +28,7 @@ export function RedirectPopupModal({
       setIsVisible={setRedirectModalVisible}
       label="Launch App"
     >
-      You are leaving GMX.io and will be redirected to a third party, independent website.
+      You are leaving MADMEX.io and will be redirected to a third party, independent website.
       <br />
       <br />
       The website is a community deployed and maintained instance of the open source{" "}
@@ -43,18 +43,18 @@ export function RedirectPopupModal({
       <br />
       <br />
       Alternative links can be found in the{" "}
-      <a href="https://gmxio.gitbook.io/gmx/app-links" target="_blank" rel="noopener noreferrer">
+      <a href="https://mmfinance.gitbook.io/docs/mmx/app-links" target="_blank" rel="noopener noreferrer">
         docs
       </a>
       .
       <br />
       <br />
       By clicking Agree you accept the{" "}
-      <a href="https://gmx.io/#/terms-and-conditions" target="_blank" rel="noopener noreferrer">
+      <a href="https://madmex.io/#/terms-and-conditions" target="_blank" rel="noopener noreferrer">
         T&Cs
       </a>{" "}
       and{" "}
-      <a href="https://gmx.io/#/referral-terms" target="_blank" rel="noopener noreferrer">
+      <a href="https://madmex.io/#/referral-terms" target="_blank" rel="noopener noreferrer">
         Referral T&Cs
       </a>
       .

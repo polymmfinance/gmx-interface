@@ -103,7 +103,7 @@ export function useUserCodesOnAllChain(account) {
   `;
   useEffect(() => {
     async function main() {
-      const [arbitrumCodes, avalancheCodes] = await Promise.all(
+      const [arbitrumCodes, avalancheCodes, polygonCodes] = await Promise.all(
         ACTIVE_CHAINS.map((chainId) => {
           return getGraphClient(chainId)
             .query({ query, variables: { account: (account || "").toLowerCase() } })
@@ -112,9 +112,10 @@ export function useUserCodesOnAllChain(account) {
             });
         })
       );
-      const [codeOwnersOnAvax = [], codeOwnersOnArbitrum = []] = await Promise.all([
+      const [codeOwnersOnAvax = [], codeOwnersOnArbitrum = [], codeOwnersOnPolygon = []] = await Promise.all([
         getCodeOwnersData(AVALANCHE, account, arbitrumCodes),
         getCodeOwnersData(ARBITRUM, account, avalancheCodes),
+        getCodeOwnersData(POLYGON, account, polygonCodes),
       ]);
 
       setData({
@@ -123,6 +124,10 @@ export function useUserCodesOnAllChain(account) {
           return acc;
         }, {}),
         [AVALANCHE]: codeOwnersOnArbitrum.reduce((acc, cv) => {
+          acc[cv.code] = cv;
+          return acc;
+        }, {}),
+        [POLYGON]: codeOwnersOnPolygon.reduce((acc, cv) => {
           acc[cv.code] = cv;
           return acc;
         }, {}),

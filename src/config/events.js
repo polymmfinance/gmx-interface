@@ -7,11 +7,11 @@ export const homeEventsData = [
     isActive: true,
     validTill: "10 Jul 2022, 12:00",
     bodyText:
-      "Updates have been applied to the GMX frontend to inform users of the separation between gmx.io and app.gmx.io",
+      "Updates have been applied to the GMX frontend to inform users of the separation between madmex.io and app.madmex.io",
     buttons: [
       {
         text: "Read More",
-        link: "https://medium.com/@gmx.io/gmx-frontend-updates-8d13f2346e1e",
+        link: "https://medium.com/@madmex.io/gmx-frontend-updates-8d13f2346e1e",
         newTab: true,
       },
     ],
@@ -26,7 +26,7 @@ export const homeEventsData = [
     buttons: [
       {
         text: "Read More",
-        link: "https://medium.com/@gmx.io/arbitrum-nitro-5f88c03a46fe",
+        link: "https://medium.com/@madmex.io/arbitrum-nitro-5f88c03a46fe",
         newTab: true,
       },
     ],
@@ -43,12 +43,12 @@ export const appEventsData = [
   //   buttons: [
   //     {
   //       text: "Read more",
-  //       link: "https://gmxio.gitbook.io/gmx/roadmap#30-march-2022",
+  //       link: "https://mmfinance.gitbook.io/docs/mmx/roadmap#30-march-2022",
   //       newTab: true,
   //     },
   //     {
   //       text: "Trade Now",
-  //       link: "https://gmx.io/trade",
+  //       link: "https://madmex.io/trade",
   //     },
   //   ],
   // },
@@ -61,7 +61,7 @@ export const appEventsData = [
   //   buttons: [
   //     {
   //       text: "Trade Now",
-  //       link: "https://gmx.io/trade",
+  //       link: "https://madmex.io/trade",
   //     },
   //   ],
   // },
@@ -74,7 +74,7 @@ export const appEventsData = [
   //   buttons: [
   //     {
   //       text: "Learn More",
-  //       link: "https://gmxio.gitbook.io/gmx/trading#backup-rpc-urls",
+  //       link: "https://mmfinance.gitbook.io/docs/mmx/trading#backup-rpc-urls",
   //       newTab: true,
   //     },
   //   ],
@@ -88,11 +88,11 @@ export const appEventsData = [
   //   buttons: [
   //     {
   //       text: "Read More",
-  //       link: "https://gmx.io/referrals",
+  //       link: "https://madmex.io/referrals",
   //     },
   //     {
   //       text: "Join Now",
-  //       link: "https://gmx.io/referrals",
+  //       link: "https://madmex.io/referrals",
   //     },
   //   ],
   // },
@@ -106,7 +106,7 @@ export const appEventsData = [
   //   buttons: [
   //     {
   //       text: "Read More",
-  //       link: "https://medium.com/@gmx.io/gmx-arbitrum-odyssey-fc12cba2d10d",
+  //       link: "https://medium.com/@madmex.io/gmx-arbitrum-odyssey-fc12cba2d10d",
   //     },
   //   ],
   // },
@@ -120,7 +120,7 @@ export const appEventsData = [
   //   buttons: [
   //     {
   //       text: "Learn More",
-  //       link: "https://gmxio.gitbook.io/gmx/trading#backup-rpc-urls",
+  //       link: "https://mmfinance.gitbook.io/docs/mmx/trading#backup-rpc-urls",
   //       newTab: true,
   //     },
   //   ],
@@ -145,11 +145,11 @@ export const appEventsData = [
   //   isActive: true,
   //   validTill: "6 Jul 2022, 12:00",
   //   bodyText:
-  //     "On 6 Jul 2022, updates will be applied to the GMX frontend to inform users of the separation between gmx.io and app.gmx.io",
+  //     "On 6 Jul 2022, updates will be applied to the GMX frontend to inform users of the separation between madmex.io and app.madmex.io",
   //   buttons: [
   //     {
   //       text: "Read More",
-  //       link: "https://medium.com/@gmx.io/gmx-frontend-updates-8d13f2346e1e",
+  //       link: "https://medium.com/@madmex.io/gmx-frontend-updates-8d13f2346e1e",
   //       newTab: true,
   //     },
   //   ],
@@ -180,11 +180,11 @@ export const appEventsData = [
     isActive: true,
     validTill: "10 Jul 2022, 12:00",
     bodyText:
-      "You are currently using app.gmx.io. Customized settings have been reset, you may need to adjust your settings by clicking on the menu in the top right after connecting your wallet.",
+      "You are currently using app.madmex.io. Customized settings have been reset, you may need to adjust your settings by clicking on the menu in the top right after connecting your wallet.",
     buttons: [
       {
         text: "Read More",
-        link: "https://medium.com/@gmx.io/gmx-frontend-updates-8d13f2346e1e",
+        link: "https://medium.com/@madmex.io/gmx-frontend-updates-8d13f2346e1e",
         newTab: true,
       },
     ],
@@ -199,7 +199,7 @@ export const appEventsData = [
     buttons: [
       {
         text: "Learn More",
-        link: "https://gmxio.gitbook.io/gmx/trading#backup-rpc-urls",
+        link: "https://mmfinance.gitbook.io/docs/mmx/trading#backup-rpc-urls",
         newTab: true,
       },
     ],
@@ -214,7 +214,7 @@ export const appEventsData = [
     buttons: [
       {
         text: "Read More",
-        link: "https://medium.com/@gmx.io/arbitrum-nitro-5f88c03a46fe",
+        link: "https://medium.com/@madmex.io/arbitrum-nitro-5f88c03a46fe",
         newTab: true,
       },
     ],

@@ -9,7 +9,6 @@ export default function TooltipCard({
   showDollar = true,
   decimalsForConversion = USD_DECIMALS,
 }) {
-  console.log(title, total)
   return (
     <>
       {/* <p className="Tooltip-row">
