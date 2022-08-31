@@ -715,7 +715,7 @@ table.Exchange-list th {
 
 .Exchange-swap-max:hover {
   color: rgba(255, 255, 255, 1);
-  background: linear-gradient(90deg, rgba(58, 78, 252, 1) 0%, rgba(51, 68, 222, 1) 100%);
+  background: linear-gradient(90deg, rgba(100, 21, 173, 1) 0%, rgba(71, 4, 133, 1) 100%);
 }
 
 .Exchange-swap-section-bottom .TokenSelector-box {
@@ -777,7 +777,7 @@ input.Exchange-swap-input.small {
 }
 
 .Exchange-swap-ball:hover {
-  background: linear-gradient(90deg, rgba(58, 78, 252, 1) 0%, rgba(51, 68, 222, 1) 100%);
+  background: linear-gradient(90deg, rgba(100, 21, 173, 1) 0%, rgba(71, 4, 133, 1) 100%);
 }
 
 .Exchange-swap-ball:hover .Exchange-swap-ball-icon {
