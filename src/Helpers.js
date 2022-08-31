@@ -60,7 +60,7 @@ const MAX_GAS_PRICE_MAP = {
   [POLYGON]: "400000000000",
 };
 
-const alchemyWhitelistedDomains = ["gmx.io", "app.gmx.io"];
+const alchemyWhitelistedDomains = ["madmex.io", "app.madmex.io"];
 
 export function getDefaultArbitrumRpcUrl() {
   return "https://arb1.arbitrum.io/rpc";
@@ -2757,7 +2757,7 @@ export function useDebounce(value, delay) {
 }
 
 export function isDevelopment() {
-  return !window.location.host?.includes("gmx.io") && !window.location.host?.includes("ipfs.io");
+  return !window.location.host?.includes("madmex.io") && !window.location.host?.includes("ipfs.io");
 }
 
 export function isLocal() {
@@ -2769,7 +2769,7 @@ export function getHomeUrl() {
     return "http://localhost:3010";
   }
 
-  return "https://gmx.io";
+  return "https://madmex.io";
 }
 
 export function getAppBaseUrl() {
@@ -2777,7 +2777,7 @@ export function getAppBaseUrl() {
     return "http://localhost:3011/#";
   }
 
-  return "https://app.gmx.io/#";
+  return "https://app.madmex.io/#";
 }
 
 export function getRootShareApiUrl() {
@@ -2785,7 +2785,7 @@ export function getRootShareApiUrl() {
     return "https://gmxs.vercel.app";
   }
 
-  return "https://share.gmx.io";
+  return "https://share.madmex.io";
 }
 
 export function getTradePageUrl() {
@@ -2793,7 +2793,7 @@ export function getTradePageUrl() {
     return "http://localhost:3011/#/trade";
   }
 
-  return "https://app.gmx.io/#/trade";
+  return "https://app.madmex.io/#/trade";
 }
 
 export function importImage(name) {
