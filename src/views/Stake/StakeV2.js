@@ -14,6 +14,7 @@ import RewardRouter from "../../abis/RewardRouter.json";
 import RewardReader from "../../abis/RewardReader.json";
 import Token from "../../abis/Token.json";
 import GlpManager from "../../abis/GlpManager.json";
+import glpBigIcon from "../../img/ic_glp_custom.svg";
 
 import { ethers } from "ethers";
 import {
@@ -1725,7 +1726,14 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
             </div>
           </div> */}
           <div className="App-card">
-            <div className="App-card-title">MLP ({chainName})</div>
+            <div className="Home-token-card-option-icon">
+              <img src={glpBigIcon} alt="glpBigIcon" /> MLP
+            </div>
+            <div className="Home-token-card-option-title-polygon">
+              MLP is the liquidity provider token.
+              <br />
+              Accrues 70% of the platform's generated fees.
+            </div>
             <div className="App-card-divider"></div>
             <div className="App-card-content">
               <div className="App-card-row">
@@ -1830,6 +1838,14 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
                 <Link className="App-button-option App-card-option" to="/buy_mlp#redeem">
                   Sell MLP
                 </Link>
+                <a
+                  href="https://mmfinance.gitbook.io/docs/mmx/mlp"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="App-button-option App-card-option"
+                >
+                  Read more
+                </a>
                 {/* {hasInsurance && (
                   <a
                     className="App-button-option App-card-option"

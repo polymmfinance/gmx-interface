@@ -63,12 +63,12 @@ const MAX_GAS_PRICE_MAP = {
 const alchemyWhitelistedDomains = ["madmex.io", "app.madmex.io"];
 
 export function getDefaultArbitrumRpcUrl() {
-  return ""
+  return "";
   return "https://arb1.arbitrum.io/rpc";
 }
 
 export function getAlchemyHttpUrl() {
-  return ""
+  return "";
   if (alchemyWhitelistedDomains.includes(window.location.host)) {
     return "https://arb-mainnet.g.alchemy.com/v2/ha7CFsr1bx5ZItuR6VZBbhKozcKDY4LZ";
   }
@@ -76,7 +76,7 @@ export function getAlchemyHttpUrl() {
 }
 
 export function getAlchemyWsUrl() {
-  return ""
+  return "";
   if (alchemyWhitelistedDomains.includes(window.location.host)) {
     return "wss://arb-mainnet.g.alchemy.com/v2/ha7CFsr1bx5ZItuR6VZBbhKozcKDY4LZ";
   }
@@ -2779,15 +2779,15 @@ export function getHomeUrl() {
 
 export function getAppBaseUrl() {
   if (isLocal()) {
-    return "http://localhost:3011/#";
+    return "http://localhost:3010/#";
   }
 
-  return "https://app.madmex.io/#";
+  return "https://madmex.io/#";
 }
 
 export function getRootShareApiUrl() {
   if (isLocal()) {
-    return "https://gmxs.vercel.app";
+    return "https://madmexmadmex.vercel.app";
   }
 
   return "https://share.madmex.io";
@@ -2795,10 +2795,10 @@ export function getRootShareApiUrl() {
 
 export function getTradePageUrl() {
   if (isLocal()) {
-    return "http://localhost:3011/#/trade";
+    return "http://localhost:3010/#/trade";
   }
 
-  return "https://app.madmex.io/#/trade";
+  return "https://madmex.io/#/trade";
 }
 
 export function importImage(name) {

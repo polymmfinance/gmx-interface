@@ -57,9 +57,11 @@
 }
 
 .StakeV2-cards {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: 1.5rem;
+  display: flex;
+  justify-content: center;
+  /* display: grid; */
+  /* grid-template-columns: 1fr; */
+  /* grid-gap: 1.5rem; */
 }
 
 @media (max-width: 900px) {

@@ -176,9 +176,9 @@ function AppHeaderLinks({ HeaderLink, small, openSettings, clickCloseIcon }) {
       <div className="App-header-link-container">
         <HeaderLink to="/earn">Earn</HeaderLink>
       </div>
-      <div className="App-header-link-container">
+      {/* <div className="App-header-link-container">
         <HeaderLink to="/buy">Buy</HeaderLink>
-      </div>
+      </div> */}
       <div className="App-header-link-container">
         <HeaderLink to="/referrals">Referrals</HeaderLink>
       </div>
@@ -819,13 +819,13 @@ function FullApp() {
               <Route exact path="/earn">
                 <Stake setPendingTxns={setPendingTxns} connectWallet={connectWallet} />
               </Route>
-              <Route exact path="/buy">
+              {/* <Route exact path="/buy">
                 <Buy
                   savedSlippageAmount={savedSlippageAmount}
                   setPendingTxns={setPendingTxns}
                   connectWallet={connectWallet}
                 />
-              </Route>
+              </Route> */}
               <Route exact path="/buy_mlp">
                 <BuyGlp
                   savedSlippageAmount={savedSlippageAmount}
