@@ -1100,7 +1100,7 @@ button.App-button {
 }
 
 .App-slider .rc-slider-rail {
-  background: linear-gradient(90deg, rgba(30, 34, 61, 1) 0%, rgba(40, 45, 74, 1) 100%);
+  background: linear-gradient(90deg, rgba(44, 30, 61, 1) 0%, rgba(40, 45, 74, 1) 100%);
 }
 
 .App-slider .rc-slider-track {
