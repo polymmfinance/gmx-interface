@@ -42,7 +42,7 @@
 
 .stats-wrapper {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 2fr;
   grid-column-gap: 1.5rem;
   margin-bottom: 1.5rem;
 }
@@ -165,7 +165,6 @@
 @media (max-width: 660px) {
   .stats-wrapper .App-card {
     flex-wrap: wrap;
-    padding-bottom: 0;
   }
 
   .stats-piechart {

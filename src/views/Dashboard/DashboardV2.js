@@ -548,180 +548,10 @@ export default function DashboardV2() {
           </div>
         </div>
         <div className="DashboardV2-content">
-          <div className="DashboardV2-cards">
-            <div className="App-card">
-              <div className="App-card-title">Overview</div>
-              <div className="App-card-divider"></div>
-              <div className="App-card-content">
-                <div className="App-card-row">
-                  <div className="label">AUM</div>
-                  <div>
-                    <TooltipComponent
-                      handle={`$${formatAmount(tvl, USD_DECIMALS, 0, true)}`}
-                      position="right-bottom"
-                      renderContent={() => (
-                        <span className="label">{`Assets Under Management: MLP pool (${chainName})`}</span>
-                        // <span className="label">{`Assets Under Management: GMX staked (All chains) + MLP pool (${chainName})`}</span>
-                      )}
-                    />
-                  </div>
-                </div>
-                <div className="App-card-row">
-                  <div className="label">MLP Pool</div>
-                  <div>
-                    <TooltipComponent
-                      handle={`$${formatAmount(aum, USD_DECIMALS, 0, true)}`}
-                      position="right-bottom"
-                      renderContent={() => (
-                        <span className="label">{`Total value of tokens in MLP pool (${chainName})`}</span>
-                      )}
-                    />
-                  </div>
-                </div>
-                <div className="App-card-row">
-                  <div className="label">24h Volume</div>
-                  <div>
-                    <TooltipComponent
-                      position="right-bottom"
-                      className="nowrap"
-                      handle={`$${formatAmount(currentVolumeInfo?.totalVolume, 0, 0, true)}`}
-                      renderContent={() => (
-                        <TooltipCard
-                          title="Volume"
-                          polygon={currentVolumeInfo?.totalVolume}
-                          // avax={currentVolumeInfo?.[AVALANCHE].totalVolume}
-                          decimalsForConversion={0}
-                          total={currentVolumeInfo?.totalVolume}
-                        />
-                      )}
-                    />
-                  </div>
-                </div>
-                <div className="App-card-row">
-                  <div className="label">Long Positions</div>
-                  <div>
-                    <TooltipComponent
-                      position="right-bottom"
-                      className="nowrap"
-                      handle={`$${formatAmount(positionStatsInfo?.[chainId].totalLongPositionSizes, 0, 0, true)}`}
-                      renderContent={() => (
-                        <TooltipCard
-                          title="Long Positions"
-                          polygon={positionStatsInfo?.[POLYGON].totalLongPositionSizes}
-                          total={positionStatsInfo?.totalLongPositionSizes}
-                          decimalsForConversion={0}
-                        />
-                      )}
-                    />
-                  </div>
-                </div>
-                <div className="App-card-row">
-                  <div className="label">Short Positions</div>
-                  <div>
-                    <TooltipComponent
-                      position="right-bottom"
-                      className="nowrap"
-                      handle={`$${formatAmount(
-                        positionStatsInfo?.[chainId].totalShortPositionSizes,
-                        USD_DECIMALS,
-                        0,
-                        true
-                      )}`}
-                      renderContent={() => (
-                        <TooltipCard
-                          title="Short Positions"
-                          polygon={positionStatsInfo?.[POLYGON].totalShortPositionSizes}
-                          // avax={positionStatsInfo?.[AVALANCHE].totalShortPositionSizes}
-                          total={positionStatsInfo?.totalShortPositionSizes}
-                        />
-                      )}
-                    />
-                  </div>
-                </div>
-                {feeHistory.length ? (
-                  <div className="App-card-row">
-                    <div className="label">Fees since {formatDate(feeHistory[0].to)}</div>
-                    <div>
-                      <TooltipComponent
-                        position="right-bottom"
-                        className="nowrap"
-                        handle={`$${formatAmount(currentFees?.[chainId], USD_DECIMALS, 2, true)}`}
-                        renderContent={() => (
-                          <TooltipCard
-                            title="Fees"
-                            arbitrum={currentFees?.[ARBITRUM]}
-                            polygon={currentFees?.[POLYGON]}
-                            total={currentFees?.total}
-                          />
-                        )}
-                      />
-                    </div>
-                  </div>
-                ) : null}
-              </div>
-            </div>
-            <div className="App-card">
-              <div className="App-card-title">Total Stats</div>
-              <div className="App-card-divider"></div>
-              <div className="App-card-content">
-                <div className="App-card-row">
-                  <div className="label">Total Fees</div>
-                  <div>
-                    <TooltipComponent
-                      position="right-bottom"
-                      className="nowrap"
-                      handle={`$${numberWithCommas(totalFees?.[chainId])}`}
-                      renderContent={() => (
-                        <TooltipCard
-                          title="Total Fees"
-                          // arbitrum={totalFees?.[ARBITRUM]}
-                          // avax={totalFees?.[AVALANCHE]}
-                          polygon={totalFees?.[POLYGON]}
-                          total={totalFees?.total}
-                          decimalsForConversion={0}
-                        />
-                      )}
-                    />
-                  </div>
-                </div>
-                <div className="App-card-row">
-                  <div className="label">Total Volume</div>
-                  <div>
-                    <TooltipComponent
-                      position="right-bottom"
-                      className="nowrap"
-                      handle={`$${formatAmount(totalVolume?.[chainId], 0, 0, true)}`}
-                      renderContent={() => (
-                        <TooltipCard
-                          title="Total Volume"
-                          // arbitrum={totalVolume?.[ARBITRUM]}
-                          // avax={totalVolume?.[AVALANCHE]}
-                          polygon={totalVolume?.[POLYGON]}
-                          total={totalVolume?.total}
-                          decimalsForConversion={0}
-                        />
-                      )}
-                    />
-                  </div>
-                </div>
-                {/* <div className="App-card-row">
-                  <div className="label">Floor Price Fund</div>
-                  <div>${formatAmount(totalFloorPriceFundUsd, 30, 0, true)}</div>
-                </div> */}
-              </div>
-            </div>
-          </div>
-          <div className="Tab-title-section">
-            <div className="Page-title">
-              Tokens {chainId === POLYGON && <img src={polygon24Icon} alt="polygon24Icon" />}
-              {chainId === ARBITRUM && <img src={arbitrum24Icon} alt="arbitrum24Icon" />}
-            </div>
-            <div className="Page-description">MLP index token statistics.</div>
-          </div>
-          <div className="DashboardV2-token-cards">
-            <div className="stats-wrapper stats-wrapper--gmx">
-              {/* TODO: Let's build one stat here to show liquid-staking stats */}
-              {/* <div className="App-card">
+          {" "}
+          <div className="stats-wrapper stats-wrapper--gmx">
+            {/* TODO: Let's build one stat here to show liquid-staking stats */}
+            {/* <div className="App-card">
                 <div className="stats-block">
                   <div className="App-card-title">
                     <div className="App-card-title-mark">
@@ -838,94 +668,268 @@ export default function DashboardV2() {
                   )}
                 </div>
               </div> */}
-              <div className="App-card">
-                <div className="stats-block">
-                  <div className="App-card-title">
-                    <div className="App-card-title-mark">
-                      <div className="App-card-title-mark-icon">
-                        <img src={glp40Icon} alt="glp40Icon" />
-                        {chainId === ARBITRUM ? (
-                          <img src={arbitrum16Icon} alt="arbitrum16Icon" className="selected-network-symbol" />
-                        ) : (
-                          <img src={polygon16Icon} alt="polygon16Icon" className="selected-network-symbol" />
+            <div className="App-card">
+              <div className="stats-block">
+                <div className="App-card-title">Overview</div>
+                <div className="App-card-divider"></div>
+                <div className="App-card-content">
+                  <div className="App-card-row">
+                    <div className="label">AUM</div>
+                    <div>
+                      <TooltipComponent
+                        handle={`$${formatAmount(tvl, USD_DECIMALS, 0, true)}`}
+                        position="right-bottom"
+                        renderContent={() => (
+                          <span className="label">{`Assets Under Management: MLP pool (${chainName})`}</span>
+                          // <span className="label">{`Assets Under Management: GMX staked (All chains) + MLP pool (${chainName})`}</span>
                         )}
-                      </div>
-                      <div className="App-card-title-mark-info">
-                        <div className="App-card-title-mark-title">MLP</div>
-                        <div className="App-card-title-mark-subtitle">MLP</div>
-                      </div>
-                      <div>
-                        <AssetDropdown assetSymbol="MLP" />
-                      </div>
+                      />
                     </div>
                   </div>
-                  <div className="App-card-divider"></div>
-                  <div className="App-card-content">
-                    <div className="App-card-row">
-                      <div className="label">Price</div>
-                      <div>${formatAmount(glpPrice, USD_DECIMALS, 3, true)}</div>
-                    </div>
-                    <div className="App-card-row">
-                      <div className="label">Supply</div>
-                      <div>{formatAmount(glpSupply, GLP_DECIMALS, 0, true)} MLP</div>
-                    </div>
-                    <div className="App-card-row">
-                      <div className="label">Total Staked</div>
-                      <div>${formatAmount(glpMarketCap, USD_DECIMALS, 0, true)}</div>
-                    </div>
-                    <div className="App-card-row">
-                      <div className="label">Market Cap</div>
-                      <div>${formatAmount(glpMarketCap, USD_DECIMALS, 0, true)}</div>
-                    </div>
-                    <div className="App-card-row">
-                      <div className="label">Stablecoin Percentage</div>
-                      <div>{stablePercentage}%</div>
+                  <div className="App-card-row">
+                    <div className="label">MLP Pool</div>
+                    <div>
+                      <TooltipComponent
+                        handle={`$${formatAmount(aum, USD_DECIMALS, 0, true)}`}
+                        position="right-bottom"
+                        renderContent={() => (
+                          <span className="label">{`Total value of tokens in MLP pool (${chainName})`}</span>
+                        )}
+                      />
                     </div>
                   </div>
-                </div>
-                <div className="stats-piechart" onMouseOut={onGLPPoolChartLeave}>
-                  {glpPool.length > 0 && (
-                    <PieChart width={210} height={210}>
-                      <Pie
-                        data={glpPool}
-                        cx={100}
-                        cy={100}
-                        innerRadius={73}
-                        outerRadius={80}
-                        fill="#8884d8"
-                        dataKey="value"
-                        startAngle={90}
-                        endAngle={-270}
-                        onMouseEnter={onGLPPoolChartEnter}
-                        onMouseOut={onGLPPoolChartLeave}
-                        onMouseLeave={onGLPPoolChartLeave}
-                        paddingAngle={2}
-                      >
-                        {glpPool.map((entry, index) => (
-                          <Cell
-                            key={`cell-${index}`}
-                            fill={GLPPOOLCOLORS[entry.name]}
-                            style={{
-                              filter:
-                                glpActiveIndex === index
-                                  ? `drop-shadow(0px 0px 6px ${hexToRgba(GLPPOOLCOLORS[entry.name], 0.7)})`
-                                  : "none",
-                              cursor: "pointer",
-                            }}
-                            stroke={GLPPOOLCOLORS[entry.name]}
-                            strokeWidth={glpActiveIndex === index ? 1 : 1}
+                  <div className="App-card-row">
+                    <div className="label">24h Volume</div>
+                    <div>
+                      <TooltipComponent
+                        position="right-bottom"
+                        className="nowrap"
+                        handle={`$${formatAmount(currentVolumeInfo?.totalVolume, 0, 0, true)}`}
+                        renderContent={() => (
+                          <TooltipCard
+                            title="Volume"
+                            polygon={currentVolumeInfo?.totalVolume}
+                            // avax={currentVolumeInfo?.[AVALANCHE].totalVolume}
+                            decimalsForConversion={0}
+                            total={currentVolumeInfo?.totalVolume}
                           />
-                        ))}
-                      </Pie>
-                      <text x={"50%"} y={"50%"} fill="white" textAnchor="middle" dominantBaseline="middle">
-                        MLP Pool
-                      </text>
-                      <Tooltip content={<CustomTooltip />} />
-                    </PieChart>
-                  )}
+                        )}
+                      />
+                    </div>
+                  </div>
+                  <div className="App-card-row">
+                    <div className="label">Long Positions</div>
+                    <div>
+                      <TooltipComponent
+                        position="right-bottom"
+                        className="nowrap"
+                        handle={`$${formatAmount(positionStatsInfo?.[chainId].totalLongPositionSizes, 0, 0, true)}`}
+                        renderContent={() => (
+                          <TooltipCard
+                            title="Long Positions"
+                            polygon={positionStatsInfo?.[POLYGON].totalLongPositionSizes}
+                            total={positionStatsInfo?.totalLongPositionSizes}
+                            decimalsForConversion={0}
+                          />
+                        )}
+                      />
+                    </div>
+                  </div>
+                  <div className="App-card-row">
+                    <div className="label">Short Positions</div>
+                    <div>
+                      <TooltipComponent
+                        position="right-bottom"
+                        className="nowrap"
+                        handle={`$${formatAmount(
+                          positionStatsInfo?.[chainId].totalShortPositionSizes,
+                          USD_DECIMALS,
+                          0,
+                          true
+                        )}`}
+                        renderContent={() => (
+                          <TooltipCard
+                            title="Short Positions"
+                            polygon={positionStatsInfo?.[POLYGON].totalShortPositionSizes}
+                            // avax={positionStatsInfo?.[AVALANCHE].totalShortPositionSizes}
+                            total={positionStatsInfo?.totalShortPositionSizes}
+                          />
+                        )}
+                      />
+                    </div>
+                  </div>
+                  {feeHistory.length ? (
+                    <div className="App-card-row">
+                      <div className="label">Fees since {formatDate(feeHistory[0].to)}</div>
+                      <div>
+                        <TooltipComponent
+                          position="right-bottom"
+                          className="nowrap"
+                          handle={`$${formatAmount(currentFees?.[chainId], USD_DECIMALS, 2, true)}`}
+                          renderContent={() => (
+                            <TooltipCard
+                              title="Fees"
+                              arbitrum={currentFees?.[ARBITRUM]}
+                              polygon={currentFees?.[POLYGON]}
+                              total={currentFees?.total}
+                            />
+                          )}
+                        />
+                      </div>
+                    </div>
+                  ) : null}
                 </div>
               </div>
             </div>
+            <div className="App-card">
+              <div className="stats-block">
+                <div className="App-card-title">Total Stats</div>
+                <div className="App-card-divider"></div>
+                <div className="App-card-content">
+                  <div className="App-card-row">
+                    <div className="label">Total Fees</div>
+                    <div>
+                      <TooltipComponent
+                        position="right-bottom"
+                        className="nowrap"
+                        handle={`$${numberWithCommas(totalFees?.[chainId])}`}
+                        renderContent={() => (
+                          <TooltipCard
+                            title="Total Fees"
+                            // arbitrum={totalFees?.[ARBITRUM]}
+                            // avax={totalFees?.[AVALANCHE]}
+                            polygon={totalFees?.[POLYGON]}
+                            total={totalFees?.total}
+                            decimalsForConversion={0}
+                          />
+                        )}
+                      />
+                    </div>
+                  </div>
+                  <div className="App-card-row">
+                    <div className="label">Total Volume</div>
+                    <div>
+                      <TooltipComponent
+                        position="right-bottom"
+                        className="nowrap"
+                        handle={`$${formatAmount(totalVolume?.[chainId], 0, 0, true)}`}
+                        renderContent={() => (
+                          <TooltipCard
+                            title="Total Volume"
+                            // arbitrum={totalVolume?.[ARBITRUM]}
+                            // avax={totalVolume?.[AVALANCHE]}
+                            polygon={totalVolume?.[POLYGON]}
+                            total={totalVolume?.total}
+                            decimalsForConversion={0}
+                          />
+                        )}
+                      />
+                    </div>
+                  </div>
+                  {/* <div className="App-card-row">
+                  <div className="label">Floor Price Fund</div>
+                  <div>${formatAmount(totalFloorPriceFundUsd, 30, 0, true)}</div>
+                </div> */}
+                </div>
+              </div>
+            </div>
+            <div className="App-card">
+              <div className="stats-block">
+                <div className="App-card-title">
+                  <div className="App-card-title-mark">
+                    <div className="App-card-title-mark-icon">
+                      <img src={glp40Icon} alt="glp40Icon" />
+                      {chainId === ARBITRUM ? (
+                        <img src={arbitrum16Icon} alt="arbitrum16Icon" className="selected-network-symbol" />
+                      ) : (
+                        <img src={polygon16Icon} alt="polygon16Icon" className="selected-network-symbol" />
+                      )}
+                    </div>
+                    <div className="App-card-title-mark-info">
+                      <div className="App-card-title-mark-title">MLP</div>
+                      <div className="App-card-title-mark-subtitle">MLP index token statistics</div>
+                    </div>
+                    <div>
+                      <AssetDropdown assetSymbol="MLP" />
+                    </div>
+                  </div>
+                </div>
+                <div className="App-card-divider"></div>
+                <div className="App-card-content">
+                  <div className="App-card-row">
+                    <div className="label">Price</div>
+                    <div>${formatAmount(glpPrice, USD_DECIMALS, 3, true)}</div>
+                  </div>
+                  <div className="App-card-row">
+                    <div className="label">Supply</div>
+                    <div>{formatAmount(glpSupply, GLP_DECIMALS, 0, true)} MLP</div>
+                  </div>
+                  <div className="App-card-row">
+                    <div className="label">Total Staked</div>
+                    <div>${formatAmount(glpMarketCap, USD_DECIMALS, 0, true)}</div>
+                  </div>
+                  <div className="App-card-row">
+                    <div className="label">Market Cap</div>
+                    <div>${formatAmount(glpMarketCap, USD_DECIMALS, 0, true)}</div>
+                  </div>
+                  <div className="App-card-row">
+                    <div className="label">Stablecoin Percentage</div>
+                    <div>{stablePercentage}%</div>
+                  </div>
+                </div>
+              </div>
+              <div className="stats-piechart" onMouseOut={onGLPPoolChartLeave}>
+                {glpPool.length > 0 && (
+                  <PieChart width={210} height={210}>
+                    <Pie
+                      data={glpPool}
+                      cx={100}
+                      cy={100}
+                      innerRadius={73}
+                      outerRadius={80}
+                      fill="#8884d8"
+                      dataKey="value"
+                      startAngle={90}
+                      endAngle={-270}
+                      onMouseEnter={onGLPPoolChartEnter}
+                      onMouseOut={onGLPPoolChartLeave}
+                      onMouseLeave={onGLPPoolChartLeave}
+                      paddingAngle={2}
+                    >
+                      {glpPool.map((entry, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={GLPPOOLCOLORS[entry.name]}
+                          style={{
+                            filter:
+                              glpActiveIndex === index
+                                ? `drop-shadow(0px 0px 6px ${hexToRgba(GLPPOOLCOLORS[entry.name], 0.7)})`
+                                : "none",
+                            cursor: "pointer",
+                          }}
+                          stroke={GLPPOOLCOLORS[entry.name]}
+                          strokeWidth={glpActiveIndex === index ? 1 : 1}
+                        />
+                      ))}
+                    </Pie>
+                    <text x={"50%"} y={"50%"} fill="white" textAnchor="middle" dominantBaseline="middle">
+                      MLP Pool
+                    </text>
+                    <Tooltip content={<CustomTooltip />} />
+                  </PieChart>
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="DashboardV2-cards"></div>
+          <div className="Tab-title-section">
+            <div className="Page-title">
+              Tokens {chainId === POLYGON && <img src={polygon24Icon} alt="polygon24Icon" />}
+              {chainId === ARBITRUM && <img src={arbitrum24Icon} alt="arbitrum24Icon" />}
+            </div>
+            <div className="Page-description">MLP index token statistics.</div>
+          </div>
+          <div className="DashboardV2-token-cards">
             <div className="token-table-wrapper App-card">
               <div className="App-card-title">
                 MLP Index Composition{" "}
