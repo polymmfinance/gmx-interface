@@ -34,7 +34,7 @@ export default function BuyGlp(props) {
             <a href="https://mmfinance.gitbook.io/docs/mmx/mlp" target="_blank" rel="noopener noreferrer">
               MLP tokens
             </a>{" "}
-            to earn {nativeTokenSymbol} fees from swaps and leverages trading.
+            to earn {nativeTokenSymbol} fees from swaps and leveraged trading.
             <br />
             Note that there is a minimum holding time of 15 minutes after a purchase.
             <br />

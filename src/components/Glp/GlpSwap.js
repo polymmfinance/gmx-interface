@@ -173,23 +173,18 @@ export default function GlpSwap(props) {
     }
   );
 
+  // TODO: Use masterchef to calculate staked amounts?
   const { data: glpBalance } = useSWR(
-    [`GlpSwap:glpBalance:${active}`, chainId, feeGlpTrackerAddress, "stakedAmounts", account || PLACEHOLDER_ACCOUNT],
+    [`GlpSwap:glpBalance:${active}`, chainId, glpAddress, "balanceOf", account || PLACEHOLDER_ACCOUNT],
     {
       fetcher: fetcher(library, RewardTracker),
     }
   );
 
-  const glpVesterAddress = getContract(chainId, "GlpVester");
-  const { data: reservedAmount } = useSWR(
-    [`GlpSwap:reservedAmount:${active}`, chainId, glpVesterAddress, "pairAmounts", account || PLACEHOLDER_ACCOUNT],
-    {
-      fetcher: fetcher(library, Vester),
-    }
-  );
-
   const { gmxPrice } = useGmxPrice(chainId, { arbitrum: chainId === ARBITRUM ? library : undefined }, active);
 
+  // This chunk is used to calculate the staking APR for GLP
+  // We will add APR for our masterchef implementation
   const rewardTrackersForStakingInfo = [glpAddress, feeGlpTrackerAddress];
   const { data: stakingInfo } = useSWR(
     [`GlpSwap:stakingInfo:${active}`, chainId, rewardReaderAddress, "getStakingInfo", account || PLACEHOLDER_ACCOUNT],
@@ -219,14 +214,17 @@ export default function GlpSwap(props) {
   }
   const glpSupplyUsd = glpSupply.mul(glpPrice).div(expandDecimals(1, GLP_DECIMALS));
 
-  let reserveAmountUsd;
-  if (reservedAmount) {
-    reserveAmountUsd = reservedAmount.mul(glpPrice).div(expandDecimals(1, GLP_DECIMALS));
-  }
+  // let reserveAmountUsd;
+  // if (reservedAmount) {
+  //   reserveAmountUsd = reservedAmount.mul(glpPrice).div(expandDecimals(1, GLP_DECIMALS));
+  // }
 
   let maxSellAmount = glpBalance;
-  if (glpBalance && reservedAmount) {
-    maxSellAmount = glpBalance.sub(reservedAmount);
+  // if (glpBalance && reservedAmount) {
+  //   maxSellAmount = glpBalance.sub(reservedAmount);
+  // }
+  if (glpBalance) {
+    maxSellAmount = glpBalance;
   }
 
   const { infoTokens } = useInfoTokens(library, chainId, active, tokenBalances, undefined);
@@ -701,17 +699,18 @@ export default function GlpSwap(props) {
                 {formatAmount(glpBalanceUsd, USD_DECIMALS, 2, true)})
               </div>
             </div>
-            <div className="App-card-row">
+            {/* TODO: we figure out the staked amounts thru masterchef one day */}
+            {/* <div className="App-card-row">
               <div className="label">Staked</div>
               <div className="value">
                 {formatAmount(glpBalance, GLP_DECIMALS, 4, true)} MLP ($
                 {formatAmount(glpBalanceUsd, USD_DECIMALS, 2, true)})
               </div>
-            </div>
+            </div> */}
           </div>
           <div className="App-card-divider"></div>
           <div className="App-card-content">
-            {!isBuying && (
+            {/* {!isBuying && (
               <div className="App-card-row">
                 <div className="label">Reserved</div>
                 <div className="value">
@@ -729,7 +728,7 @@ export default function GlpSwap(props) {
                   />
                 </div>
               </div>
-            )}
+            )} */}
             <div className="App-card-row">
               <div className="label">APR</div>
               <div className="value">

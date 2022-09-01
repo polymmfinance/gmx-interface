@@ -111,7 +111,7 @@ export function useInfoTokens(library, chainId, active, tokenBalances, fundingRa
     }
   );
 
-  console.log(vaultTokenInfo)
+  // console.log(vaultTokenInfo)
   // const vaultTokenInfo = []
   const indexPricesUrl = getServerUrl(chainId, "/prices");
   const { data: indexPrices } = useSWR([indexPricesUrl], {
