@@ -134,30 +134,6 @@ export default function GlpSwap(props) {
     }
   );
 
-  const { data: balancesAndSupplies } = useSWR(
-    [
-      `GlpSwap:getTokenBalancesWithSupplies:${active}`,
-      chainId,
-      readerAddress,
-      "getTokenBalancesWithSupplies",
-      account || PLACEHOLDER_ACCOUNT,
-    ],
-    {
-      fetcher: fetcher(library, ReaderV2, [tokensForBalanceAndSupplyQuery]),
-    }
-  );
-
-  const { data: aums } = useSWR([`GlpSwap:getAums:${active}`, chainId, glpManagerAddress, "getAums"], {
-    fetcher: fetcher(library, GlpManager),
-  });
-
-  const { data: totalTokenWeights } = useSWR(
-    [`GlpSwap:totalTokenWeights:${active}`, chainId, vaultAddress, "totalTokenWeights"],
-    {
-      fetcher: fetcher(library, VaultV2),
-    }
-  );
-
   const tokenAllowanceAddress = swapTokenAddress === AddressZero ? nativeTokenAddress : swapTokenAddress;
   const { data: tokenAllowance } = useSWR(
     [active, chainId, tokenAllowanceAddress, "allowance", account || PLACEHOLDER_ACCOUNT, glpManagerAddress],
@@ -170,14 +146,6 @@ export default function GlpSwap(props) {
     [`GlpSwap:lastPurchaseTime:${active}`, chainId, glpManagerAddress, "lastAddedAt", account || PLACEHOLDER_ACCOUNT],
     {
       fetcher: fetcher(library, GlpManager),
-    }
-  );
-
-  // TODO: Use masterchef to calculate staked amounts?
-  const { data: glpBalance } = useSWR(
-    [`GlpSwap:glpBalance:${active}`, chainId, glpAddress, "balanceOf", account || PLACEHOLDER_ACCOUNT],
-    {
-      fetcher: fetcher(library, RewardTracker),
     }
   );
 
@@ -197,6 +165,40 @@ export default function GlpSwap(props) {
 
   const redemptionTime = lastPurchaseTime ? lastPurchaseTime.add(GLP_COOLDOWN_DURATION) : undefined;
   const inCooldownWindow = redemptionTime && parseInt(Date.now() / 1000) < redemptionTime;
+
+  // GLP supply and prices 
+  const { data: balancesAndSupplies } = useSWR(
+    [
+      `GlpSwap:getTokenBalancesWithSupplies:${active}`,
+      chainId,
+      readerAddress,
+      "getTokenBalancesWithSupplies",
+      account || PLACEHOLDER_ACCOUNT,
+    ],
+    {
+      fetcher: fetcher(library, ReaderV2, [tokensForBalanceAndSupplyQuery]),
+    }
+  );
+
+
+  // TODO: Use masterchef to calculate staked amounts?
+  const { data: glpBalance } = useSWR(
+    [`GlpSwap:glpBalance:${active}`, chainId, glpAddress, "balanceOf", account || PLACEHOLDER_ACCOUNT],
+    {
+      fetcher: fetcher(library, RewardTracker),
+    }
+  );
+
+  const { data: aums } = useSWR([`GlpSwap:getAums:${active}`, chainId, glpManagerAddress, "getAums"], {
+    fetcher: fetcher(library, GlpManager),
+  });
+
+  const { data: totalTokenWeights } = useSWR(
+    [`GlpSwap:totalTokenWeights:${active}`, chainId, vaultAddress, "totalTokenWeights"],
+    {
+      fetcher: fetcher(library, VaultV2),
+    }
+  );
 
   const glpSupply = balancesAndSupplies ? balancesAndSupplies[1] : bigNumberify(0);
   const usdgSupply = balancesAndSupplies ? balancesAndSupplies[3] : bigNumberify(0);

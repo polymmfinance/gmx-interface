@@ -15,6 +15,10 @@ import RewardReader from "../../abis/RewardReader.json";
 import Token from "../../abis/Token.json";
 import GlpManager from "../../abis/GlpManager.json";
 import glpBigIcon from "../../img/ic_glp_custom.svg";
+import RewardTracker from "../../abis/RewardTracker.json";
+import MasterchefABI from "../../abis/masterchef.json";
+
+import VaultV2 from "../../abis/VaultV2.json";
 
 import { ethers } from "ethers";
 import {
@@ -55,874 +59,51 @@ import SEO from "../../components/Common/SEO";
 
 const { AddressZero } = ethers.constants;
 
-function StakeModal(props) {
-  const {
-    isVisible,
-    setIsVisible,
-    chainId,
-    title,
-    maxAmount,
-    value,
-    setValue,
-    active,
-    account,
-    library,
-    stakingTokenSymbol,
-    stakingTokenAddress,
-    farmAddress,
-    rewardRouterAddress,
-    stakeMethodName,
-    setPendingTxns,
-  } = props;
-  const [isStaking, setIsStaking] = useState(false);
-  const [isApproving, setIsApproving] = useState(false);
-
-  const { data: tokenAllowance } = useSWR(
-    active && stakingTokenAddress && [active, chainId, stakingTokenAddress, "allowance", account, farmAddress],
-    {
-      fetcher: fetcher(library, Token),
-    }
-  );
-
-  let amount = parseValue(value, 18);
-  const needApproval = farmAddress !== AddressZero && tokenAllowance && amount && amount.gt(tokenAllowance);
-
-  const getError = () => {
-    if (!amount || amount.eq(0)) {
-      return "Enter an amount";
-    }
-    if (maxAmount && amount.gt(maxAmount)) {
-      return "Max amount exceeded";
-    }
-  };
-
-  const onClickPrimary = () => {
-    if (needApproval) {
-      approveTokens({
-        setIsApproving,
-        library,
-        tokenAddress: stakingTokenAddress,
-        spender: farmAddress,
-        chainId,
-      });
-      return;
-    }
-
-    setIsStaking(true);
-    const contract = new ethers.Contract(rewardRouterAddress, RewardRouter.abi, library.getSigner());
-
-    callContract(chainId, contract, stakeMethodName, [amount], {
-      sentMsg: "Stake submitted!",
-      failMsg: "Stake failed.",
-      setPendingTxns,
-    })
-      .then(async (res) => {
-        setIsVisible(false);
-      })
-      .finally(() => {
-        setIsStaking(false);
-      });
-  };
-
-  const isPrimaryEnabled = () => {
-    const error = getError();
-    if (error) {
-      return false;
-    }
-    if (isApproving) {
-      return false;
-    }
-    if (isStaking) {
-      return false;
-    }
-    return true;
-  };
-
-  const getPrimaryText = () => {
-    const error = getError();
-    if (error) {
-      return error;
-    }
-    if (isApproving) {
-      return `Approving ${stakingTokenSymbol}...`;
-    }
-    if (needApproval) {
-      return `Approve ${stakingTokenSymbol}`;
-    }
-    if (isStaking) {
-      return "Staking...";
-    }
-    return "Stake";
-  };
-
-  return (
-    <div className="StakeModal">
-      <Modal isVisible={isVisible} setIsVisible={setIsVisible} label={title}>
-        <div className="Exchange-swap-section">
-          <div className="Exchange-swap-section-top">
-            <div className="muted">
-              <div className="Exchange-swap-usd">Stake</div>
-            </div>
-            <div className="muted align-right clickable" onClick={() => setValue(formatAmountFree(maxAmount, 18, 18))}>
-              Max: {formatAmount(maxAmount, 18, 4, true)}
-            </div>
-          </div>
-          <div className="Exchange-swap-section-bottom">
-            <div>
-              <input
-                type="number"
-                placeholder="0.0"
-                className="Exchange-swap-input"
-                value={value}
-                onChange={(e) => setValue(e.target.value)}
-              />
-            </div>
-            <div className="PositionEditor-token-symbol">{stakingTokenSymbol}</div>
-          </div>
-        </div>
-        <div className="Exchange-swap-button-container">
-          <button className="App-cta Exchange-swap-button" onClick={onClickPrimary} disabled={!isPrimaryEnabled()}>
-            {getPrimaryText()}
-          </button>
-        </div>
-      </Modal>
-    </div>
-  );
-}
-
-function UnstakeModal(props) {
-  const {
-    isVisible,
-    setIsVisible,
-    chainId,
-    title,
-    maxAmount,
-    value,
-    setValue,
-    library,
-    unstakingTokenSymbol,
-    rewardRouterAddress,
-    unstakeMethodName,
-    multiplierPointsAmount,
-    reservedAmount,
-    bonusGmxInFeeGmx,
-    setPendingTxns,
-  } = props;
-  const [isUnstaking, setIsUnstaking] = useState(false);
-
-  let amount = parseValue(value, 18);
-  let burnAmount;
-
-  if (
-    multiplierPointsAmount &&
-    multiplierPointsAmount.gt(0) &&
-    amount &&
-    amount.gt(0) &&
-    bonusGmxInFeeGmx &&
-    bonusGmxInFeeGmx.gt(0)
-  ) {
-    burnAmount = multiplierPointsAmount.mul(amount).div(bonusGmxInFeeGmx);
-  }
-
-  const shouldShowReductionAmount = true;
-  let rewardReductionBasisPoints;
-  if (burnAmount && bonusGmxInFeeGmx) {
-    rewardReductionBasisPoints = burnAmount.mul(BASIS_POINTS_DIVISOR).div(bonusGmxInFeeGmx);
-  }
-
-  const getError = () => {
-    if (!amount) {
-      return "Enter an amount";
-    }
-    if (amount.gt(maxAmount)) {
-      return "Max amount exceeded";
-    }
-  };
-
-  const onClickPrimary = () => {
-    setIsUnstaking(true);
-    const contract = new ethers.Contract(rewardRouterAddress, RewardRouter.abi, library.getSigner());
-    callContract(chainId, contract, unstakeMethodName, [amount], {
-      sentMsg: "Unstake submitted!",
-      failMsg: "Unstake failed.",
-      successMsg: "Unstake completed!",
-      setPendingTxns,
-    })
-      .then(async (res) => {
-        setIsVisible(false);
-      })
-      .finally(() => {
-        setIsUnstaking(false);
-      });
-  };
-
-  const isPrimaryEnabled = () => {
-    const error = getError();
-    if (error) {
-      return false;
-    }
-    if (isUnstaking) {
-      return false;
-    }
-    return true;
-  };
-
-  const getPrimaryText = () => {
-    const error = getError();
-    if (error) {
-      return error;
-    }
-    if (isUnstaking) {
-      return "Unstaking...";
-    }
-    return "Unstake";
-  };
-
-  return (
-    <div className="StakeModal">
-      <Modal isVisible={isVisible} setIsVisible={setIsVisible} label={title}>
-        <div className="Exchange-swap-section">
-          <div className="Exchange-swap-section-top">
-            <div className="muted">
-              <div className="Exchange-swap-usd">Unstake</div>
-            </div>
-            <div className="muted align-right clickable" onClick={() => setValue(formatAmountFree(maxAmount, 18, 18))}>
-              Max: {formatAmount(maxAmount, 18, 4, true)}
-            </div>
-          </div>
-          <div className="Exchange-swap-section-bottom">
-            <div>
-              <input
-                type="number"
-                placeholder="0.0"
-                className="Exchange-swap-input"
-                value={value}
-                onChange={(e) => setValue(e.target.value)}
-              />
-            </div>
-            <div className="PositionEditor-token-symbol">{unstakingTokenSymbol}</div>
-          </div>
-        </div>
-        {reservedAmount && reservedAmount.gt(0) && (
-          <div className="Modal-note">
-            You have {formatAmount(reservedAmount, 18, 2, true)} tokens reserved for vesting.
-          </div>
-        )}
-        {burnAmount && burnAmount.gt(0) && rewardReductionBasisPoints && rewardReductionBasisPoints.gt(0) && (
-          <div className="Modal-note">
-            Unstaking will burn&nbsp;
-            <a href="https://mmfinance.gitbook.io/docs/mmx/rewards" target="_blank" rel="noopener noreferrer">
-              {formatAmount(burnAmount, 18, 4, true)} Multiplier Points
-            </a>
-            .&nbsp;
-            {shouldShowReductionAmount && (
-              <span>Boost Percentage: -{formatAmount(rewardReductionBasisPoints, 2, 2)}%.</span>
-            )}
-          </div>
-        )}
-        <div className="Exchange-swap-button-container">
-          <button className="App-cta Exchange-swap-button" onClick={onClickPrimary} disabled={!isPrimaryEnabled()}>
-            {getPrimaryText()}
-          </button>
-        </div>
-      </Modal>
-    </div>
-  );
-}
-
-function VesterDepositModal(props) {
-  const {
-    isVisible,
-    setIsVisible,
-    chainId,
-    title,
-    maxAmount,
-    value,
-    setValue,
-    balance,
-    vestedAmount,
-    averageStakedAmount,
-    maxVestableAmount,
-    library,
-    stakeTokenLabel,
-    reserveAmount,
-    maxReserveAmount,
-    vesterAddress,
-    setPendingTxns,
-  } = props;
-  const [isDepositing, setIsDepositing] = useState(false);
-
-  let amount = parseValue(value, 18);
-
-  let nextReserveAmount = reserveAmount;
-
-  let nextDepositAmount = vestedAmount;
-  if (amount) {
-    nextDepositAmount = vestedAmount.add(amount);
-  }
-
-  let additionalReserveAmount = bigNumberify(0);
-  if (amount && averageStakedAmount && maxVestableAmount && maxVestableAmount.gt(0)) {
-    nextReserveAmount = nextDepositAmount.mul(averageStakedAmount).div(maxVestableAmount);
-    if (nextReserveAmount.gt(reserveAmount)) {
-      additionalReserveAmount = nextReserveAmount.sub(reserveAmount);
-    }
-  }
-
-  const getError = () => {
-    if (!amount || amount.eq(0)) {
-      return "Enter an amount";
-    }
-    if (maxAmount && amount.gt(maxAmount)) {
-      return "Max amount exceeded";
-    }
-    if (nextReserveAmount.gt(maxReserveAmount)) {
-      return "Insufficient staked tokens";
-    }
-  };
-
-  const onClickPrimary = () => {
-    setIsDepositing(true);
-    const contract = new ethers.Contract(vesterAddress, Vester.abi, library.getSigner());
-
-    callContract(chainId, contract, "deposit", [amount], {
-      sentMsg: "Deposit submitted!",
-      failMsg: "Deposit failed!",
-      successMsg: "Deposited!",
-      setPendingTxns,
-    })
-      .then(async (res) => {
-        setIsVisible(false);
-      })
-      .finally(() => {
-        setIsDepositing(false);
-      });
-  };
-
-  const isPrimaryEnabled = () => {
-    const error = getError();
-    if (error) {
-      return false;
-    }
-    if (isDepositing) {
-      return false;
-    }
-    return true;
-  };
-
-  const getPrimaryText = () => {
-    const error = getError();
-    if (error) {
-      return error;
-    }
-    if (isDepositing) {
-      return "Depositing...";
-    }
-    return "Deposit";
-  };
-
-  return (
-    <SEO title={getPageTitle("Earn")}>
-      <div className="StakeModal">
-        <Modal isVisible={isVisible} setIsVisible={setIsVisible} label={title} className="non-scrollable">
-          <div className="Exchange-swap-section">
-            <div className="Exchange-swap-section-top">
-              <div className="muted">
-                <div className="Exchange-swap-usd">Deposit</div>
-              </div>
-              <div
-                className="muted align-right clickable"
-                onClick={() => setValue(formatAmountFree(maxAmount, 18, 18))}
-              >
-                Max: {formatAmount(maxAmount, 18, 4, true)}
-              </div>
-            </div>
-            <div className="Exchange-swap-section-bottom">
-              <div>
-                <input
-                  type="number"
-                  placeholder="0.0"
-                  className="Exchange-swap-input"
-                  value={value}
-                  onChange={(e) => setValue(e.target.value)}
-                />
-              </div>
-              <div className="PositionEditor-token-symbol">esGMX</div>
-            </div>
-          </div>
-          <div className="VesterDepositModal-info-rows">
-            <div className="Exchange-info-row">
-              <div className="Exchange-info-label">Wallet</div>
-              <div className="align-right">{formatAmount(balance, 18, 2, true)} esGMX</div>
-            </div>
-            <div className="Exchange-info-row">
-              <div className="Exchange-info-label">Vault Capacity</div>
-              <div className="align-right">
-                <Tooltip
-                  handle={`${formatAmount(nextDepositAmount, 18, 2, true)} / ${formatAmount(
-                    maxVestableAmount,
-                    18,
-                    2,
-                    true
-                  )}`}
-                  position="right-bottom"
-                  renderContent={() => {
-                    return (
-                      <>
-                        Vault Capacity for your Account
-                        <br />
-                        <br />
-                        Deposited: {formatAmount(vestedAmount, 18, 2, true)} esGMX
-                        <br />
-                        Max Capacity: {formatAmount(maxVestableAmount, 18, 2, true)} esGMX
-                        <br />
-                      </>
-                    );
-                  }}
-                />
-              </div>
-            </div>
-            <div className="Exchange-info-row">
-              <div className="Exchange-info-label">Reserve Amount</div>
-              <div className="align-right">
-                <Tooltip
-                  handle={`${formatAmount(
-                    reserveAmount && reserveAmount.gte(additionalReserveAmount)
-                      ? reserveAmount
-                      : additionalReserveAmount,
-                    18,
-                    2,
-                    true
-                  )} / ${formatAmount(maxReserveAmount, 18, 2, true)}`}
-                  position="right-bottom"
-                  renderContent={() => {
-                    return (
-                      <>
-                        Current Reserved: {formatAmount(reserveAmount, 18, 2, true)}
-                        <br />
-                        Additional reserve required: {formatAmount(additionalReserveAmount, 18, 2, true)}
-                        <br />
-                        {amount && nextReserveAmount.gt(maxReserveAmount) && (
-                          <div>
-                            <br />
-                            You need a total of at least {formatAmount(nextReserveAmount, 18, 2, true)}{" "}
-                            {stakeTokenLabel} to vest {formatAmount(amount, 18, 2, true)} esGMX.
-                          </div>
-                        )}
-                      </>
-                    );
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-          <div className="Exchange-swap-button-container">
-            <button className="App-cta Exchange-swap-button" onClick={onClickPrimary} disabled={!isPrimaryEnabled()}>
-              {getPrimaryText()}
-            </button>
-          </div>
-        </Modal>
-      </div>
-    </SEO>
-  );
-}
-
-function VesterWithdrawModal(props) {
-  const { isVisible, setIsVisible, chainId, title, library, vesterAddress, setPendingTxns } = props;
-  const [isWithdrawing, setIsWithdrawing] = useState(false);
-
-  const onClickPrimary = () => {
-    setIsWithdrawing(true);
-    const contract = new ethers.Contract(vesterAddress, Vester.abi, library.getSigner());
-
-    callContract(chainId, contract, "withdraw", [], {
-      sentMsg: "Withdraw submitted.",
-      failMsg: "Withdraw failed.",
-      successMsg: "Withdrawn!",
-      setPendingTxns,
-    })
-      .then(async (res) => {
-        setIsVisible(false);
-      })
-      .finally(() => {
-        setIsWithdrawing(false);
-      });
-  };
-
-  return (
-    <div className="StakeModal">
-      <Modal isVisible={isVisible} setIsVisible={setIsVisible} label={title}>
-        <div>
-          This will withdraw and unreserve all tokens as well as pause vesting.
-          <br />
-          <br />
-          esGMX tokens that have been converted to GMX will remain as GMX tokens.
-          <br />
-          <br />
-          To claim GMX tokens without withdrawing, use the "Claim" button under the Total Rewards section.
-          <br />
-          <br />
-        </div>
-        <div className="Exchange-swap-button-container">
-          <button className="App-cta Exchange-swap-button" onClick={onClickPrimary} disabled={isWithdrawing}>
-            {!isWithdrawing && "Confirm Withdraw"}
-            {isWithdrawing && "Confirming..."}
-          </button>
-        </div>
-      </Modal>
-    </div>
-  );
-}
-
-function CompoundModal(props) {
-  const {
-    isVisible,
-    setIsVisible,
-    rewardRouterAddress,
-    active,
-    account,
-    library,
-    chainId,
-    setPendingTxns,
-    totalVesterRewards,
-    nativeTokenSymbol,
-    wrappedTokenSymbol,
-  } = props;
-  const [isCompounding, setIsCompounding] = useState(false);
-  const [shouldClaimGmx, setShouldClaimGmx] = useLocalStorageSerializeKey(
-    [chainId, "StakeV2-compound-should-claim-gmx"],
-    true
-  );
-  const [shouldStakeGmx, setShouldStakeGmx] = useLocalStorageSerializeKey(
-    [chainId, "StakeV2-compound-should-stake-gmx"],
-    true
-  );
-  const [shouldClaimEsGmx, setShouldClaimEsGmx] = useLocalStorageSerializeKey(
-    [chainId, "StakeV2-compound-should-claim-es-gmx"],
-    true
-  );
-  const [shouldStakeEsGmx, setShouldStakeEsGmx] = useLocalStorageSerializeKey(
-    [chainId, "StakeV2-compound-should-stake-es-gmx"],
-    true
-  );
-  const [shouldStakeMultiplierPoints, setShouldStakeMultiplierPoints] = useState(true);
-  const [shouldClaimWeth, setShouldClaimWeth] = useLocalStorageSerializeKey(
-    [chainId, "StakeV2-compound-should-claim-weth"],
-    true
-  );
-  const [shouldConvertWeth, setShouldConvertWeth] = useLocalStorageSerializeKey(
-    [chainId, "StakeV2-compound-should-convert-weth"],
-    true
-  );
-
-  const gmxAddress = getContract(chainId, "GMX");
-  const stakedGmxTrackerAddress = getContract(chainId, "StakedGmxTracker");
-
-  const [isApproving, setIsApproving] = useState(false);
-
-  const { data: tokenAllowance } = useSWR(
-    active && [active, chainId, gmxAddress, "allowance", account, stakedGmxTrackerAddress],
-    {
-      fetcher: fetcher(library, Token),
-    }
-  );
-
-  const needApproval = shouldStakeGmx && tokenAllowance && totalVesterRewards && totalVesterRewards.gt(tokenAllowance);
-
-  const isPrimaryEnabled = () => {
-    return !isCompounding && !isApproving && !isCompounding;
-  };
-
-  const getPrimaryText = () => {
-    if (isApproving) {
-      return `Approving GMX...`;
-    }
-    if (needApproval) {
-      return `Approve GMX`;
-    }
-    if (isCompounding) {
-      return "Compounding...";
-    }
-    return "Compound";
-  };
-
-  const onClickPrimary = () => {
-    if (needApproval) {
-      approveTokens({
-        setIsApproving,
-        library,
-        tokenAddress: gmxAddress,
-        spender: stakedGmxTrackerAddress,
-        chainId,
-      });
-      return;
-    }
-
-    setIsCompounding(true);
-
-    const contract = new ethers.Contract(rewardRouterAddress, RewardRouter.abi, library.getSigner());
-    callContract(
-      chainId,
-      contract,
-      "handleRewards",
-      [
-        shouldClaimGmx || shouldStakeGmx,
-        shouldStakeGmx,
-        shouldClaimEsGmx || shouldStakeEsGmx,
-        shouldStakeEsGmx,
-        shouldStakeMultiplierPoints,
-        shouldClaimWeth || shouldConvertWeth,
-        shouldConvertWeth,
-      ],
-      {
-        sentMsg: "Compound submitted!",
-        failMsg: "Compound failed.",
-        successMsg: "Compound completed!",
-        setPendingTxns,
-      }
-    )
-      .then(async (res) => {
-        setIsVisible(false);
-      })
-      .finally(() => {
-        setIsCompounding(false);
-      });
-  };
-
-  const toggleShouldStakeGmx = (value) => {
-    if (value) {
-      setShouldClaimGmx(true);
-    }
-    setShouldStakeGmx(value);
-  };
-
-  const toggleShouldStakeEsGmx = (value) => {
-    if (value) {
-      setShouldClaimEsGmx(true);
-    }
-    setShouldStakeEsGmx(value);
-  };
-
-  const toggleConvertWeth = (value) => {
-    if (value) {
-      setShouldClaimWeth(true);
-    }
-    setShouldConvertWeth(value);
-  };
-
-  return (
-    <div className="StakeModal">
-      <Modal isVisible={isVisible} setIsVisible={setIsVisible} label="Compound Rewards">
-        <div className="CompoundModal-menu">
-          <div>
-            <Checkbox
-              isChecked={shouldStakeMultiplierPoints}
-              setIsChecked={setShouldStakeMultiplierPoints}
-              disabled={true}
-            >
-              Stake Multiplier Points
-            </Checkbox>
-          </div>
-          <div>
-            <Checkbox isChecked={shouldClaimGmx} setIsChecked={setShouldClaimGmx} disabled={shouldStakeGmx}>
-              Claim GMX Rewards
-            </Checkbox>
-          </div>
-          <div>
-            <Checkbox isChecked={shouldStakeGmx} setIsChecked={toggleShouldStakeGmx}>
-              Stake GMX Rewards
-            </Checkbox>
-          </div>
-          <div>
-            <Checkbox isChecked={shouldClaimEsGmx} setIsChecked={setShouldClaimEsGmx} disabled={shouldStakeEsGmx}>
-              Claim esGMX Rewards
-            </Checkbox>
-          </div>
-          <div>
-            <Checkbox isChecked={shouldStakeEsGmx} setIsChecked={toggleShouldStakeEsGmx}>
-              Stake esGMX Rewards
-            </Checkbox>
-          </div>
-          <div>
-            <Checkbox isChecked={shouldClaimWeth} setIsChecked={setShouldClaimWeth} disabled={shouldConvertWeth}>
-              Claim {wrappedTokenSymbol} Rewards
-            </Checkbox>
-          </div>
-          <div>
-            <Checkbox isChecked={shouldConvertWeth} setIsChecked={toggleConvertWeth}>
-              Convert {wrappedTokenSymbol} to {nativeTokenSymbol}
-            </Checkbox>
-          </div>
-        </div>
-        <div className="Exchange-swap-button-container">
-          <button className="App-cta Exchange-swap-button" onClick={onClickPrimary} disabled={!isPrimaryEnabled()}>
-            {getPrimaryText()}
-          </button>
-        </div>
-      </Modal>
-    </div>
-  );
-}
-
-function ClaimModal(props) {
-  const {
-    isVisible,
-    setIsVisible,
-    rewardRouterAddress,
-    library,
-    chainId,
-    setPendingTxns,
-    nativeTokenSymbol,
-    wrappedTokenSymbol,
-  } = props;
-  const [isClaiming, setIsClaiming] = useState(false);
-  const [shouldClaimGmx, setShouldClaimGmx] = useLocalStorageSerializeKey(
-    [chainId, "StakeV2-claim-should-claim-gmx"],
-    true
-  );
-  const [shouldClaimEsGmx, setShouldClaimEsGmx] = useLocalStorageSerializeKey(
-    [chainId, "StakeV2-claim-should-claim-es-gmx"],
-    true
-  );
-  const [shouldClaimWeth, setShouldClaimWeth] = useLocalStorageSerializeKey(
-    [chainId, "StakeV2-claim-should-claim-weth"],
-    true
-  );
-  const [shouldConvertWeth, setShouldConvertWeth] = useLocalStorageSerializeKey(
-    [chainId, "StakeV2-claim-should-convert-weth"],
-    true
-  );
-
-  const isPrimaryEnabled = () => {
-    return !isClaiming;
-  };
-
-  const getPrimaryText = () => {
-    if (isClaiming) {
-      return `Claiming...`;
-    }
-    return "Claim";
-  };
-
-  const onClickPrimary = () => {
-    setIsClaiming(true);
-
-    const contract = new ethers.Contract(rewardRouterAddress, RewardRouter.abi, library.getSigner());
-    callContract(
-      chainId,
-      contract,
-      "handleRewards",
-      [
-        shouldClaimGmx,
-        false, // shouldStakeGmx
-        shouldClaimEsGmx,
-        false, // shouldStakeEsGmx
-        false, // shouldStakeMultiplierPoints
-        shouldClaimWeth,
-        shouldConvertWeth,
-      ],
-      {
-        sentMsg: "Claim submitted.",
-        failMsg: "Claim failed.",
-        successMsg: "Claim completed!",
-        setPendingTxns,
-      }
-    )
-      .then(async (res) => {
-        setIsVisible(false);
-      })
-      .finally(() => {
-        setIsClaiming(false);
-      });
-  };
-
-  const toggleConvertWeth = (value) => {
-    if (value) {
-      setShouldClaimWeth(true);
-    }
-    setShouldConvertWeth(value);
-  };
-
-  return (
-    <div className="StakeModal">
-      <Modal isVisible={isVisible} setIsVisible={setIsVisible} label="Claim Rewards">
-        <div className="CompoundModal-menu">
-          <div>
-            <Checkbox isChecked={shouldClaimGmx} setIsChecked={setShouldClaimGmx}>
-              Claim GMX Rewards
-            </Checkbox>
-          </div>
-          <div>
-            <Checkbox isChecked={shouldClaimEsGmx} setIsChecked={setShouldClaimEsGmx}>
-              Claim esGMX Rewards
-            </Checkbox>
-          </div>
-          <div>
-            <Checkbox isChecked={shouldClaimWeth} setIsChecked={setShouldClaimWeth} disabled={shouldConvertWeth}>
-              Claim {wrappedTokenSymbol} Rewards
-            </Checkbox>
-          </div>
-          <div>
-            <Checkbox isChecked={shouldConvertWeth} setIsChecked={toggleConvertWeth}>
-              Convert {wrappedTokenSymbol} to {nativeTokenSymbol}
-            </Checkbox>
-          </div>
-        </div>
-        <div className="Exchange-swap-button-container">
-          <button className="App-cta Exchange-swap-button" onClick={onClickPrimary} disabled={!isPrimaryEnabled()}>
-            {getPrimaryText()}
-          </button>
-        </div>
-      </Modal>
-    </div>
-  );
-}
-
 export default function StakeV2({ setPendingTxns, connectWallet }) {
   const { active, library, account } = useWeb3React();
   const { chainId } = useChainId();
 
   const chainName = getChainName(chainId);
 
-  const hasInsurance = true;
+  // const hasInsurance = true;
 
-  const [isStakeModalVisible, setIsStakeModalVisible] = useState(false);
-  const [stakeModalTitle, setStakeModalTitle] = useState("");
-  const [stakeModalMaxAmount, setStakeModalMaxAmount] = useState(undefined);
-  const [stakeValue, setStakeValue] = useState("");
-  const [stakingTokenSymbol, setStakingTokenSymbol] = useState("");
-  const [stakingTokenAddress, setStakingTokenAddress] = useState("");
-  const [stakingFarmAddress, setStakingFarmAddress] = useState("");
-  const [stakeMethodName, setStakeMethodName] = useState("");
+  // const [isStakeModalVisible, setIsStakeModalVisible] = useState(false);
+  // const [stakeModalTitle, setStakeModalTitle] = useState("");
+  // const [stakeModalMaxAmount, setStakeModalMaxAmount] = useState(undefined);
+  // const [stakeValue, setStakeValue] = useState("");
+  // const [stakingTokenSymbol, setStakingTokenSymbol] = useState("");
+  // const [stakingTokenAddress, setStakingTokenAddress] = useState("");
+  // const [stakingFarmAddress, setStakingFarmAddress] = useState("");
+  // const [stakeMethodName, setStakeMethodName] = useState("");
 
-  const [isUnstakeModalVisible, setIsUnstakeModalVisible] = useState(false);
-  const [unstakeModalTitle, setUnstakeModalTitle] = useState("");
-  const [unstakeModalMaxAmount, setUnstakeModalMaxAmount] = useState(undefined);
-  const [unstakeModalReservedAmount, setUnstakeModalReservedAmount] = useState(undefined);
-  const [unstakeValue, setUnstakeValue] = useState("");
-  const [unstakingTokenSymbol, setUnstakingTokenSymbol] = useState("");
-  const [unstakeMethodName, setUnstakeMethodName] = useState("");
+  // const [isUnstakeModalVisible, setIsUnstakeModalVisible] = useState(false);
+  // const [unstakeModalTitle, setUnstakeModalTitle] = useState("");
+  // const [unstakeModalMaxAmount, setUnstakeModalMaxAmount] = useState(undefined);
+  // const [unstakeModalReservedAmount, setUnstakeModalReservedAmount] = useState(undefined);
+  // const [unstakeValue, setUnstakeValue] = useState("");
+  // const [unstakingTokenSymbol, setUnstakingTokenSymbol] = useState("");
+  // const [unstakeMethodName, setUnstakeMethodName] = useState("");
 
-  const [isVesterDepositModalVisible, setIsVesterDepositModalVisible] = useState(false);
-  const [vesterDepositTitle, setVesterDepositTitle] = useState("");
-  const [vesterDepositStakeTokenLabel, setVesterDepositStakeTokenLabel] = useState("");
-  const [vesterDepositMaxAmount, setVesterDepositMaxAmount] = useState("");
-  const [vesterDepositBalance, setVesterDepositBalance] = useState("");
-  const [vesterDepositEscrowedBalance, setVesterDepositEscrowedBalance] = useState("");
-  const [vesterDepositVestedAmount, setVesterDepositVestedAmount] = useState("");
-  const [vesterDepositAverageStakedAmount, setVesterDepositAverageStakedAmount] = useState("");
-  const [vesterDepositMaxVestableAmount, setVesterDepositMaxVestableAmount] = useState("");
-  const [vesterDepositValue, setVesterDepositValue] = useState("");
-  const [vesterDepositReserveAmount, setVesterDepositReserveAmount] = useState("");
-  const [vesterDepositMaxReserveAmount, setVesterDepositMaxReserveAmount] = useState("");
-  const [vesterDepositAddress, setVesterDepositAddress] = useState("");
+  // const [isVesterDepositModalVisible, setIsVesterDepositModalVisible] = useState(false);
+  // const [vesterDepositTitle, setVesterDepositTitle] = useState("");
+  // const [vesterDepositStakeTokenLabel, setVesterDepositStakeTokenLabel] = useState("");
+  // const [vesterDepositMaxAmount, setVesterDepositMaxAmount] = useState("");
+  // const [vesterDepositBalance, setVesterDepositBalance] = useState("");
+  // const [vesterDepositEscrowedBalance, setVesterDepositEscrowedBalance] = useState("");
+  // const [vesterDepositVestedAmount, setVesterDepositVestedAmount] = useState("");
+  // const [vesterDepositAverageStakedAmount, setVesterDepositAverageStakedAmount] = useState("");
+  // const [vesterDepositMaxVestableAmount, setVesterDepositMaxVestableAmount] = useState("");
+  // const [vesterDepositValue, setVesterDepositValue] = useState("");
+  // const [vesterDepositReserveAmount, setVesterDepositReserveAmount] = useState("");
+  // const [vesterDepositMaxReserveAmount, setVesterDepositMaxReserveAmount] = useState("");
+  // const [vesterDepositAddress, setVesterDepositAddress] = useState("");
 
-  const [isVesterWithdrawModalVisible, setIsVesterWithdrawModalVisible] = useState(false);
-  const [vesterWithdrawTitle, setVesterWithdrawTitle] = useState(false);
-  const [vesterWithdrawAddress, setVesterWithdrawAddress] = useState("");
+  // const [isVesterWithdrawModalVisible, setIsVesterWithdrawModalVisible] = useState(false);
+  // const [vesterWithdrawTitle, setVesterWithdrawTitle] = useState(false);
+  // const [vesterWithdrawAddress, setVesterWithdrawAddress] = useState("");
 
-  const [isCompoundModalVisible, setIsCompoundModalVisible] = useState(false);
-  const [isClaimModalVisible, setIsClaimModalVisible] = useState(false);
+  // const [isCompoundModalVisible, setIsCompoundModalVisible] = useState(false);
+  // const [isClaimModalVisible, setIsClaimModalVisible] = useState(false);
 
   const rewardRouterAddress = getContract(chainId, "RewardRouter");
   const rewardReaderAddress = getContract(chainId, "RewardReader");
@@ -934,6 +115,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
   const esGmxAddress = getContract(chainId, "ES_GMX");
   const bnGmxAddress = getContract(chainId, "BN_GMX");
   const glpAddress = getContract(chainId, "MLP");
+  const masterchef = getContract(chainId, "masterchef")
 
   const stakedGmxTrackerAddress = getContract(chainId, "StakedGmxTracker");
   const bonusGmxTrackerAddress = getContract(chainId, "BonusGmxTracker");
@@ -959,379 +141,461 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
 
   const walletTokens = [gmxAddress, esGmxAddress, glpAddress, stakedGmxTrackerAddress];
   const depositTokens = [
-    gmxAddress,
-    esGmxAddress,
-    stakedGmxTrackerAddress,
-    bonusGmxTrackerAddress,
-    bnGmxAddress,
+    // gmxAddress,
+    // esGmxAddress,
+    // stakedGmxTrackerAddress,
+    // bonusGmxTrackerAddress,
+    // bnGmxAddress,
     glpAddress,
   ];
   const rewardTrackersForDepositBalances = [
-    stakedGmxTrackerAddress,
-    stakedGmxTrackerAddress,
-    bonusGmxTrackerAddress,
-    feeGmxTrackerAddress,
-    feeGmxTrackerAddress,
+    // stakedGmxTrackerAddress,
+    // stakedGmxTrackerAddress,
+    // bonusGmxTrackerAddress,
+    // feeGmxTrackerAddress,
+    // feeGmxTrackerAddress,
     feeGlpTrackerAddress,
   ];
   const rewardTrackersForStakingInfo = [
-    stakedGmxTrackerAddress,
-    bonusGmxTrackerAddress,
-    feeGmxTrackerAddress,
+    // stakedGmxTrackerAddress,
+    // bonusGmxTrackerAddress,
+    // feeGmxTrackerAddress,
     stakedGlpTrackerAddress,
     feeGlpTrackerAddress,
   ];
 
-  const { data: walletBalances } = useSWR(
+  const usdgAddress = getContract(chainId, "USDG");
+  const tokensForBalanceAndSupplyQuery = [glpAddress, usdgAddress];
+  const { data: balancesAndSupplies } = useSWR(
     [
-      `StakeV2:walletBalances:${active}`,
+      `GlpSwap:getTokenBalancesWithSupplies:${active}`,
       chainId,
       readerAddress,
       "getTokenBalancesWithSupplies",
       account || PLACEHOLDER_ACCOUNT,
     ],
     {
-      fetcher: fetcher(library, ReaderV2, [walletTokens]),
+      fetcher: fetcher(library, ReaderV2, [tokensForBalanceAndSupplyQuery]),
     }
   );
 
-  const { data: depositBalances } = useSWR(
-    [
-      `StakeV2:depositBalances:${active}`,
-      chainId,
-      rewardReaderAddress,
-      "getDepositBalances",
-      account || PLACEHOLDER_ACCOUNT,
-    ],
+
+  const { data: glpBalance } = useSWR(
+    [`GlpSwap:glpBalance:${active}`, chainId, glpAddress, "balanceOf", account || PLACEHOLDER_ACCOUNT],
     {
-      fetcher: fetcher(library, RewardReader, [depositTokens, rewardTrackersForDepositBalances]),
+      fetcher: fetcher(library, RewardTracker),
     }
   );
 
-  const { data: stakingInfo } = useSWR(
-    [`StakeV2:stakingInfo:${active}`, chainId, rewardReaderAddress, "getStakingInfo", account || PLACEHOLDER_ACCOUNT],
+  const { data: totalGlpStakedInMasterchef } = useSWR(
+    [`GlpSwap:glpBalance:${active}`, chainId, glpAddress, "balanceOf", masterchef || PLACEHOLDER_ACCOUNT],
     {
-      fetcher: fetcher(library, RewardReader, [rewardTrackersForStakingInfo]),
+      fetcher: fetcher(library, RewardTracker),
     }
   );
 
-  const { data: stakedGmxSupply } = useSWR(
-    [`StakeV2:stakedGmxSupply:${active}`, chainId, gmxAddress, "balanceOf", stakedGmxTrackerAddress],
+  const { data: glpStakeInMasterChef } = useSWR(
+    [`GlpSwap:glpStakedMasterchef:${active}`, chainId, masterchef, "userInfo"],
     {
-      fetcher: fetcher(library, Token),
+      fetcher: fetcher(library, MasterchefABI, [13, account]),
     }
   );
 
-  const { data: aums } = useSWR([`StakeV2:getAums:${active}`, chainId, glpManagerAddress, "getAums"], {
+
+  const { data: aums } = useSWR([`GlpSwap:getAums:${active}`, chainId, glpManagerAddress, "getAums"], {
     fetcher: fetcher(library, GlpManager),
   });
 
-  const { data: nativeTokenPrice } = useSWR(
-    [`StakeV2:nativeTokenPrice:${active}`, chainId, vaultAddress, "getMinPrice", nativeTokenAddress],
-    {
-      fetcher: fetcher(library, Vault),
-    }
-  );
+  // const { data: totalTokenWeights } = useSWR(
+  //   [`GlpSwap:totalTokenWeights:${active}`, chainId, vaultAddress, "totalTokenWeights"],
+  //   {
+  //     fetcher: fetcher(library, VaultV2),
+  //   }
+  // );
 
-  const { data: esGmxSupply } = useSWR(
-    [`StakeV2:esGmxSupply:${active}`, chainId, readerAddress, "getTokenSupply", esGmxAddress],
-    {
-      fetcher: fetcher(library, ReaderV2, [excludedEsGmxAccounts]),
-    }
-  );
-
-  const { data: vestingInfo } = useSWR(
-    [`StakeV2:vestingInfo:${active}`, chainId, readerAddress, "getVestingInfo", account || PLACEHOLDER_ACCOUNT],
-    {
-      fetcher: fetcher(library, ReaderV2, [vesterAddresses]),
-    }
-  );
-
-  const { gmxPrice, gmxPriceFromArbitrum, gmxPriceFromAvalanche } = useGmxPrice(
-    chainId,
-    { arbitrum: chainId === ARBITRUM ? library : undefined },
-    active
-  );
-
-  let { total: totalGmxSupply } = useTotalGmxSupply();
-
-  let { avax: avaxGmxStaked, arbitrum: arbitrumGmxStaked, total: totalGmxStaked } = useTotalGmxStaked();
-
-  const gmxSupplyUrl = getServerUrl(chainId, "/gmx_supply");
-  const { data: gmxSupply } = useSWR([gmxSupplyUrl], {
-    fetcher: (...args) => fetch(...args).then((res) => res.text()),
-  });
-
-  const isGmxTransferEnabled = true;
-
-  let esGmxSupplyUsd;
-  if (esGmxSupply && gmxPrice) {
-    esGmxSupplyUsd = esGmxSupply.mul(gmxPrice).div(expandDecimals(1, 18));
-  }
-
+  const glpSupply = balancesAndSupplies ? balancesAndSupplies[1] : bigNumberify(0);
+  const usdgSupply = balancesAndSupplies ? balancesAndSupplies[3] : bigNumberify(0);
   let aum;
   if (aums && aums.length > 0) {
-    aum = aums[0].add(aums[1]).div(2);
+    aum = true ? aums[0] : aums[1];
   }
-
-  const { balanceData, supplyData } = getBalanceAndSupplyData(walletBalances);
-  const depositBalanceData = getDepositBalanceData(depositBalances);
-  const stakingData = getStakingData(stakingInfo);
-  const vestingData = getVestingData(vestingInfo);
-
-  const processedData = getProcessedData(
-    balanceData,
-    supplyData,
-    depositBalanceData,
-    stakingData,
-    vestingData,
-    aum,
-    nativeTokenPrice,
-    stakedGmxSupply,
-    gmxPrice,
-    gmxSupply
-  );
-
-  let hasMultiplierPoints = false;
-  let multiplierPointsAmount;
-  if (processedData && processedData.bonusGmxTrackerRewards && processedData.bnGmxInFeeGmx) {
-    multiplierPointsAmount = processedData.bonusGmxTrackerRewards.add(processedData.bnGmxInFeeGmx);
-    if (multiplierPointsAmount.gt(0)) {
-      hasMultiplierPoints = true;
-    }
+  const glpPrice =
+    aum && aum.gt(0) && glpSupply.gt(0)
+      ? aum.mul(expandDecimals(1, GLP_DECIMALS)).div(glpSupply)
+      : expandDecimals(1, USD_DECIMALS);
+  let glpBalanceUsd;
+  if (glpBalance) {
+    glpBalanceUsd = glpBalance.mul(glpPrice).div(expandDecimals(1, GLP_DECIMALS));
   }
-  let totalRewardTokens;
-  if (processedData && processedData.bnGmxInFeeGmx && processedData.bonusGmxInFeeGmx) {
-    totalRewardTokens = processedData.bnGmxInFeeGmx.add(processedData.bonusGmxInFeeGmx);
-  }
+  const glpSupplyUsd = glpSupply.mul(glpPrice).div(expandDecimals(1, GLP_DECIMALS));
 
-  let totalRewardTokensAndGlp;
-  if (totalRewardTokens && processedData && processedData.glpBalance) {
-    totalRewardTokensAndGlp = totalRewardTokens.add(processedData.glpBalance);
-  }
 
-  const bonusGmxInFeeGmx = processedData ? processedData.bonusGmxInFeeGmx : undefined;
 
-  let stakedGmxSupplyUsd;
-  if (!totalGmxStaked.isZero() && gmxPrice) {
-    stakedGmxSupplyUsd = totalGmxStaked.mul(gmxPrice).div(expandDecimals(1, 18));
+  let stakedAmount;
+  let stakedAmountUSD;
+  let totalMlpStakedPrice;
+  if (glpStakeInMasterChef && glpStakeInMasterChef.amount && totalGlpStakedInMasterchef) {
+    stakedAmount = glpStakeInMasterChef.amount 
+    stakedAmountUSD = glpStakeInMasterChef.amount.mul(glpPrice).div(expandDecimals(1, GLP_DECIMALS));
+    totalMlpStakedPrice = totalGlpStakedInMasterchef.mul(glpPrice).div(expandDecimals(1, GLP_DECIMALS));
   }
+  console.log(totalMlpStakedPrice)
 
-  let totalSupplyUsd;
-  if (totalGmxSupply && !totalGmxSupply.isZero() && gmxPrice) {
-    totalSupplyUsd = totalGmxSupply.mul(gmxPrice).div(expandDecimals(1, 18));
-  }
+  // const { data: walletBalances } = useSWR(
+  //   [
+  //     `StakeV2:walletBalances:${active}`,
+  //     chainId,
+  //     readerAddress,
+  //     "getTokenBalancesWithSupplies",
+  //     account || PLACEHOLDER_ACCOUNT,
+  //   ],
+  //   {
+  //     fetcher: fetcher(library, ReaderV2, [walletTokens]),
+  //   }
+  // );
+
+  // const { data: depositBalances } = useSWR(
+  //   [
+  //     `StakeV2:depositBalances:${active}`,
+  //     chainId,
+  //     rewardReaderAddress,
+  //     "getDepositBalances",
+  //     account || PLACEHOLDER_ACCOUNT,
+  //   ],
+  //   {
+  //     fetcher: fetcher(library, RewardReader, [depositTokens, rewardTrackersForDepositBalances]),
+  //   }
+  // );
+
+  // const { data: stakingInfo } = useSWR(
+  //   [`StakeV2:stakingInfo:${active}`, chainId, rewardReaderAddress, "getStakingInfo", account || PLACEHOLDER_ACCOUNT],
+  //   {
+  //     fetcher: fetcher(library, RewardReader, [rewardTrackersForStakingInfo]),
+  //   }
+  // );
+
+  // const { data: stakedGmxSupply } = useSWR(
+  //   [`StakeV2:stakedGmxSupply:${active}`, chainId, gmxAddress, "balanceOf", stakedGmxTrackerAddress],
+  //   {
+  //     fetcher: fetcher(library, Token),
+  //   }
+  // );
+  const stakedGmxSupply = 0;
+  const nativeTokenPrice = 0;
+
+  // const { data: aums } = useSWR([`StakeV2:getAums:${active}`, chainId, glpManagerAddress, "getAums"], {
+  //   fetcher: fetcher(library, GlpManager),
+  // });
+
+  // const { data: nativeTokenPrice } = useSWR(
+  //   [`StakeV2:nativeTokenPrice:${active}`, chainId, vaultAddress, "getMinPrice", nativeTokenAddress],
+  //   {
+  //     fetcher: fetcher(library, Vault),
+  //   }
+  // );
+
+  // const { data: esGmxSupply } = useSWR(
+  //   [`StakeV2:esGmxSupply:${active}`, chainId, readerAddress, "getTokenSupply", esGmxAddress],
+  //   {
+  //     fetcher: fetcher(library, ReaderV2, [excludedEsGmxAccounts]),
+  //   }
+  // );
+  const esGmxSupply = 0;
+
+  // const { data: vestingInfo } = useSWR(
+  //   [`StakeV2:vestingInfo:${active}`, chainId, readerAddress, "getVestingInfo", account || PLACEHOLDER_ACCOUNT],
+  //   {
+  //     fetcher: fetcher(library, ReaderV2, [vesterAddresses]),
+  //   }
+  // );
+
+  // const { gmxPrice, gmxPriceFromArbitrum, gmxPriceFromAvalanche } = useGmxPrice(
+  //   chainId,
+  //   { arbitrum: chainId === ARBITRUM ? library : undefined },
+  //   active
+  // );
+
+  // let { total: totalGmxSupply } = useTotalGmxSupply();
+
+  // let { avax: avaxGmxStaked, arbitrum: arbitrumGmxStaked, total: totalGmxStaked } = useTotalGmxStaked();
+
+  // const gmxSupplyUrl = getServerUrl(chainId, "/gmx_supply");
+  // const { data: gmxSupply } = useSWR([gmxSupplyUrl], {
+  //   fetcher: (...args) => fetch(...args).then((res) => res.text()),
+  // });
+  const gmxSupply=0, gmxPrice = 0;
+
+  // const isGmxTransferEnabled = true;
+
+  // let esGmxSupplyUsd;
+  // if (esGmxSupply && gmxPrice) {
+  //   esGmxSupplyUsd = esGmxSupply.mul(gmxPrice).div(expandDecimals(1, 18));
+  // }
+
+  // let aum;
+  // if (aums && aums.length > 0) {
+  //   aum = aums[0].add(aums[1]).div(2);
+  // }
+
+  // const { balanceData, supplyData } = getBalanceAndSupplyData(walletBalances);
+  // const depositBalanceData = getDepositBalanceData(depositBalances);
+  const processedData = {}
+  // const stakingData = getStakingData(stakingInfo);
+  // const vestingData = getVestingData(vestingInfo);
+
+  // const processedData = getProcessedData(
+  //   balanceData,
+  //   supplyData,
+  //   depositBalanceData,
+  //   stakingData,
+  //   vestingData,
+  //   aum,
+  //   nativeTokenPrice,
+  //   stakedGmxSupply,
+  //   gmxPrice,
+  //   gmxSupply
+  // );
+
+  // let hasMultiplierPoints = false;
+  // let multiplierPointsAmount;
+  // if (processedData && processedData.bonusGmxTrackerRewards && processedData.bnGmxInFeeGmx) {
+  //   multiplierPointsAmount = processedData.bonusGmxTrackerRewards.add(processedData.bnGmxInFeeGmx);
+  //   if (multiplierPointsAmount.gt(0)) {
+  //     hasMultiplierPoints = true;
+  //   }
+  // }
+  // let totalRewardTokens;
+  // if (processedData && processedData.bnGmxInFeeGmx && processedData.bonusGmxInFeeGmx) {
+  //   totalRewardTokens = processedData.bnGmxInFeeGmx.add(processedData.bonusGmxInFeeGmx);
+  // }
+
+  // let totalRewardTokensAndGlp;
+  // if (totalRewardTokens && processedData && processedData.glpBalance) {
+  //   totalRewardTokensAndGlp = totalRewardTokens.add(processedData.glpBalance);
+  // }
+
+  // const bonusGmxInFeeGmx = processedData ? processedData.bonusGmxInFeeGmx : undefined;
+
+  // let stakedGmxSupplyUsd;
+  // if (!totalGmxStaked.isZero() && gmxPrice) {
+  //   stakedGmxSupplyUsd = totalGmxStaked.mul(gmxPrice).div(expandDecimals(1, 18));
+  // }
+
+  // let totalSupplyUsd;
+  // if (totalGmxSupply && !totalGmxSupply.isZero() && gmxPrice) {
+  //   totalSupplyUsd = totalGmxSupply.mul(gmxPrice).div(expandDecimals(1, 18));
+  // }
 
   let maxUnstakeableGmx = bigNumberify(0);
-  if (
-    totalRewardTokens &&
-    vestingData &&
-    vestingData.gmxVesterPairAmount &&
-    multiplierPointsAmount &&
-    processedData.bonusGmxInFeeGmx
-  ) {
-    const availableTokens = totalRewardTokens.sub(vestingData.gmxVesterPairAmount);
-    const stakedTokens = processedData.bonusGmxInFeeGmx;
-    const divisor = multiplierPointsAmount.add(stakedTokens);
-    if (divisor.gt(0)) {
-      maxUnstakeableGmx = availableTokens.mul(stakedTokens).div(divisor);
-    }
-  }
+  // if (
+  //   totalRewardTokens &&
+  //   vestingData &&
+  //   vestingData.gmxVesterPairAmount &&
+  //   multiplierPointsAmount &&
+  //   processedData.bonusGmxInFeeGmx
+  // ) {
+  //   const availableTokens = totalRewardTokens.sub(vestingData.gmxVesterPairAmount);
+  //   const stakedTokens = processedData.bonusGmxInFeeGmx;
+  //   const divisor = multiplierPointsAmount.add(stakedTokens);
+  //   if (divisor.gt(0)) {
+  //     maxUnstakeableGmx = availableTokens.mul(stakedTokens).div(divisor);
+  //   }
+  // }
 
-  const showStakeGmxModal = () => {
-    if (!isGmxTransferEnabled) {
-      helperToast.error("GMX transfers not yet enabled");
-      return;
-    }
+  // const showStakeGmxModal = () => {
+  //   if (!isGmxTransferEnabled) {
+  //     helperToast.error("GMX transfers not yet enabled");
+  //     return;
+  //   }
 
-    setIsStakeModalVisible(true);
-    setStakeModalTitle("Stake GMX");
-    setStakeModalMaxAmount(processedData.gmxBalance);
-    setStakeValue("");
-    setStakingTokenSymbol("GMX");
-    setStakingTokenAddress(gmxAddress);
-    setStakingFarmAddress(stakedGmxTrackerAddress);
-    setStakeMethodName("stakeGmx");
-  };
+  //   setIsStakeModalVisible(true);
+  //   setStakeModalTitle("Stake GMX");
+  //   setStakeModalMaxAmount(processedData.gmxBalance);
+  //   setStakeValue("");
+  //   setStakingTokenSymbol("GMX");
+  //   setStakingTokenAddress(gmxAddress);
+  //   setStakingFarmAddress(stakedGmxTrackerAddress);
+  //   setStakeMethodName("stakeGmx");
+  // };
 
-  const showStakeEsGmxModal = () => {
-    setIsStakeModalVisible(true);
-    setStakeModalTitle("Stake esGMX");
-    setStakeModalMaxAmount(processedData.esGmxBalance);
-    setStakeValue("");
-    setStakingTokenSymbol("esGMX");
-    setStakingTokenAddress(esGmxAddress);
-    setStakingFarmAddress(AddressZero);
-    setStakeMethodName("stakeEsGmx");
-  };
+  // const showStakeEsGmxModal = () => {
+  //   setIsStakeModalVisible(true);
+  //   setStakeModalTitle("Stake esGMX");
+  //   setStakeModalMaxAmount(processedData.esGmxBalance);
+  //   setStakeValue("");
+  //   setStakingTokenSymbol("esGMX");
+  //   setStakingTokenAddress(esGmxAddress);
+  //   setStakingFarmAddress(AddressZero);
+  //   setStakeMethodName("stakeEsGmx");
+  // };
 
-  const showGmxVesterDepositModal = () => {
-    let remainingVestableAmount = vestingData.gmxVester.maxVestableAmount.sub(vestingData.gmxVester.vestedAmount);
-    if (processedData.esGmxBalance.lt(remainingVestableAmount)) {
-      remainingVestableAmount = processedData.esGmxBalance;
-    }
+  // const showGmxVesterDepositModal = () => {
+  //   let remainingVestableAmount = vestingData.gmxVester.maxVestableAmount.sub(vestingData.gmxVester.vestedAmount);
+  //   if (processedData.esGmxBalance.lt(remainingVestableAmount)) {
+  //     remainingVestableAmount = processedData.esGmxBalance;
+  //   }
 
-    setIsVesterDepositModalVisible(true);
-    setVesterDepositTitle("GMX Vault");
-    setVesterDepositStakeTokenLabel("staked GMX + esGMX + Multiplier Points");
-    setVesterDepositMaxAmount(remainingVestableAmount);
-    setVesterDepositBalance(processedData.esGmxBalance);
-    setVesterDepositEscrowedBalance(vestingData.gmxVester.escrowedBalance);
-    setVesterDepositVestedAmount(vestingData.gmxVester.vestedAmount);
-    setVesterDepositMaxVestableAmount(vestingData.gmxVester.maxVestableAmount);
-    setVesterDepositAverageStakedAmount(vestingData.gmxVester.averageStakedAmount);
-    setVesterDepositReserveAmount(vestingData.gmxVester.pairAmount);
-    setVesterDepositMaxReserveAmount(totalRewardTokens);
-    setVesterDepositValue("");
-    setVesterDepositAddress(gmxVesterAddress);
-  };
+  //   setIsVesterDepositModalVisible(true);
+  //   setVesterDepositTitle("GMX Vault");
+  //   setVesterDepositStakeTokenLabel("staked GMX + esGMX + Multiplier Points");
+  //   setVesterDepositMaxAmount(remainingVestableAmount);
+  //   setVesterDepositBalance(processedData.esGmxBalance);
+  //   setVesterDepositEscrowedBalance(vestingData.gmxVester.escrowedBalance);
+  //   setVesterDepositVestedAmount(vestingData.gmxVester.vestedAmount);
+  //   setVesterDepositMaxVestableAmount(vestingData.gmxVester.maxVestableAmount);
+  //   setVesterDepositAverageStakedAmount(vestingData.gmxVester.averageStakedAmount);
+  //   setVesterDepositReserveAmount(vestingData.gmxVester.pairAmount);
+  //   setVesterDepositMaxReserveAmount(totalRewardTokens);
+  //   setVesterDepositValue("");
+  //   setVesterDepositAddress(gmxVesterAddress);
+  // };
 
-  const showGlpVesterDepositModal = () => {
-    let remainingVestableAmount = vestingData.glpVester.maxVestableAmount.sub(vestingData.glpVester.vestedAmount);
-    if (processedData.esGmxBalance.lt(remainingVestableAmount)) {
-      remainingVestableAmount = processedData.esGmxBalance;
-    }
+  // const showGlpVesterDepositModal = () => {
+  //   let remainingVestableAmount = vestingData.glpVester.maxVestableAmount.sub(vestingData.glpVester.vestedAmount);
+  //   if (processedData.esGmxBalance.lt(remainingVestableAmount)) {
+  //     remainingVestableAmount = processedData.esGmxBalance;
+  //   }
 
-    setIsVesterDepositModalVisible(true);
-    setVesterDepositTitle("MLP Vault");
-    setVesterDepositStakeTokenLabel("staked MLP");
-    setVesterDepositMaxAmount(remainingVestableAmount);
-    setVesterDepositBalance(processedData.esGmxBalance);
-    setVesterDepositEscrowedBalance(vestingData.glpVester.escrowedBalance);
-    setVesterDepositVestedAmount(vestingData.glpVester.vestedAmount);
-    setVesterDepositMaxVestableAmount(vestingData.glpVester.maxVestableAmount);
-    setVesterDepositAverageStakedAmount(vestingData.glpVester.averageStakedAmount);
-    setVesterDepositReserveAmount(vestingData.glpVester.pairAmount);
-    setVesterDepositMaxReserveAmount(processedData.glpBalance);
-    setVesterDepositValue("");
-    setVesterDepositAddress(glpVesterAddress);
-  };
+  //   setIsVesterDepositModalVisible(true);
+  //   setVesterDepositTitle("MLP Vault");
+  //   setVesterDepositStakeTokenLabel("staked MLP");
+  //   setVesterDepositMaxAmount(remainingVestableAmount);
+  //   setVesterDepositBalance(processedData.esGmxBalance);
+  //   setVesterDepositEscrowedBalance(vestingData.glpVester.escrowedBalance);
+  //   setVesterDepositVestedAmount(vestingData.glpVester.vestedAmount);
+  //   setVesterDepositMaxVestableAmount(vestingData.glpVester.maxVestableAmount);
+  //   setVesterDepositAverageStakedAmount(vestingData.glpVester.averageStakedAmount);
+  //   setVesterDepositReserveAmount(vestingData.glpVester.pairAmount);
+  //   setVesterDepositMaxReserveAmount(processedData.glpBalance);
+  //   setVesterDepositValue("");
+  //   setVesterDepositAddress(glpVesterAddress);
+  // };
 
-  const showGmxVesterWithdrawModal = () => {
-    if (!vestingData || !vestingData.gmxVesterVestedAmount || vestingData.gmxVesterVestedAmount.eq(0)) {
-      helperToast.error("You have not deposited any tokens for vesting.");
-      return;
-    }
+  // const showGmxVesterWithdrawModal = () => {
+  //   if (!vestingData || !vestingData.gmxVesterVestedAmount || vestingData.gmxVesterVestedAmount.eq(0)) {
+  //     helperToast.error("You have not deposited any tokens for vesting.");
+  //     return;
+  //   }
 
-    setIsVesterWithdrawModalVisible(true);
-    setVesterWithdrawTitle("Withdraw from GMX Vault");
-    setVesterWithdrawAddress(gmxVesterAddress);
-  };
+  //   setIsVesterWithdrawModalVisible(true);
+  //   setVesterWithdrawTitle("Withdraw from GMX Vault");
+  //   setVesterWithdrawAddress(gmxVesterAddress);
+  // };
 
-  const showGlpVesterWithdrawModal = () => {
-    if (!vestingData || !vestingData.glpVesterVestedAmount || vestingData.glpVesterVestedAmount.eq(0)) {
-      helperToast.error("You have not deposited any tokens for vesting.");
-      return;
-    }
+  // const showGlpVesterWithdrawModal = () => {
+  //   if (!vestingData || !vestingData.glpVesterVestedAmount || vestingData.glpVesterVestedAmount.eq(0)) {
+  //     helperToast.error("You have not deposited any tokens for vesting.");
+  //     return;
+  //   }
 
-    setIsVesterWithdrawModalVisible(true);
-    setVesterWithdrawTitle("Withdraw from MLP Vault");
-    setVesterWithdrawAddress(glpVesterAddress);
-  };
+  //   setIsVesterWithdrawModalVisible(true);
+  //   setVesterWithdrawTitle("Withdraw from MLP Vault");
+  //   setVesterWithdrawAddress(glpVesterAddress);
+  // };
 
-  const showUnstakeGmxModal = () => {
-    if (!isGmxTransferEnabled) {
-      helperToast.error("GMX transfers not yet enabled");
-      return;
-    }
-    setIsUnstakeModalVisible(true);
-    setUnstakeModalTitle("Unstake GMX");
-    let maxAmount = processedData.gmxInStakedGmx;
-    if (
-      processedData.gmxInStakedGmx &&
-      vestingData &&
-      vestingData.gmxVesterPairAmount.gt(0) &&
-      maxUnstakeableGmx &&
-      maxUnstakeableGmx.lt(processedData.gmxInStakedGmx)
-    ) {
-      maxAmount = maxUnstakeableGmx;
-    }
-    setUnstakeModalMaxAmount(maxAmount);
-    setUnstakeModalReservedAmount(vestingData.gmxVesterPairAmount);
-    setUnstakeValue("");
-    setUnstakingTokenSymbol("GMX");
-    setUnstakeMethodName("unstakeGmx");
-  };
+  // const showUnstakeGmxModal = () => {
+  //   if (!isGmxTransferEnabled) {
+  //     helperToast.error("GMX transfers not yet enabled");
+  //     return;
+  //   }
+  //   setIsUnstakeModalVisible(true);
+  //   setUnstakeModalTitle("Unstake GMX");
+  //   let maxAmount = processedData.gmxInStakedGmx;
+  //   if (
+  //     processedData.gmxInStakedGmx &&
+  //     vestingData &&
+  //     vestingData.gmxVesterPairAmount.gt(0) &&
+  //     maxUnstakeableGmx &&
+  //     maxUnstakeableGmx.lt(processedData.gmxInStakedGmx)
+  //   ) {
+  //     maxAmount = maxUnstakeableGmx;
+  //   }
+  //   setUnstakeModalMaxAmount(maxAmount);
+  //   setUnstakeModalReservedAmount(vestingData.gmxVesterPairAmount);
+  //   setUnstakeValue("");
+  //   setUnstakingTokenSymbol("GMX");
+  //   setUnstakeMethodName("unstakeGmx");
+  // };
 
-  const showUnstakeEsGmxModal = () => {
-    setIsUnstakeModalVisible(true);
-    setUnstakeModalTitle("Unstake esGMX");
-    let maxAmount = processedData.esGmxInStakedGmx;
-    if (
-      processedData.esGmxInStakedGmx &&
-      vestingData &&
-      vestingData.gmxVesterPairAmount.gt(0) &&
-      maxUnstakeableGmx &&
-      maxUnstakeableGmx.lt(processedData.esGmxInStakedGmx)
-    ) {
-      maxAmount = maxUnstakeableGmx;
-    }
-    setUnstakeModalMaxAmount(maxAmount);
-    setUnstakeModalReservedAmount(vestingData.gmxVesterPairAmount);
-    setUnstakeValue("");
-    setUnstakingTokenSymbol("esGMX");
-    setUnstakeMethodName("unstakeEsGmx");
-  };
+  // const showUnstakeEsGmxModal = () => {
+  //   setIsUnstakeModalVisible(true);
+  //   setUnstakeModalTitle("Unstake esGMX");
+  //   let maxAmount = processedData.esGmxInStakedGmx;
+  //   if (
+  //     processedData.esGmxInStakedGmx &&
+  //     vestingData &&
+  //     vestingData.gmxVesterPairAmount.gt(0) &&
+  //     maxUnstakeableGmx &&
+  //     maxUnstakeableGmx.lt(processedData.esGmxInStakedGmx)
+  //   ) {
+  //     maxAmount = maxUnstakeableGmx;
+  //   }
+  //   setUnstakeModalMaxAmount(maxAmount);
+  //   setUnstakeModalReservedAmount(vestingData.gmxVesterPairAmount);
+  //   setUnstakeValue("");
+  //   setUnstakingTokenSymbol("esGMX");
+  //   setUnstakeMethodName("unstakeEsGmx");
+  // };
 
-  const renderMultiplierPointsLabel = useCallback(() => {
-    return "Multiplier Points APR";
-  }, []);
+  // const renderMultiplierPointsLabel = useCallback(() => {
+  //   return "Multiplier Points APR";
+  // }, []);
 
-  const renderMultiplierPointsValue = useCallback(() => {
-    return (
-      <Tooltip
-        handle={`100.00%`}
-        position="right-bottom"
-        renderContent={() => {
-          return (
-            <>
-              Boost your rewards with Multiplier Points.&nbsp;
-              <a
-                href="https://mmfinance.gitbook.io/docs/mmx/rewards#multiplier-points"
-                rel="noreferrer"
-                target="_blank"
-              >
-                More info
-              </a>
-              .
-            </>
-          );
-        }}
-      />
-    );
-  }, []);
+  // const renderMultiplierPointsValue = useCallback(() => {
+  //   return (
+  //     <Tooltip
+  //       handle={`100.00%`}
+  //       position="right-bottom"
+  //       renderContent={() => {
+  //         return (
+  //           <>
+  //             Boost your rewards with Multiplier Points.&nbsp;
+  //             <a
+  //               href="https://mmfinance.gitbook.io/docs/mmx/rewards#multiplier-points"
+  //               rel="noreferrer"
+  //               target="_blank"
+  //             >
+  //               More info
+  //             </a>
+  //             .
+  //           </>
+  //         );
+  //       }}
+  //     />
+  //   );
+  // }, []);
 
-  let earnMsg;
-  if (totalRewardTokensAndGlp && totalRewardTokensAndGlp.gt(0)) {
-    let gmxAmountStr;
-    if (processedData.gmxInStakedGmx && processedData.gmxInStakedGmx.gt(0)) {
-      gmxAmountStr = formatAmount(processedData.gmxInStakedGmx, 18, 2, true) + " GMX";
-    }
-    let esGmxAmountStr;
-    if (processedData.esGmxInStakedGmx && processedData.esGmxInStakedGmx.gt(0)) {
-      esGmxAmountStr = formatAmount(processedData.esGmxInStakedGmx, 18, 2, true) + " esGMX";
-    }
-    let mpAmountStr;
-    if (processedData.bonusGmxInFeeGmx && processedData.bnGmxInFeeGmx.gt(0)) {
-      mpAmountStr = formatAmount(processedData.bnGmxInFeeGmx, 18, 2, true) + " MP";
-    }
-    let glpStr;
-    if (processedData.glpBalance && processedData.glpBalance.gt(0)) {
-      glpStr = formatAmount(processedData.glpBalance, 18, 2, true) + " MLP";
-    }
-    const amountStr = [gmxAmountStr, esGmxAmountStr, mpAmountStr, glpStr].filter((s) => s).join(", ");
-    earnMsg = (
-      <div>
-        You are earning {nativeTokenSymbol} rewards with {formatAmount(totalRewardTokensAndGlp, 18, 2, true)} tokens.
-        <br />
-        Tokens: {amountStr}.
-      </div>
-    );
-  }
+  // let earnMsg;
+  // if (totalRewardTokensAndGlp && totalRewardTokensAndGlp.gt(0)) {
+  //   let gmxAmountStr;
+  //   // if (processedData.gmxInStakedGmx && processedData.gmxInStakedGmx.gt(0)) {
+  //   //   gmxAmountStr = formatAmount(processedData.gmxInStakedGmx, 18, 2, true) + " GMX";
+  //   // }
+  //   // let esGmxAmountStr;
+  //   // if (processedData.esGmxInStakedGmx && processedData.esGmxInStakedGmx.gt(0)) {
+  //   //   esGmxAmountStr = formatAmount(processedData.esGmxInStakedGmx, 18, 2, true) + " esGMX";
+  //   // }
+  //   // let mpAmountStr;
+  //   // if (processedData.bonusGmxInFeeGmx && processedData.bnGmxInFeeGmx.gt(0)) {
+  //   //   mpAmountStr = formatAmount(processedData.bnGmxInFeeGmx, 18, 2, true) + " MP";
+  //   // }
+  //   let glpStr;
+  //   if (processedData.glpBalance && processedData.glpBalance.gt(0)) {
+  //     glpStr = formatAmount(processedData.glpBalance, 18, 2, true) + " MLP";
+  //   }
+  //   const amountStr = [glpStr].filter((s) => s).join(", ");
+  //   earnMsg = (
+  //     <div>
+  //       You are earning {nativeTokenSymbol} rewards with {formatAmount(totalRewardTokensAndGlp, 18, 2, true)} tokens.
+  //       <br />
+  //       Tokens: {amountStr}.
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="default-container page-layout">
-      <StakeModal
+      {/* <StakeModal
         isVisible={isStakeModalVisible}
         setIsVisible={setIsStakeModalVisible}
         chainId={chainId}
@@ -1423,7 +687,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
         nativeTokenSymbol={nativeTokenSymbol}
         library={library}
         chainId={chainId}
-      />
+      /> */}
       <div className="section-title-block">
         <div className="section-title-icon"></div>
         <div className="section-title-content">
@@ -1439,7 +703,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
             </a>{" "}
             to earn rewards.
           </div>
-          {earnMsg && <div className="Page-description">{earnMsg}</div>}
+          {/* {earnMsg && <div className="Page-description">{earnMsg}</div>} */}
         </div>
       </div>
       <div className="StakeV2-content">
@@ -1738,20 +1002,21 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
             <div className="App-card-content">
               <div className="App-card-row">
                 <div className="label">Price</div>
-                <div>${formatKeyAmount(processedData, "glpPrice", USD_DECIMALS, 3, true)}</div>
+                {/* <div>${formatKeyAmount(processedData, "glpPrice", USD_DECIMALS, 3, true)}</div> */}
+                <div>${formatAmount(glpPrice, USD_DECIMALS, 3, true)}</div>
               </div>
               <div className="App-card-row">
                 <div className="label">Wallet</div>
                 <div>
-                  {formatKeyAmount(processedData, "glpBalance", GLP_DECIMALS, 2, true)} MLP ($
-                  {formatKeyAmount(processedData, "glpBalanceUsd", USD_DECIMALS, 2, true)})
+                {formatAmount(glpBalance, GLP_DECIMALS, 4, true)} MLP ($
+                {formatAmount(glpBalanceUsd, USD_DECIMALS, 2, true)})
                 </div>
               </div>
               <div className="App-card-row">
                 <div className="label">Staked</div>
                 <div>
-                  {formatKeyAmount(processedData, "glpBalance", GLP_DECIMALS, 2, true)} MLP ($
-                  {formatKeyAmount(processedData, "glpBalanceUsd", USD_DECIMALS, 2, true)})
+                {formatAmount(stakedAmount, GLP_DECIMALS, 4, true)} MLP ($
+                {formatAmount(stakedAmountUSD, USD_DECIMALS, 2, true)})
                 </div>
               </div>
               <div className="App-card-divider"></div>
@@ -1819,8 +1084,8 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
               <div className="App-card-row">
                 <div className="label">Total Staked</div>
                 <div>
-                  {formatKeyAmount(processedData, "glpSupply", 18, 2, true)} MLP ($
-                  {formatKeyAmount(processedData, "glpSupplyUsd", USD_DECIMALS, 2, true)})
+                {formatAmount(totalGlpStakedInMasterchef, GLP_DECIMALS, 4, true)} MLP ($
+                {formatAmount(totalMlpStakedPrice, USD_DECIMALS, 2, true)})
                 </div>
               </div>
               <div className="App-card-row">
@@ -2153,3 +1418,828 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
     </div>
   );
 }
+
+
+// function ClaimModal(props) {
+//   const {
+//     isVisible,
+//     setIsVisible,
+//     rewardRouterAddress,
+//     library,
+//     chainId,
+//     setPendingTxns,
+//     nativeTokenSymbol,
+//     wrappedTokenSymbol,
+//   } = props;
+//   const [isClaiming, setIsClaiming] = useState(false);
+//   const [shouldClaimGmx, setShouldClaimGmx] = useLocalStorageSerializeKey(
+//     [chainId, "StakeV2-claim-should-claim-gmx"],
+//     true
+//   );
+//   const [shouldClaimEsGmx, setShouldClaimEsGmx] = useLocalStorageSerializeKey(
+//     [chainId, "StakeV2-claim-should-claim-es-gmx"],
+//     true
+//   );
+//   const [shouldClaimWeth, setShouldClaimWeth] = useLocalStorageSerializeKey(
+//     [chainId, "StakeV2-claim-should-claim-weth"],
+//     true
+//   );
+//   const [shouldConvertWeth, setShouldConvertWeth] = useLocalStorageSerializeKey(
+//     [chainId, "StakeV2-claim-should-convert-weth"],
+//     true
+//   );
+
+//   const isPrimaryEnabled = () => {
+//     return !isClaiming;
+//   };
+
+//   const getPrimaryText = () => {
+//     if (isClaiming) {
+//       return `Claiming...`;
+//     }
+//     return "Claim";
+//   };
+
+//   const onClickPrimary = () => {
+//     setIsClaiming(true);
+
+//     const contract = new ethers.Contract(rewardRouterAddress, RewardRouter.abi, library.getSigner());
+//     callContract(
+//       chainId,
+//       contract,
+//       "handleRewards",
+//       [
+//         shouldClaimGmx,
+//         false, // shouldStakeGmx
+//         shouldClaimEsGmx,
+//         false, // shouldStakeEsGmx
+//         false, // shouldStakeMultiplierPoints
+//         shouldClaimWeth,
+//         shouldConvertWeth,
+//       ],
+//       {
+//         sentMsg: "Claim submitted.",
+//         failMsg: "Claim failed.",
+//         successMsg: "Claim completed!",
+//         setPendingTxns,
+//       }
+//     )
+//       .then(async (res) => {
+//         setIsVisible(false);
+//       })
+//       .finally(() => {
+//         setIsClaiming(false);
+//       });
+//   };
+
+//   const toggleConvertWeth = (value) => {
+//     if (value) {
+//       setShouldClaimWeth(true);
+//     }
+//     setShouldConvertWeth(value);
+//   };
+
+//   return (
+//     <div className="StakeModal">
+//       <Modal isVisible={isVisible} setIsVisible={setIsVisible} label="Claim Rewards">
+//         <div className="CompoundModal-menu">
+//           <div>
+//             <Checkbox isChecked={shouldClaimGmx} setIsChecked={setShouldClaimGmx}>
+//               Claim GMX Rewards
+//             </Checkbox>
+//           </div>
+//           <div>
+//             <Checkbox isChecked={shouldClaimEsGmx} setIsChecked={setShouldClaimEsGmx}>
+//               Claim esGMX Rewards
+//             </Checkbox>
+//           </div>
+//           <div>
+//             <Checkbox isChecked={shouldClaimWeth} setIsChecked={setShouldClaimWeth} disabled={shouldConvertWeth}>
+//               Claim {wrappedTokenSymbol} Rewards
+//             </Checkbox>
+//           </div>
+//           <div>
+//             <Checkbox isChecked={shouldConvertWeth} setIsChecked={toggleConvertWeth}>
+//               Convert {wrappedTokenSymbol} to {nativeTokenSymbol}
+//             </Checkbox>
+//           </div>
+//         </div>
+//         <div className="Exchange-swap-button-container">
+//           <button className="App-cta Exchange-swap-button" onClick={onClickPrimary} disabled={!isPrimaryEnabled()}>
+//             {getPrimaryText()}
+//           </button>
+//         </div>
+//       </Modal>
+//     </div>
+//   );
+// }
+
+
+// function StakeModal(props) {
+//   const {
+//     isVisible,
+//     setIsVisible,
+//     chainId,
+//     title,
+//     maxAmount,
+//     value,
+//     setValue,
+//     active,
+//     account,
+//     library,
+//     stakingTokenSymbol,
+//     stakingTokenAddress,
+//     farmAddress,
+//     rewardRouterAddress,
+//     stakeMethodName,
+//     setPendingTxns,
+//   } = props;
+//   const [isStaking, setIsStaking] = useState(false);
+//   const [isApproving, setIsApproving] = useState(false);
+
+//   const { data: tokenAllowance } = useSWR(
+//     active && stakingTokenAddress && [active, chainId, stakingTokenAddress, "allowance", account, farmAddress],
+//     {
+//       fetcher: fetcher(library, Token),
+//     }
+//   );
+
+//   let amount = parseValue(value, 18);
+//   const needApproval = farmAddress !== AddressZero && tokenAllowance && amount && amount.gt(tokenAllowance);
+
+//   const getError = () => {
+//     if (!amount || amount.eq(0)) {
+//       return "Enter an amount";
+//     }
+//     if (maxAmount && amount.gt(maxAmount)) {
+//       return "Max amount exceeded";
+//     }
+//   };
+
+//   const onClickPrimary = () => {
+//     if (needApproval) {
+//       approveTokens({
+//         setIsApproving,
+//         library,
+//         tokenAddress: stakingTokenAddress,
+//         spender: farmAddress,
+//         chainId,
+//       });
+//       return;
+//     }
+
+//     setIsStaking(true);
+//     const contract = new ethers.Contract(rewardRouterAddress, RewardRouter.abi, library.getSigner());
+
+//     callContract(chainId, contract, stakeMethodName, [amount], {
+//       sentMsg: "Stake submitted!",
+//       failMsg: "Stake failed.",
+//       setPendingTxns,
+//     })
+//       .then(async (res) => {
+//         setIsVisible(false);
+//       })
+//       .finally(() => {
+//         setIsStaking(false);
+//       });
+//   };
+
+//   const isPrimaryEnabled = () => {
+//     const error = getError();
+//     if (error) {
+//       return false;
+//     }
+//     if (isApproving) {
+//       return false;
+//     }
+//     if (isStaking) {
+//       return false;
+//     }
+//     return true;
+//   };
+
+//   const getPrimaryText = () => {
+//     const error = getError();
+//     if (error) {
+//       return error;
+//     }
+//     if (isApproving) {
+//       return `Approving ${stakingTokenSymbol}...`;
+//     }
+//     if (needApproval) {
+//       return `Approve ${stakingTokenSymbol}`;
+//     }
+//     if (isStaking) {
+//       return "Staking...";
+//     }
+//     return "Stake";
+//   };
+
+//   return (
+//     <div className="StakeModal">
+//       <Modal isVisible={isVisible} setIsVisible={setIsVisible} label={title}>
+//         <div className="Exchange-swap-section">
+//           <div className="Exchange-swap-section-top">
+//             <div className="muted">
+//               <div className="Exchange-swap-usd">Stake</div>
+//             </div>
+//             <div className="muted align-right clickable" onClick={() => setValue(formatAmountFree(maxAmount, 18, 18))}>
+//               Max: {formatAmount(maxAmount, 18, 4, true)}
+//             </div>
+//           </div>
+//           <div className="Exchange-swap-section-bottom">
+//             <div>
+//               <input
+//                 type="number"
+//                 placeholder="0.0"
+//                 className="Exchange-swap-input"
+//                 value={value}
+//                 onChange={(e) => setValue(e.target.value)}
+//               />
+//             </div>
+//             <div className="PositionEditor-token-symbol">{stakingTokenSymbol}</div>
+//           </div>
+//         </div>
+//         <div className="Exchange-swap-button-container">
+//           <button className="App-cta Exchange-swap-button" onClick={onClickPrimary} disabled={!isPrimaryEnabled()}>
+//             {getPrimaryText()}
+//           </button>
+//         </div>
+//       </Modal>
+//     </div>
+//   );
+// }
+
+// function UnstakeModal(props) {
+//   const {
+//     isVisible,
+//     setIsVisible,
+//     chainId,
+//     title,
+//     maxAmount,
+//     value,
+//     setValue,
+//     library,
+//     unstakingTokenSymbol,
+//     rewardRouterAddress,
+//     unstakeMethodName,
+//     multiplierPointsAmount,
+//     reservedAmount,
+//     bonusGmxInFeeGmx,
+//     setPendingTxns,
+//   } = props;
+//   const [isUnstaking, setIsUnstaking] = useState(false);
+
+//   let amount = parseValue(value, 18);
+//   let burnAmount;
+
+//   if (
+//     multiplierPointsAmount &&
+//     multiplierPointsAmount.gt(0) &&
+//     amount &&
+//     amount.gt(0) &&
+//     bonusGmxInFeeGmx &&
+//     bonusGmxInFeeGmx.gt(0)
+//   ) {
+//     burnAmount = multiplierPointsAmount.mul(amount).div(bonusGmxInFeeGmx);
+//   }
+
+//   const shouldShowReductionAmount = true;
+//   let rewardReductionBasisPoints;
+//   if (burnAmount && bonusGmxInFeeGmx) {
+//     rewardReductionBasisPoints = burnAmount.mul(BASIS_POINTS_DIVISOR).div(bonusGmxInFeeGmx);
+//   }
+
+//   const getError = () => {
+//     if (!amount) {
+//       return "Enter an amount";
+//     }
+//     if (amount.gt(maxAmount)) {
+//       return "Max amount exceeded";
+//     }
+//   };
+
+//   const onClickPrimary = () => {
+//     setIsUnstaking(true);
+//     const contract = new ethers.Contract(rewardRouterAddress, RewardRouter.abi, library.getSigner());
+//     callContract(chainId, contract, unstakeMethodName, [amount], {
+//       sentMsg: "Unstake submitted!",
+//       failMsg: "Unstake failed.",
+//       successMsg: "Unstake completed!",
+//       setPendingTxns,
+//     })
+//       .then(async (res) => {
+//         setIsVisible(false);
+//       })
+//       .finally(() => {
+//         setIsUnstaking(false);
+//       });
+//   };
+
+//   const isPrimaryEnabled = () => {
+//     const error = getError();
+//     if (error) {
+//       return false;
+//     }
+//     if (isUnstaking) {
+//       return false;
+//     }
+//     return true;
+//   };
+
+//   const getPrimaryText = () => {
+//     const error = getError();
+//     if (error) {
+//       return error;
+//     }
+//     if (isUnstaking) {
+//       return "Unstaking...";
+//     }
+//     return "Unstake";
+//   };
+
+//   return (
+//     <div className="StakeModal">
+//       <Modal isVisible={isVisible} setIsVisible={setIsVisible} label={title}>
+//         <div className="Exchange-swap-section">
+//           <div className="Exchange-swap-section-top">
+//             <div className="muted">
+//               <div className="Exchange-swap-usd">Unstake</div>
+//             </div>
+//             <div className="muted align-right clickable" onClick={() => setValue(formatAmountFree(maxAmount, 18, 18))}>
+//               Max: {formatAmount(maxAmount, 18, 4, true)}
+//             </div>
+//           </div>
+//           <div className="Exchange-swap-section-bottom">
+//             <div>
+//               <input
+//                 type="number"
+//                 placeholder="0.0"
+//                 className="Exchange-swap-input"
+//                 value={value}
+//                 onChange={(e) => setValue(e.target.value)}
+//               />
+//             </div>
+//             <div className="PositionEditor-token-symbol">{unstakingTokenSymbol}</div>
+//           </div>
+//         </div>
+//         {reservedAmount && reservedAmount.gt(0) && (
+//           <div className="Modal-note">
+//             You have {formatAmount(reservedAmount, 18, 2, true)} tokens reserved for vesting.
+//           </div>
+//         )}
+//         {burnAmount && burnAmount.gt(0) && rewardReductionBasisPoints && rewardReductionBasisPoints.gt(0) && (
+//           <div className="Modal-note">
+//             Unstaking will burn&nbsp;
+//             <a href="https://mmfinance.gitbook.io/docs/mmx/rewards" target="_blank" rel="noopener noreferrer">
+//               {formatAmount(burnAmount, 18, 4, true)} Multiplier Points
+//             </a>
+//             .&nbsp;
+//             {shouldShowReductionAmount && (
+//               <span>Boost Percentage: -{formatAmount(rewardReductionBasisPoints, 2, 2)}%.</span>
+//             )}
+//           </div>
+//         )}
+//         <div className="Exchange-swap-button-container">
+//           <button className="App-cta Exchange-swap-button" onClick={onClickPrimary} disabled={!isPrimaryEnabled()}>
+//             {getPrimaryText()}
+//           </button>
+//         </div>
+//       </Modal>
+//     </div>
+//   );
+// }
+
+// function VesterDepositModal(props) {
+//   const {
+//     isVisible,
+//     setIsVisible,
+//     chainId,
+//     title,
+//     maxAmount,
+//     value,
+//     setValue,
+//     balance,
+//     vestedAmount,
+//     averageStakedAmount,
+//     maxVestableAmount,
+//     library,
+//     stakeTokenLabel,
+//     reserveAmount,
+//     maxReserveAmount,
+//     vesterAddress,
+//     setPendingTxns,
+//   } = props;
+//   const [isDepositing, setIsDepositing] = useState(false);
+
+//   let amount = parseValue(value, 18);
+
+//   let nextReserveAmount = reserveAmount;
+
+//   let nextDepositAmount = vestedAmount;
+//   if (amount) {
+//     nextDepositAmount = vestedAmount.add(amount);
+//   }
+
+//   let additionalReserveAmount = bigNumberify(0);
+//   if (amount && averageStakedAmount && maxVestableAmount && maxVestableAmount.gt(0)) {
+//     nextReserveAmount = nextDepositAmount.mul(averageStakedAmount).div(maxVestableAmount);
+//     if (nextReserveAmount.gt(reserveAmount)) {
+//       additionalReserveAmount = nextReserveAmount.sub(reserveAmount);
+//     }
+//   }
+
+//   const getError = () => {
+//     if (!amount || amount.eq(0)) {
+//       return "Enter an amount";
+//     }
+//     if (maxAmount && amount.gt(maxAmount)) {
+//       return "Max amount exceeded";
+//     }
+//     if (nextReserveAmount.gt(maxReserveAmount)) {
+//       return "Insufficient staked tokens";
+//     }
+//   };
+
+//   const onClickPrimary = () => {
+//     setIsDepositing(true);
+//     const contract = new ethers.Contract(vesterAddress, Vester.abi, library.getSigner());
+
+//     callContract(chainId, contract, "deposit", [amount], {
+//       sentMsg: "Deposit submitted!",
+//       failMsg: "Deposit failed!",
+//       successMsg: "Deposited!",
+//       setPendingTxns,
+//     })
+//       .then(async (res) => {
+//         setIsVisible(false);
+//       })
+//       .finally(() => {
+//         setIsDepositing(false);
+//       });
+//   };
+
+//   const isPrimaryEnabled = () => {
+//     const error = getError();
+//     if (error) {
+//       return false;
+//     }
+//     if (isDepositing) {
+//       return false;
+//     }
+//     return true;
+//   };
+
+//   const getPrimaryText = () => {
+//     const error = getError();
+//     if (error) {
+//       return error;
+//     }
+//     if (isDepositing) {
+//       return "Depositing...";
+//     }
+//     return "Deposit";
+//   };
+
+//   return (
+//     <SEO title={getPageTitle("Earn")}>
+//       <div className="StakeModal">
+//         <Modal isVisible={isVisible} setIsVisible={setIsVisible} label={title} className="non-scrollable">
+//           <div className="Exchange-swap-section">
+//             <div className="Exchange-swap-section-top">
+//               <div className="muted">
+//                 <div className="Exchange-swap-usd">Deposit</div>
+//               </div>
+//               <div
+//                 className="muted align-right clickable"
+//                 onClick={() => setValue(formatAmountFree(maxAmount, 18, 18))}
+//               >
+//                 Max: {formatAmount(maxAmount, 18, 4, true)}
+//               </div>
+//             </div>
+//             <div className="Exchange-swap-section-bottom">
+//               <div>
+//                 <input
+//                   type="number"
+//                   placeholder="0.0"
+//                   className="Exchange-swap-input"
+//                   value={value}
+//                   onChange={(e) => setValue(e.target.value)}
+//                 />
+//               </div>
+//               <div className="PositionEditor-token-symbol">esGMX</div>
+//             </div>
+//           </div>
+//           <div className="VesterDepositModal-info-rows">
+//             <div className="Exchange-info-row">
+//               <div className="Exchange-info-label">Wallet</div>
+//               <div className="align-right">{formatAmount(balance, 18, 2, true)} esGMX</div>
+//             </div>
+//             <div className="Exchange-info-row">
+//               <div className="Exchange-info-label">Vault Capacity</div>
+//               <div className="align-right">
+//                 <Tooltip
+//                   handle={`${formatAmount(nextDepositAmount, 18, 2, true)} / ${formatAmount(
+//                     maxVestableAmount,
+//                     18,
+//                     2,
+//                     true
+//                   )}`}
+//                   position="right-bottom"
+//                   renderContent={() => {
+//                     return (
+//                       <>
+//                         Vault Capacity for your Account
+//                         <br />
+//                         <br />
+//                         Deposited: {formatAmount(vestedAmount, 18, 2, true)} esGMX
+//                         <br />
+//                         Max Capacity: {formatAmount(maxVestableAmount, 18, 2, true)} esGMX
+//                         <br />
+//                       </>
+//                     );
+//                   }}
+//                 />
+//               </div>
+//             </div>
+//             <div className="Exchange-info-row">
+//               <div className="Exchange-info-label">Reserve Amount</div>
+//               <div className="align-right">
+//                 <Tooltip
+//                   handle={`${formatAmount(
+//                     reserveAmount && reserveAmount.gte(additionalReserveAmount)
+//                       ? reserveAmount
+//                       : additionalReserveAmount,
+//                     18,
+//                     2,
+//                     true
+//                   )} / ${formatAmount(maxReserveAmount, 18, 2, true)}`}
+//                   position="right-bottom"
+//                   renderContent={() => {
+//                     return (
+//                       <>
+//                         Current Reserved: {formatAmount(reserveAmount, 18, 2, true)}
+//                         <br />
+//                         Additional reserve required: {formatAmount(additionalReserveAmount, 18, 2, true)}
+//                         <br />
+//                         {amount && nextReserveAmount.gt(maxReserveAmount) && (
+//                           <div>
+//                             <br />
+//                             You need a total of at least {formatAmount(nextReserveAmount, 18, 2, true)}{" "}
+//                             {stakeTokenLabel} to vest {formatAmount(amount, 18, 2, true)} esGMX.
+//                           </div>
+//                         )}
+//                       </>
+//                     );
+//                   }}
+//                 />
+//               </div>
+//             </div>
+//           </div>
+//           <div className="Exchange-swap-button-container">
+//             <button className="App-cta Exchange-swap-button" onClick={onClickPrimary} disabled={!isPrimaryEnabled()}>
+//               {getPrimaryText()}
+//             </button>
+//           </div>
+//         </Modal>
+//       </div>
+//     </SEO>
+//   );
+// }
+
+// function VesterWithdrawModal(props) {
+//   const { isVisible, setIsVisible, chainId, title, library, vesterAddress, setPendingTxns } = props;
+//   const [isWithdrawing, setIsWithdrawing] = useState(false);
+
+//   const onClickPrimary = () => {
+//     setIsWithdrawing(true);
+//     const contract = new ethers.Contract(vesterAddress, Vester.abi, library.getSigner());
+
+//     callContract(chainId, contract, "withdraw", [], {
+//       sentMsg: "Withdraw submitted.",
+//       failMsg: "Withdraw failed.",
+//       successMsg: "Withdrawn!",
+//       setPendingTxns,
+//     })
+//       .then(async (res) => {
+//         setIsVisible(false);
+//       })
+//       .finally(() => {
+//         setIsWithdrawing(false);
+//       });
+//   };
+
+//   return (
+//     <div className="StakeModal">
+//       <Modal isVisible={isVisible} setIsVisible={setIsVisible} label={title}>
+//         <div>
+//           This will withdraw and unreserve all tokens as well as pause vesting.
+//           <br />
+//           <br />
+//           esGMX tokens that have been converted to GMX will remain as GMX tokens.
+//           <br />
+//           <br />
+//           To claim GMX tokens without withdrawing, use the "Claim" button under the Total Rewards section.
+//           <br />
+//           <br />
+//         </div>
+//         <div className="Exchange-swap-button-container">
+//           <button className="App-cta Exchange-swap-button" onClick={onClickPrimary} disabled={isWithdrawing}>
+//             {!isWithdrawing && "Confirm Withdraw"}
+//             {isWithdrawing && "Confirming..."}
+//           </button>
+//         </div>
+//       </Modal>
+//     </div>
+//   );
+// }
+
+// function CompoundModal(props) {
+//   const {
+//     isVisible,
+//     setIsVisible,
+//     rewardRouterAddress,
+//     active,
+//     account,
+//     library,
+//     chainId,
+//     setPendingTxns,
+//     totalVesterRewards,
+//     nativeTokenSymbol,
+//     wrappedTokenSymbol,
+//   } = props;
+//   const [isCompounding, setIsCompounding] = useState(false);
+//   const [shouldClaimGmx, setShouldClaimGmx] = useLocalStorageSerializeKey(
+//     [chainId, "StakeV2-compound-should-claim-gmx"],
+//     true
+//   );
+//   const [shouldStakeGmx, setShouldStakeGmx] = useLocalStorageSerializeKey(
+//     [chainId, "StakeV2-compound-should-stake-gmx"],
+//     true
+//   );
+//   const [shouldClaimEsGmx, setShouldClaimEsGmx] = useLocalStorageSerializeKey(
+//     [chainId, "StakeV2-compound-should-claim-es-gmx"],
+//     true
+//   );
+//   const [shouldStakeEsGmx, setShouldStakeEsGmx] = useLocalStorageSerializeKey(
+//     [chainId, "StakeV2-compound-should-stake-es-gmx"],
+//     true
+//   );
+//   const [shouldStakeMultiplierPoints, setShouldStakeMultiplierPoints] = useState(true);
+//   const [shouldClaimWeth, setShouldClaimWeth] = useLocalStorageSerializeKey(
+//     [chainId, "StakeV2-compound-should-claim-weth"],
+//     true
+//   );
+//   const [shouldConvertWeth, setShouldConvertWeth] = useLocalStorageSerializeKey(
+//     [chainId, "StakeV2-compound-should-convert-weth"],
+//     true
+//   );
+
+//   const gmxAddress = getContract(chainId, "GMX");
+//   const stakedGmxTrackerAddress = getContract(chainId, "StakedGmxTracker");
+
+//   const [isApproving, setIsApproving] = useState(false);
+
+//   const { data: tokenAllowance } = useSWR(
+//     active && [active, chainId, gmxAddress, "allowance", account, stakedGmxTrackerAddress],
+//     {
+//       fetcher: fetcher(library, Token),
+//     }
+//   );
+
+//   const needApproval = shouldStakeGmx && tokenAllowance && totalVesterRewards && totalVesterRewards.gt(tokenAllowance);
+
+//   const isPrimaryEnabled = () => {
+//     return !isCompounding && !isApproving && !isCompounding;
+//   };
+
+//   const getPrimaryText = () => {
+//     if (isApproving) {
+//       return `Approving GMX...`;
+//     }
+//     if (needApproval) {
+//       return `Approve GMX`;
+//     }
+//     if (isCompounding) {
+//       return "Compounding...";
+//     }
+//     return "Compound";
+//   };
+
+//   const onClickPrimary = () => {
+//     if (needApproval) {
+//       approveTokens({
+//         setIsApproving,
+//         library,
+//         tokenAddress: gmxAddress,
+//         spender: stakedGmxTrackerAddress,
+//         chainId,
+//       });
+//       return;
+//     }
+
+//     setIsCompounding(true);
+
+//     const contract = new ethers.Contract(rewardRouterAddress, RewardRouter.abi, library.getSigner());
+//     callContract(
+//       chainId,
+//       contract,
+//       "handleRewards",
+//       [
+//         shouldClaimGmx || shouldStakeGmx,
+//         shouldStakeGmx,
+//         shouldClaimEsGmx || shouldStakeEsGmx,
+//         shouldStakeEsGmx,
+//         shouldStakeMultiplierPoints,
+//         shouldClaimWeth || shouldConvertWeth,
+//         shouldConvertWeth,
+//       ],
+//       {
+//         sentMsg: "Compound submitted!",
+//         failMsg: "Compound failed.",
+//         successMsg: "Compound completed!",
+//         setPendingTxns,
+//       }
+//     )
+//       .then(async (res) => {
+//         setIsVisible(false);
+//       })
+//       .finally(() => {
+//         setIsCompounding(false);
+//       });
+//   };
+
+//   const toggleShouldStakeGmx = (value) => {
+//     if (value) {
+//       setShouldClaimGmx(true);
+//     }
+//     setShouldStakeGmx(value);
+//   };
+
+//   const toggleShouldStakeEsGmx = (value) => {
+//     if (value) {
+//       setShouldClaimEsGmx(true);
+//     }
+//     setShouldStakeEsGmx(value);
+//   };
+
+//   const toggleConvertWeth = (value) => {
+//     if (value) {
+//       setShouldClaimWeth(true);
+//     }
+//     setShouldConvertWeth(value);
+//   };
+
+//   return (
+//     <div className="StakeModal">
+//       <Modal isVisible={isVisible} setIsVisible={setIsVisible} label="Compound Rewards">
+//         <div className="CompoundModal-menu">
+//           <div>
+//             <Checkbox
+//               isChecked={shouldStakeMultiplierPoints}
+//               setIsChecked={setShouldStakeMultiplierPoints}
+//               disabled={true}
+//             >
+//               Stake Multiplier Points
+//             </Checkbox>
+//           </div>
+//           <div>
+//             <Checkbox isChecked={shouldClaimGmx} setIsChecked={setShouldClaimGmx} disabled={shouldStakeGmx}>
+//               Claim GMX Rewards
+//             </Checkbox>
+//           </div>
+//           <div>
+//             <Checkbox isChecked={shouldStakeGmx} setIsChecked={toggleShouldStakeGmx}>
+//               Stake GMX Rewards
+//             </Checkbox>
+//           </div>
+//           <div>
+//             <Checkbox isChecked={shouldClaimEsGmx} setIsChecked={setShouldClaimEsGmx} disabled={shouldStakeEsGmx}>
+//               Claim esGMX Rewards
+//             </Checkbox>
+//           </div>
+//           <div>
+//             <Checkbox isChecked={shouldStakeEsGmx} setIsChecked={toggleShouldStakeEsGmx}>
+//               Stake esGMX Rewards
+//             </Checkbox>
+//           </div>
+//           <div>
+//             <Checkbox isChecked={shouldClaimWeth} setIsChecked={setShouldClaimWeth} disabled={shouldConvertWeth}>
+//               Claim {wrappedTokenSymbol} Rewards
+//             </Checkbox>
+//           </div>
+//           <div>
+//             <Checkbox isChecked={shouldConvertWeth} setIsChecked={toggleConvertWeth}>
+//               Convert {wrappedTokenSymbol} to {nativeTokenSymbol}
+//             </Checkbox>
+//           </div>
+//         </div>
+//         <div className="Exchange-swap-button-container">
+//           <button className="App-cta Exchange-swap-button" onClick={onClickPrimary} disabled={!isPrimaryEnabled()}>
+//             {getPrimaryText()}
+//           </button>
+//         </div>
+//       </Modal>
+//     </div>
+//   );
+// }

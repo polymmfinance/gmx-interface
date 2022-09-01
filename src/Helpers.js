@@ -1581,6 +1581,10 @@ export const getContractCall = ({ provider, contractInfo, arg0, arg1, method, pa
 export const fetcher = (library, contractInfo, additionalArgs) => (...args) => {
   // eslint-disable-next-line
   const [id, chainId, arg0, arg1, ...params] = args;
+  // // console.log(arg1)
+  // if (arg1 === "userInfo") {
+  //   debugger
+  // }
   const provider = getProvider(library, chainId);
 
   const method = ethers.utils.isAddress(arg0) ? arg1 : arg0;

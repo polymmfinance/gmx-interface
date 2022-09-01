@@ -8,6 +8,7 @@ import useSWR from "swr";
 import OrderBook from "../abis/OrderBook.json";
 import PositionManager from "../abis/PositionManager.json";
 import Vault from "../abis/Vault.json";
+import MasterchefABI from "../abis/masterchef.json";
 import Router from "../abis/Router.json";
 import UniPool from "../abis/UniPool.json";
 import UniswapV2 from "../abis/UniswapV2.json";
@@ -48,6 +49,7 @@ import { getTokens, getTokenBySymbol, getWhitelistedTokens } from "../data/Token
 
 import { nissohGraphClient, arbitrumGraphClient, avalancheGraphClient, polygonGraphClient } from "./common";
 import { groupBy } from "lodash";
+import BigNumber from "bignumber.js";
 export * from "./prices";
 
 const { AddressZero } = ethers.constants;
@@ -549,6 +551,9 @@ export function useGmxPrice(chainId, libraries, active) {
 
 // use only the supply endpoint on arbitrum, it includes the supply on avalanche
 export function useTotalGmxSupply() {
+  return {
+    total: bigNumberify(0)
+  }
   const gmxSupplyUrlArbitrum = getServerUrl(ARBITRUM, "/gmx_supply");
 
   const { data: gmxSupply, mutate: updateGmxSupply } = useSWR([gmxSupplyUrlArbitrum], {
@@ -1091,4 +1096,114 @@ export async function callContract(chainId, contract, method, params, opts) {
     helperToast.error(failMsg);
     throw e;
   }
+}
+
+export const BIG_ZERO = new BigNumber(0)
+export const BIG_ONE = new BigNumber(1)
+export const BIG_NINE = new BigNumber(9)
+export const BIG_TEN = new BigNumber(10)
+const token = "0x0d5665A2319526A117E68E38EBEA4610aA8298F8"
+const masterchef = getContract(137, "masterchef")
+
+const fetchMLPData = async (library, chainId) => {
+  // const { pid, lpAddress, token, quoteToken, dualMasterchef } = farm
+
+  const provider = getProvider(library, chainId);
+  const mscontract = new ethers.Contract(masterchef, MasterchefABI, provider);
+  
+  // const calls = [
+  //   // Balance of token in the LP contract
+  //   {
+  //     address: token.address,
+  //     name: 'balanceOf',
+  //     params: [lpAddress],
+  //   },
+  //   // Balance of quote token on LP contract
+  //   {
+  //     address: quoteToken.address,
+  //     name: 'balanceOf',
+  //     params: [lpAddress],
+  //   },
+  //   // Balance of LP tokens aka 3MM token in the master chef contract
+  //   {
+  //     address: token.address,
+  //     name: 'balanceOf',
+  //     params: [masterchef],
+  //   },
+  //   // Total supply of LP aka 3MM token tokens
+  //   {
+  //     address: token.address,
+  //     name: 'totalSupply',
+  //   },
+  //   // Token decimals
+  //   {
+  //     address: token.address,
+  //     name: 'decimals',
+  //   },
+  //   // Quote token decimals
+  //   {
+  //     address: quoteToken.address,
+  //     name: 'decimals',
+  //   },
+  //   {
+  //     address: token.address,
+  //     name: 'balanceOf',
+  //     params: [masterchef],
+  //   },
+  // ]
+
+  // const [
+  //   tokenBalanceLP,
+  //   quoteTokenBalanceLP,
+  //   lpTokenBalanceMC,
+  //   lpTotalSupply,
+  //   tokenDecimals,
+  //   quoteTokenDecimals,
+  //   tokenBalance,
+  // ] = await multicall(erc20, calls)
+
+  // // Ratio in % of LP tokens that are staked in the MC, vs the total number in circulation
+  // const lpTokenRatio = new BigNumber(lpTokenBalanceMC).div(new BigNumber(lpTotalSupply))
+  // // const lpTokenRatio = new BigNumber(1000000).div(new BigNumber(1000)) // FIXME debug hard code for farms
+
+  // // Raw amount of token in the LP, including those not staked
+  // const tokenAmountTotal = new BigNumber(tokenBalanceLP).div(BIG_TEN.pow(tokenDecimals))
+  // const quoteTokenAmountTotal = new BigNumber(quoteTokenBalanceLP).div(BIG_TEN.pow(quoteTokenDecimals))
+  // // const tokenAmountTotal = new BigNumber(token.symbol === 'WORKBENCH' ? new BigNumber(10000000000000000000000000) : tokenBalanceLP).div(BIG_TEN.pow(tokenDecimals)) // FIXME debug hard code for farms
+  // // const quoteTokenAmountTotal = new BigNumber(quoteToken.symbol === 'WMATIC' ? new BigNumber(1000000000000000000) : quoteTokenBalanceLP).div(BIG_TEN.pow(quoteTokenDecimals)) // FIXME debug hard code for farms
+  // // Amount of quoteToken in the LP that are staked in the MC
+  // const quoteTokenAmountMc = quoteTokenAmountTotal.times(lpTokenRatio)
+
+  // // Total staked in LP, in quote token value
+  // const lpTotalInQuoteToken = new BigNumber(tokenBalance).div(BIG_TEN.pow(18))
+
+  // Only make masterchef calls if farm has pid
+  // const [info, totalAllocPoint] =
+  //   pid || pid === 0
+  //     ? await multicall(masterchefABI, [
+  //         {
+  //           address: masterchef,
+  //           name: 'poolInfo',
+  //           params: [pid],
+  //         },
+  //         {
+  //           address: masterchef,
+  //           name: 'totalAllocPoint',
+  //         },
+  //       ])
+  //     : [null, null]
+
+  // const allocPoint = info ? new BigNumber(info.allocPoint?._hex) : BIG_ZERO
+  // const poolWeight = totalAllocPoint ? allocPoint.div(new BigNumber(totalAllocPoint)) : BIG_ZERO
+
+  // return {
+  //   tokenAmountTotal: new BigNumber(lpTokenBalanceMC).div(BIG_TEN.pow(18)).toJSON(),
+  //   lpTotalSupply: new BigNumber(lpTotalSupply).toJSON(),
+  //   lpTotalInQuoteToken: lpTotalInQuoteToken.toJSON(),
+  //   tokenPriceVsQuote: quoteTokenAmountTotal.div(tokenAmountTotal).toJSON(),
+  //   poolWeight: poolWeight.toJSON(),
+  //   multiplier: `${allocPoint.div(100).toString()}X`,
+  //   lpTokenBalanceMC: new BigNumber(lpTokenBalanceMC).toJSON(),
+  //   quoteTokenAmountMc: quoteTokenAmountMc.toJSON(),
+  // }
 }
