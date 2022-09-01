@@ -450,7 +450,7 @@ export default function DashboardV2() {
     },
   ];
 
-  const totalStatsStartDate = chainId === POLYGON ? "06 Jan 2022" : "01 Sep 2021";
+  const totalStatsStartDate = chainId === POLYGON ? "01 Sep 2022" : "01 Sep 2022";
 
   let stableGlp = 0;
   let totalGlp = 0;
