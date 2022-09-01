@@ -1091,8 +1091,8 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
               <div className="App-card-row">
                 <div className="label">Total Supply</div>
                 <div>
-                  {formatKeyAmount(processedData, "glpSupply", 18, 2, true)} MLP ($
-                  {formatKeyAmount(processedData, "glpSupplyUsd", USD_DECIMALS, 2, true)})
+                {formatAmount(glpSupply, GLP_DECIMALS, 4, true)} MLP ($
+                {formatAmount(glpSupplyUsd, USD_DECIMALS, 2, true)})
                 </div>
               </div>
               <div className="App-card-divider"></div>
