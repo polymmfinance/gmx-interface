@@ -1048,7 +1048,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
                         <>
                           <div className="Tooltip-row">
                             <span className="label">
-                              {nativeTokenSymbol} ({wrappedTokenSymbol}) APR
+                              Fees APR
                             </span>
                             <span>{formatKeyAmount(processedData, "glpAprForNativeToken", 2, 2, true)}%</span>
                           </div>
@@ -1077,7 +1077,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
                         <>
                           <div className="Tooltip-row">
                             <span className="label">
-                              {nativeTokenSymbol} ({wrappedTokenSymbol})
+                              MMF
                             </span>
                             <span>
                               {formatKeyAmount(processedData, "feeGlpTrackerRewards", 18, 4)} ($
