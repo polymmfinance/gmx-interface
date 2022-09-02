@@ -16,7 +16,7 @@ import Token from "../../abis/Token.json";
 import GlpManager from "../../abis/GlpManager.json";
 import glpBigIcon from "../../img/ic_glp_custom.svg";
 import RewardTracker from "../../abis/RewardTracker.json";
-import MasterchefABI from "../../abis/masterchef.json";
+import Masterchef from "../../abis/masterchef.json";
 
 import VaultV2 from "../../abis/VaultV2.json";
 
@@ -46,6 +46,8 @@ import {
   getStakingData,
   getProcessedData,
   getPageTitle,
+  getMasterchefData,
+  httpFetcher,
 } from "../../Helpers";
 import { callContract, useGmxPrice, useTotalGmxStaked, useTotalGmxSupply } from "../../Api";
 import { getConstant } from "../../Constants";
@@ -115,7 +117,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
   const esGmxAddress = getContract(chainId, "ES_GMX");
   const bnGmxAddress = getContract(chainId, "BN_GMX");
   const glpAddress = getContract(chainId, "MLP");
-  const masterchef = getContract(chainId, "masterchef")
+  const masterchefAddress = getContract(chainId, "MasterChef")
 
   const stakedGmxTrackerAddress = getContract(chainId, "StakedGmxTracker");
   const bonusGmxTrackerAddress = getContract(chainId, "BonusGmxTracker");
@@ -188,23 +190,38 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
   );
 
   const { data: totalGlpStakedInMasterchef } = useSWR(
-    [`GlpSwap:glpBalance:${active}`, chainId, glpAddress, "balanceOf", masterchef || PLACEHOLDER_ACCOUNT],
+    [`GlpSwap:glpBalance:${active}`, chainId, glpAddress, "balanceOf", masterchefAddress || PLACEHOLDER_ACCOUNT],
     {
       fetcher: fetcher(library, RewardTracker),
     }
   );
 
   const { data: glpStakeInMasterChef } = useSWR(
-    [`GlpSwap:glpStakedMasterchef:${active}`, chainId, masterchef, "userInfo"],
+    [`GlpSwap:glpStakedMasterchef:${active}`, chainId, masterchefAddress, "userInfo"],
     {
-      fetcher: fetcher(library, MasterchefABI, [13, account]),
+      fetcher: fetcher(library, Masterchef, [13, account]),
     }
   );
-
 
   const { data: aums } = useSWR([`GlpSwap:getAums:${active}`, chainId, glpManagerAddress, "getAums"], {
     fetcher: fetcher(library, GlpManager),
   });
+
+  const { data: masterPoolInfo } = useSWR(
+    [`MasterChef:masterPoolInfo:${active}`, chainId, masterchefAddress, "poolInfo"],
+    {
+      fetcher: fetcher(undefined, Masterchef, [13]),
+    }
+  );
+
+  const { data: masterPoolTotalAlloc } = useSWR(
+    [`MasterChef:masterPoolTotalAlloc:${active}`, chainId, masterchefAddress, "totalAllocPoint"],
+    {
+      fetcher: fetcher(undefined, Masterchef),
+    }
+  );
+
+  const { data: mmfPairs } = useSWR(`https://api.dexscreener.com/latest/dex/tokens/0x22a31bD4cB694433B6de19e0aCC2899E553e9481`, { fetcher: httpFetcher })
 
   // const { data: totalTokenWeights } = useSWR(
   //   [`GlpSwap:totalTokenWeights:${active}`, chainId, vaultAddress, "totalTokenWeights"],
@@ -235,11 +252,12 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
   let stakedAmountUSD;
   let totalMlpStakedPrice;
   if (glpStakeInMasterChef && glpStakeInMasterChef.amount && totalGlpStakedInMasterchef) {
-    stakedAmount = glpStakeInMasterChef.amount 
+    stakedAmount = glpStakeInMasterChef.amount
     stakedAmountUSD = glpStakeInMasterChef.amount.mul(glpPrice).div(expandDecimals(1, GLP_DECIMALS));
     totalMlpStakedPrice = totalGlpStakedInMasterchef.mul(glpPrice).div(expandDecimals(1, GLP_DECIMALS));
   }
-  console.log(totalMlpStakedPrice)
+
+  const masterChefData = getMasterchefData(masterPoolInfo, masterPoolTotalAlloc, totalGlpStakedInMasterchef, formatAmount(glpPrice, USD_DECIMALS, 3, true), mmfPairs);
 
   // const { data: walletBalances } = useSWR(
   //   [
@@ -323,7 +341,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
   // const { data: gmxSupply } = useSWR([gmxSupplyUrl], {
   //   fetcher: (...args) => fetch(...args).then((res) => res.text()),
   // });
-  const gmxSupply=0, gmxPrice = 0;
+  const gmxSupply = 0, gmxPrice = 0;
 
   // const isGmxTransferEnabled = true;
 
@@ -1008,23 +1026,24 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
               <div className="App-card-row">
                 <div className="label">Wallet</div>
                 <div>
-                {formatAmount(glpBalance, GLP_DECIMALS, 4, true)} MLP ($
-                {formatAmount(glpBalanceUsd, USD_DECIMALS, 2, true)})
+                  {formatAmount(glpBalance, GLP_DECIMALS, 4, true)} MLP ($
+                  {formatAmount(glpBalanceUsd, USD_DECIMALS, 2, true)})
                 </div>
               </div>
               <div className="App-card-row">
                 <div className="label">Staked</div>
                 <div>
-                {formatAmount(stakedAmount, GLP_DECIMALS, 4, true)} MLP ($
-                {formatAmount(stakedAmountUSD, USD_DECIMALS, 2, true)})
+                  {formatAmount(stakedAmount, GLP_DECIMALS, 4, true)} MLP ($
+                  {formatAmount(stakedAmountUSD, USD_DECIMALS, 2, true)})
                 </div>
               </div>
               <div className="App-card-divider"></div>
               <div className="App-card-row">
                 <div className="label">APR</div>
                 <div>
+                  {/* TODO: need to add MATIC APR into total */}
                   <Tooltip
-                    handle={`${formatKeyAmount(processedData, "glpAprTotal", 2, 2, true)}%`}
+                    handle={`${formatAmount(masterChefData.apr, 2, 2, true)}%`}
                     position="right-bottom"
                     renderContent={() => {
                       return (
@@ -1035,10 +1054,10 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
                             </span>
                             <span>{formatKeyAmount(processedData, "glpAprForNativeToken", 2, 2, true)}%</span>
                           </div>
-                          {/* <div className="Tooltip-row">
-                            <span className="label">Escrowed GMX APR</span>
-                            <span>{formatKeyAmount(processedData, "glpAprForEsGmx", 2, 2, true)}%</span>
-                          </div> */}
+                          <div className="Tooltip-row">
+                            <span className="label">Liquid Staking APR</span>
+                            <span>{formatAmount(masterChefData.apr, 2, 2, true)}%</span>
+                          </div>
                           <br />
                           <div className="muted">
                             APRs are updated weekly on Wednesday and will depend on the fees collected for the week.
@@ -1084,15 +1103,15 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
               <div className="App-card-row">
                 <div className="label">Total Staked</div>
                 <div>
-                {formatAmount(totalGlpStakedInMasterchef, GLP_DECIMALS, 4, true)} MLP ($
-                {formatAmount(totalMlpStakedPrice, USD_DECIMALS, 2, true)})
+                  {formatAmount(totalGlpStakedInMasterchef, GLP_DECIMALS, 4, true)} MLP ($
+                  {formatAmount(totalMlpStakedPrice, USD_DECIMALS, 2, true)})
                 </div>
               </div>
               <div className="App-card-row">
                 <div className="label">Total Supply</div>
                 <div>
-                {formatAmount(glpSupply, GLP_DECIMALS, 4, true)} MLP ($
-                {formatAmount(glpSupplyUsd, USD_DECIMALS, 2, true)})
+                  {formatAmount(glpSupply, GLP_DECIMALS, 4, true)} MLP ($
+                  {formatAmount(glpSupplyUsd, USD_DECIMALS, 2, true)})
                 </div>
               </div>
               <div className="App-card-divider"></div>
@@ -1103,6 +1122,14 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
                 <Link className="App-button-option App-card-option" to="/buy_mlp#redeem">
                   Sell MLP
                 </Link>
+                <a
+                  href="https://polymm.finance/farms"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="App-button-option App-card-option"
+                >
+                  Stake
+                </a>
                 <a
                   href="https://mmfinance.gitbook.io/docs/mmx/mlp"
                   target="_blank"

@@ -1103,7 +1103,7 @@ export const BIG_ONE = new BigNumber(1)
 export const BIG_NINE = new BigNumber(9)
 export const BIG_TEN = new BigNumber(10)
 const token = "0x0d5665A2319526A117E68E38EBEA4610aA8298F8"
-const masterchef = getContract(137, "masterchef")
+const masterchef = getContract(137, "MasterChef")
 
 const fetchMLPData = async (library, chainId) => {
   // const { pid, lpAddress, token, quoteToken, dualMasterchef } = farm

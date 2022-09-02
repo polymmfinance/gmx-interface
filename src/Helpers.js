@@ -1484,7 +1484,7 @@ export function useEagerConnect(setActivatingConnector) {
           setActivatingConnector(connector);
           await activate(connector, undefined, true);
         }
-      } catch (ex) {}
+      } catch (ex) { }
 
       setTried(true);
     })();
@@ -1576,6 +1576,8 @@ export const getContractCall = ({ provider, contractInfo, arg0, arg1, method, pa
 
   return provider[method](arg1, ...params);
 };
+
+export const httpFetcher = (url) => fetch(url).then((res) => res.json());
 
 // prettier-ignore
 export const fetcher = (library, contractInfo, additionalArgs) => (...args) => {
@@ -2537,6 +2539,25 @@ export function getVestingData(vestingInfo) {
   return data;
 }
 
+export function getMasterchefData(masterPoolInfo, masterPoolTotalAlloc, stakedGlpSupply, glpPrice, mmfPairs) {
+  const allocPoint = Number.parseFloat(masterPoolInfo?.allocPoint?.toString?.() ?? "0");
+  const totalAllocPoint = Number.parseFloat(masterPoolTotalAlloc?.toString?.() ?? "0");
+  const glpSupply = bigNumberify(stakedGlpSupply?.toString?.() ?? 0);
+  const tokenPrice = Number.parseFloat(glpPrice);
+  const poolWeight = allocPoint / (totalAllocPoint ?? 1);
+
+  const poolLiquidityUsd = Number.parseFloat(ethers.utils.formatEther(glpSupply.toString())) * tokenPrice
+  const mmfPrice = mmfPairs?.pairs?.[0]?.priceUsd ?? "0";
+
+  const MMF_PER_BLOCK = 30
+  const BLOCKS_PER_YEAR = (60 / 2.3) * 60 * 24 * 365 // 10512000
+  const MMF_PER_YEAR = MMF_PER_BLOCK * BLOCKS_PER_YEAR
+  const yearlyMMFRewardAllocation = poolWeight * MMF_PER_YEAR;
+  const apr = yearlyMMFRewardAllocation * Number.parseFloat(mmfPrice) / poolLiquidityUsd * 100
+
+  return { apr, poolLiquidityUsd, poolWeight };
+}
+
 export function getStakingData(stakingInfo) {
   if (!stakingInfo || stakingInfo.length === 0) {
     return;
@@ -2685,6 +2706,8 @@ export function getProcessedData(
     data.glpSupplyUsd && data.glpSupplyUsd.gt(0)
       ? data.feeGlpTrackerAnnualRewardsUsd.mul(BASIS_POINTS_DIVISOR).div(data.glpSupplyUsd)
       : bigNumberify(0);
+  data.glpAprForMasterchef = 0;
+
   data.glpAprTotal = data.glpAprForNativeToken.add(data.glpAprForEsGmx);
 
   data.totalGlpRewardsUsd = data.stakedGlpTrackerRewardsUsd.add(data.feeGlpTrackerRewardsUsd);
