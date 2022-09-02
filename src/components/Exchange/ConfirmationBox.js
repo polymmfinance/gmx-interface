@@ -319,7 +319,7 @@ export default function ConfirmationBox(props) {
             <div className="Confirmation-box-warning">
               Increasing this position at the current price will forfeit a&nbsp;
               <a
-                href="https://mmfinance.gitbook.io/docs/mmx/trading#minimum-price-change"
+                href="https://mmfinance.gitbook.io/madmex-spot-and-perps/trading#minimum-price-change"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -341,7 +341,7 @@ export default function ConfirmationBox(props) {
               <div className="Confirmation-box-warning">
                 This order will forfeit a&nbsp;
                 <a
-                  href="https://mmfinance.gitbook.io/docs/mmx/trading#minimum-price-change"
+                  href="https://mmfinance.gitbook.io/madmex-spot-and-perps/trading#minimum-price-change"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -361,7 +361,7 @@ export default function ConfirmationBox(props) {
         <div className="Confirmation-box-warning">
           A minimum price change of&nbsp;
           <a
-            href="https://mmfinance.gitbook.io/docs/mmx/trading#minimum-price-change"
+            href="https://mmfinance.gitbook.io/madmex-spot-and-perps/trading#minimum-price-change"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -711,7 +711,7 @@ export default function ConfirmationBox(props) {
                         <br />
                         This is the network cost required to execute the postion.{" "}
                         <a
-                          href="https://mmfinance.gitbook.io/docs/mmx/trading#execution-fee"
+                          href="https://mmfinance.gitbook.io/madmex-spot-and-perps/trading#execution-fee"
                           target="_blank"
                           rel="noopener noreferrer"
                         >

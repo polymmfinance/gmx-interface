@@ -43,7 +43,7 @@ export const appEventsData = [
   //   buttons: [
   //     {
   //       text: "Read more",
-  //       link: "https://mmfinance.gitbook.io/docs/mmx/roadmap#30-march-2022",
+  //       link: "https://mmfinance.gitbook.io/madmex-spot-and-perps/roadmap#30-march-2022",
   //       newTab: true,
   //     },
   //     {
@@ -74,7 +74,7 @@ export const appEventsData = [
   //   buttons: [
   //     {
   //       text: "Learn More",
-  //       link: "https://mmfinance.gitbook.io/docs/mmx/trading#backup-rpc-urls",
+  //       link: "https://mmfinance.gitbook.io/madmex-spot-and-perps/trading#backup-rpc-urls",
   //       newTab: true,
   //     },
   //   ],
@@ -120,7 +120,7 @@ export const appEventsData = [
   //   buttons: [
   //     {
   //       text: "Learn More",
-  //       link: "https://mmfinance.gitbook.io/docs/mmx/trading#backup-rpc-urls",
+  //       link: "https://mmfinance.gitbook.io/madmex-spot-and-perps/trading#backup-rpc-urls",
   //       newTab: true,
   //     },
   //   ],
@@ -199,7 +199,7 @@ export const appEventsData = [
   //   buttons: [
   //     {
   //       text: "Learn More",
-  //       link: "https://mmfinance.gitbook.io/docs/mmx/trading#backup-rpc-urls",
+  //       link: "https://mmfinance.gitbook.io/madmex-spot-and-perps/trading#backup-rpc-urls",
   //       newTab: true,
   //     },
   //   ],

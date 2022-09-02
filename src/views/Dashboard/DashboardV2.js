@@ -407,7 +407,11 @@ export default function DashboardV2() {
               )}
               <br />
               <div>
-                <a href="https://mmfinance.gitbook.io/docs/mmx/mlp" target="_blank" rel="noopener noreferrer">
+                <a
+                  href="https://mmfinance.gitbook.io/madmex-spot-and-perps/mlp"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   More Info
                 </a>
               </div>

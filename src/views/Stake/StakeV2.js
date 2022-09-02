@@ -115,7 +115,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
   const esGmxAddress = getContract(chainId, "ES_GMX");
   const bnGmxAddress = getContract(chainId, "BN_GMX");
   const glpAddress = getContract(chainId, "MLP");
-  const masterchef = getContract(chainId, "masterchef")
+  const masterchef = getContract(chainId, "masterchef");
 
   const stakedGmxTrackerAddress = getContract(chainId, "StakedGmxTracker");
   const bonusGmxTrackerAddress = getContract(chainId, "BonusGmxTracker");
@@ -179,7 +179,6 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
     }
   );
 
-
   const { data: glpBalance } = useSWR(
     [`GlpSwap:glpBalance:${active}`, chainId, glpAddress, "balanceOf", account || PLACEHOLDER_ACCOUNT],
     {
@@ -200,7 +199,6 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
       fetcher: fetcher(library, MasterchefABI, [13, account]),
     }
   );
-
 
   const { data: aums } = useSWR([`GlpSwap:getAums:${active}`, chainId, glpManagerAddress, "getAums"], {
     fetcher: fetcher(library, GlpManager),
@@ -229,17 +227,15 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
   }
   const glpSupplyUsd = glpSupply.mul(glpPrice).div(expandDecimals(1, GLP_DECIMALS));
 
-
-
   let stakedAmount;
   let stakedAmountUSD;
   let totalMlpStakedPrice;
   if (glpStakeInMasterChef && glpStakeInMasterChef.amount && totalGlpStakedInMasterchef) {
-    stakedAmount = glpStakeInMasterChef.amount 
+    stakedAmount = glpStakeInMasterChef.amount;
     stakedAmountUSD = glpStakeInMasterChef.amount.mul(glpPrice).div(expandDecimals(1, GLP_DECIMALS));
     totalMlpStakedPrice = totalGlpStakedInMasterchef.mul(glpPrice).div(expandDecimals(1, GLP_DECIMALS));
   }
-  console.log(totalMlpStakedPrice)
+  console.log(totalMlpStakedPrice);
 
   // const { data: walletBalances } = useSWR(
   //   [
@@ -323,7 +319,8 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
   // const { data: gmxSupply } = useSWR([gmxSupplyUrl], {
   //   fetcher: (...args) => fetch(...args).then((res) => res.text()),
   // });
-  const gmxSupply=0, gmxPrice = 0;
+  const gmxSupply = 0,
+    gmxPrice = 0;
 
   // const isGmxTransferEnabled = true;
 
@@ -339,7 +336,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
 
   // const { balanceData, supplyData } = getBalanceAndSupplyData(walletBalances);
   // const depositBalanceData = getDepositBalanceData(depositBalances);
-  const processedData = {}
+  const processedData = {};
   // const stakingData = getStakingData(stakingInfo);
   // const vestingData = getVestingData(vestingInfo);
 
@@ -551,7 +548,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
   //           <>
   //             Boost your rewards with Multiplier Points.&nbsp;
   //             <a
-  //               href="https://mmfinance.gitbook.io/docs/mmx/rewards#multiplier-points"
+  //               href="https://mmfinance.gitbook.io/madmex-spot-and-perps/rewards#multiplier-points"
   //               rel="noreferrer"
   //               target="_blank"
   //             >
@@ -694,11 +691,11 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
           <div className="Page-title">Earn</div>
           <div className="Page-description">
             Stake{" "}
-            {/* <a href="https://mmfinance.gitbook.io/docs/mmx/tokenomics" target="_blank" rel="noopener noreferrer">
+            {/* <a href="https://mmfinance.gitbook.io/madmex-spot-and-perps/tokenomics" target="_blank" rel="noopener noreferrer">
               GMX
             </a>{" "}
             and{" "} */}
-            <a href="https://mmfinance.gitbook.io/docs/mmx/mlp" target="_blank" rel="noopener noreferrer">
+            <a href="https://mmfinance.gitbook.io/madmex-spot-and-perps/mlp" target="_blank" rel="noopener noreferrer">
               MLP
             </a>{" "}
             to earn rewards.
@@ -1008,15 +1005,15 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
               <div className="App-card-row">
                 <div className="label">Wallet</div>
                 <div>
-                {formatAmount(glpBalance, GLP_DECIMALS, 4, true)} MLP ($
-                {formatAmount(glpBalanceUsd, USD_DECIMALS, 2, true)})
+                  {formatAmount(glpBalance, GLP_DECIMALS, 4, true)} MLP ($
+                  {formatAmount(glpBalanceUsd, USD_DECIMALS, 2, true)})
                 </div>
               </div>
               <div className="App-card-row">
                 <div className="label">Staked</div>
                 <div>
-                {formatAmount(stakedAmount, GLP_DECIMALS, 4, true)} MLP ($
-                {formatAmount(stakedAmountUSD, USD_DECIMALS, 2, true)})
+                  {formatAmount(stakedAmount, GLP_DECIMALS, 4, true)} MLP ($
+                  {formatAmount(stakedAmountUSD, USD_DECIMALS, 2, true)})
                 </div>
               </div>
               <div className="App-card-divider"></div>
@@ -1084,15 +1081,15 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
               <div className="App-card-row">
                 <div className="label">Total Staked</div>
                 <div>
-                {formatAmount(totalGlpStakedInMasterchef, GLP_DECIMALS, 4, true)} MLP ($
-                {formatAmount(totalMlpStakedPrice, USD_DECIMALS, 2, true)})
+                  {formatAmount(totalGlpStakedInMasterchef, GLP_DECIMALS, 4, true)} MLP ($
+                  {formatAmount(totalMlpStakedPrice, USD_DECIMALS, 2, true)})
                 </div>
               </div>
               <div className="App-card-row">
                 <div className="label">Total Supply</div>
                 <div>
-                {formatAmount(glpSupply, GLP_DECIMALS, 4, true)} MLP ($
-                {formatAmount(glpSupplyUsd, USD_DECIMALS, 2, true)})
+                  {formatAmount(glpSupply, GLP_DECIMALS, 4, true)} MLP ($
+                  {formatAmount(glpSupplyUsd, USD_DECIMALS, 2, true)})
                 </div>
               </div>
               <div className="App-card-divider"></div>
@@ -1104,7 +1101,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
                   Sell MLP
                 </Link>
                 <a
-                  href="https://mmfinance.gitbook.io/docs/mmx/mlp"
+                  href="https://mmfinance.gitbook.io/madmex-spot-and-perps/mlp"
                   target="_blank"
                   rel="noreferrer"
                   className="App-button-option App-card-option"
@@ -1231,7 +1228,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
             Convert esGMX tokens to GMX tokens.
             <br />
             Please read the{" "}
-            <a href="https://mmfinance.gitbook.io/docs/mmx/rewards#vesting" target="_blank" rel="noopener noreferrer">
+            <a href="https://mmfinance.gitbook.io/madmex-spot-and-perps/rewards#vesting" target="_blank" rel="noopener noreferrer">
               vesting details
             </a>{" "}
             before using the vaults.
@@ -1419,7 +1416,6 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
   );
 }
 
-
 // function ClaimModal(props) {
 //   const {
 //     isVisible,
@@ -1533,7 +1529,6 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
 //     </div>
 //   );
 // }
-
 
 // function StakeModal(props) {
 //   const {
@@ -1791,7 +1786,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
 //         {burnAmount && burnAmount.gt(0) && rewardReductionBasisPoints && rewardReductionBasisPoints.gt(0) && (
 //           <div className="Modal-note">
 //             Unstaking will burn&nbsp;
-//             <a href="https://mmfinance.gitbook.io/docs/mmx/rewards" target="_blank" rel="noopener noreferrer">
+//             <a href="https://mmfinance.gitbook.io/madmex-spot-and-perps/rewards" target="_blank" rel="noopener noreferrer">
 //               {formatAmount(burnAmount, 18, 4, true)} Multiplier Points
 //             </a>
 //             .&nbsp;

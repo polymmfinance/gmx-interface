@@ -653,7 +653,7 @@ export default function GlpSwap(props) {
       {/* <div className="Page-title-section">
         <div className="Page-title">{isBuying ? "Buy MLP" : "Sell MLP"}</div>
         {isBuying && <div className="Page-description">
-          Purchase <a href="https://mmfinance.gitbook.io/docs/mmx/mlp" target="_blank" rel="noopener noreferrer">MLP tokens</a> to earn {nativeTokenSymbol} fees from swaps and leverage trading.<br/>
+          Purchase <a href="https://mmfinance.gitbook.io/madmex-spot-and-perps/mlp" target="_blank" rel="noopener noreferrer">MLP tokens</a> to earn {nativeTokenSymbol} fees from swaps and leverage trading.<br/>
           Note that there is a minimum holding time of 15 minutes after a purchase.<br/>
           <div>View <Link to="/earn">staking</Link> page.</div>
         </div>}

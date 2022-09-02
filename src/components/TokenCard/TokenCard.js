@@ -73,7 +73,7 @@ export default function TokenCard({ showRedirectModal }) {
               </BuyLink>
             </div>
             <a
-              href="https://mmfinance.gitbook.io/docs/mmx/tokenomics"
+              href="https://mmfinance.gitbook.io/madmex-spot-and-perps/tokenomics"
               target="_blank"
               rel="noreferrer"
               className="default-btn read-more"
@@ -109,7 +109,7 @@ export default function TokenCard({ showRedirectModal }) {
               </BuyLink>
             </div>
             <a
-              href="https://mmfinance.gitbook.io/docs/mmx/mlp"
+              href="https://mmfinance.gitbook.io/madmex-spot-and-perps/mlp"
               target="_blank"
               rel="noreferrer"
               className="default-btn read-more"

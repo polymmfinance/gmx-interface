@@ -769,7 +769,7 @@ export default function PositionSeller(props) {
           <div className="Confirmation-box-warning">
             Reducing the position at the current price will forfeit a&nbsp;
             <a
-              href="https://mmfinance.gitbook.io/docs/mmx/trading#minimum-price-change"
+              href="https://mmfinance.gitbook.io/madmex-spot-and-perps/trading#minimum-price-change"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -786,7 +786,7 @@ export default function PositionSeller(props) {
         <div className="Confirmation-box-warning">
           This order will forfeit a&nbsp;
           <a
-            href="https://mmfinance.gitbook.io/docs/mmx/trading#minimum-price-change"
+            href="https://mmfinance.gitbook.io/madmex-spot-and-perps/trading#minimum-price-change"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -1077,7 +1077,7 @@ export default function PositionSeller(props) {
 
                       <div className="PositionSeller-fee-item">
                         <a
-                          href="https://mmfinance.gitbook.io/docs/mmx/trading#fees"
+                          href="https://mmfinance.gitbook.io/madmex-spot-and-perps/trading#fees"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
