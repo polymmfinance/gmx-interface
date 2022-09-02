@@ -227,7 +227,7 @@ export default function OrderEditor(props) {
         <div className="Confirmation-box-warning">
           This order will forfeit a&nbsp;
           <a
-            href="https://mmfinance.gitbook.io/docs/mmx/trading#minimum-price-change"
+            href="https://mmfinance.gitbook.io/madmex-spot-and-perps/trading#minimum-price-change"
             target="_blank"
             rel="noopener noreferrer"
           >

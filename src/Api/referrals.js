@@ -22,7 +22,7 @@ import { getContract } from "../Addresses";
 import { callContract } from ".";
 import { REGEX_VERIFY_BYTES32 } from "../components/Referrals/referralsHelper";
 
-const ACTIVE_CHAINS = [ARBITRUM, AVALANCHE, POLYGON];
+const ACTIVE_CHAINS = [POLYGON];
 const DISTRIBUTION_TYPE_REBATES = "1";
 const DISTRIBUTION_TYPE_DISCOUNT = "2";
 
@@ -103,7 +103,7 @@ export function useUserCodesOnAllChain(account) {
   `;
   useEffect(() => {
     async function main() {
-      const [arbitrumCodes, avalancheCodes, polygonCodes] = await Promise.all(
+      const [polygonCodes] = await Promise.all(
         ACTIVE_CHAINS.map((chainId) => {
           return getGraphClient(chainId)
             .query({ query, variables: { account: (account || "").toLowerCase() } })
@@ -112,21 +112,9 @@ export function useUserCodesOnAllChain(account) {
             });
         })
       );
-      const [codeOwnersOnAvax = [], codeOwnersOnArbitrum = [], codeOwnersOnPolygon = []] = await Promise.all([
-        getCodeOwnersData(AVALANCHE, account, arbitrumCodes),
-        getCodeOwnersData(ARBITRUM, account, avalancheCodes),
-        getCodeOwnersData(POLYGON, account, polygonCodes),
-      ]);
+      const [codeOwnersOnPolygon = []] = await Promise.all([getCodeOwnersData(POLYGON, account, polygonCodes)]);
 
       setData({
-        [ARBITRUM]: codeOwnersOnAvax.reduce((acc, cv) => {
-          acc[cv.code] = cv;
-          return acc;
-        }, {}),
-        [AVALANCHE]: codeOwnersOnArbitrum.reduce((acc, cv) => {
-          acc[cv.code] = cv;
-          return acc;
-        }, {}),
         [POLYGON]: codeOwnersOnPolygon.reduce((acc, cv) => {
           acc[cv.code] = cv;
           return acc;

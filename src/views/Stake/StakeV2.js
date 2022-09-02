@@ -181,7 +181,6 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
     }
   );
 
-
   const { data: glpBalance } = useSWR(
     [`GlpSwap:glpBalance:${active}`, chainId, glpAddress, "balanceOf", account || PLACEHOLDER_ACCOUNT],
     {
@@ -245,8 +244,6 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
     glpBalanceUsd = glpBalance.mul(glpPrice).div(expandDecimals(1, GLP_DECIMALS));
   }
   const glpSupplyUsd = glpSupply.mul(glpPrice).div(expandDecimals(1, GLP_DECIMALS));
-
-
 
   let stakedAmount;
   let stakedAmountUSD;
@@ -341,7 +338,8 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
   // const { data: gmxSupply } = useSWR([gmxSupplyUrl], {
   //   fetcher: (...args) => fetch(...args).then((res) => res.text()),
   // });
-  const gmxSupply = 0, gmxPrice = 0;
+  const gmxSupply = 0,
+    gmxPrice = 0;
 
   // const isGmxTransferEnabled = true;
 
@@ -357,7 +355,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
 
   // const { balanceData, supplyData } = getBalanceAndSupplyData(walletBalances);
   // const depositBalanceData = getDepositBalanceData(depositBalances);
-  const processedData = {}
+  const processedData = {};
   // const stakingData = getStakingData(stakingInfo);
   // const vestingData = getVestingData(vestingInfo);
 
@@ -569,7 +567,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
   //           <>
   //             Boost your rewards with Multiplier Points.&nbsp;
   //             <a
-  //               href="https://mmfinance.gitbook.io/docs/mmx/rewards#multiplier-points"
+  //               href="https://mmfinance.gitbook.io/madmex-spot-and-perps/rewards#multiplier-points"
   //               rel="noreferrer"
   //               target="_blank"
   //             >
@@ -712,11 +710,11 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
           <div className="Page-title">Earn</div>
           <div className="Page-description">
             Stake{" "}
-            {/* <a href="https://mmfinance.gitbook.io/docs/mmx/tokenomics" target="_blank" rel="noopener noreferrer">
+            {/* <a href="https://mmfinance.gitbook.io/madmex-spot-and-perps/tokenomics" target="_blank" rel="noopener noreferrer">
               GMX
             </a>{" "}
             and{" "} */}
-            <a href="https://mmfinance.gitbook.io/docs/mmx/mlp" target="_blank" rel="noopener noreferrer">
+            <a href="https://mmfinance.gitbook.io/madmex-spot-and-perps/mlp" target="_blank" rel="noopener noreferrer">
               MLP
             </a>{" "}
             to earn rewards.
@@ -1131,7 +1129,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
                   Stake
                 </a>
                 <a
-                  href="https://mmfinance.gitbook.io/docs/mmx/mlp"
+                  href="https://mmfinance.gitbook.io/madmex-spot-and-perps/mlp"
                   target="_blank"
                   rel="noreferrer"
                   className="App-button-option App-card-option"
@@ -1258,7 +1256,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
             Convert esGMX tokens to GMX tokens.
             <br />
             Please read the{" "}
-            <a href="https://mmfinance.gitbook.io/docs/mmx/rewards#vesting" target="_blank" rel="noopener noreferrer">
+            <a href="https://mmfinance.gitbook.io/madmex-spot-and-perps/rewards#vesting" target="_blank" rel="noopener noreferrer">
               vesting details
             </a>{" "}
             before using the vaults.
@@ -1446,7 +1444,6 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
   );
 }
 
-
 // function ClaimModal(props) {
 //   const {
 //     isVisible,
@@ -1560,7 +1557,6 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
 //     </div>
 //   );
 // }
-
 
 // function StakeModal(props) {
 //   const {
@@ -1818,7 +1814,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
 //         {burnAmount && burnAmount.gt(0) && rewardReductionBasisPoints && rewardReductionBasisPoints.gt(0) && (
 //           <div className="Modal-note">
 //             Unstaking will burn&nbsp;
-//             <a href="https://mmfinance.gitbook.io/docs/mmx/rewards" target="_blank" rel="noopener noreferrer">
+//             <a href="https://mmfinance.gitbook.io/madmex-spot-and-perps/rewards" target="_blank" rel="noopener noreferrer">
 //               {formatAmount(burnAmount, 18, 4, true)} Multiplier Points
 //             </a>
 //             .&nbsp;

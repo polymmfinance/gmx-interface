@@ -31,7 +31,7 @@ export default function BuyGlp(props) {
           <div className="Page-title">Buy / Sell MLP</div>
           <div className="Page-description">
             Purchase{" "}
-            <a href="https://mmfinance.gitbook.io/docs/mmx/mlp" target="_blank" rel="noopener noreferrer">
+            <a href="https://mmfinance.gitbook.io/madmex-spot-and-perps/mlp" target="_blank" rel="noopener noreferrer">
               MLP tokens
             </a>{" "}
             to earn {nativeTokenSymbol} fees from swaps and leveraged trading.

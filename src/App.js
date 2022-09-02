@@ -189,7 +189,7 @@ function AppHeaderLinks({ HeaderLink, small, openSettings, clickCloseIcon }) {
         </a>
       </div>
       <div className="App-header-link-container">
-        <a href="https://mmfinance.gitbook.io/docs/mmx/" target="_blank" rel="noopener noreferrer">
+        <a href="https://mmfinance.gitbook.io/madmex-spot-and-perps/" target="_blank" rel="noopener noreferrer">
           About
         </a>
       </div>

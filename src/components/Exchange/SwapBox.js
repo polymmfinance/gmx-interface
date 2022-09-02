@@ -2163,7 +2163,7 @@ export default function SwapBox(props) {
             <br />
             For screenshots and more information, please see the{" "}
             <a
-              href="https://mmfinance.gitbook.io/docs/mmx/trading#stop-loss-take-profit-orders"
+              href="https://mmfinance.gitbook.io/madmex-spot-and-perps/trading#stop-loss-take-profit-orders"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -2251,7 +2251,7 @@ export default function SwapBox(props) {
                       <br />
                       <br />
                       <a
-                        href="https://mmfinance.gitbook.io/docs/mmx/trading#opening-a-position"
+                        href="https://mmfinance.gitbook.io/madmex-spot-and-perps/trading#opening-a-position"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -2280,7 +2280,7 @@ export default function SwapBox(props) {
                       <br />
                       <br />
                       <a
-                        href="https://mmfinance.gitbook.io/docs/mmx/trading#opening-a-position"
+                        href="https://mmfinance.gitbook.io/madmex-spot-and-perps/trading#opening-a-position"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -2317,7 +2317,7 @@ export default function SwapBox(props) {
                       )}
                       <br />
                       <a
-                        href="https://mmfinance.gitbook.io/docs/mmx/trading#opening-a-position"
+                        href="https://mmfinance.gitbook.io/madmex-spot-and-perps/trading#opening-a-position"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -2363,7 +2363,11 @@ export default function SwapBox(props) {
         <div className="App-card-divider"></div>
         <div className="Exchange-info-row">
           <div className="Exchange-info-label-button">
-            <a href="https://mmfinance.gitbook.io/docs/mmx/trading" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://mmfinance.gitbook.io/madmex-spot-and-perps/trading"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Trading guide
             </a>
           </div>
@@ -2378,7 +2382,7 @@ export default function SwapBox(props) {
         <div className="Exchange-info-row">
           <div className="Exchange-info-label-button">
             <a
-              href="https://mmfinance.gitbook.io/docs/mmx/trading#backup-rpc-urls"
+              href="https://mmfinance.gitbook.io/madmex-spot-and-perps/trading#backup-rpc-urls"
               target="_blank"
               rel="noopener noreferrer"
             >

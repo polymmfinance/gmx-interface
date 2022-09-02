@@ -566,7 +566,7 @@ export default function PositionEditor(props) {
                                 ? "deposit"
                                 : "withdrawal"}.{" "}
                               <a
-                                href="https://mmfinance.gitbook.io/docs/mmx/trading#execution-fee"
+                                href="https://mmfinance.gitbook.io/madmex-spot-and-perps/trading#execution-fee"
                                 target="_blank"
                                 rel="noopener noreferrer"
                               >

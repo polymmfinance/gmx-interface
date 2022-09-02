@@ -121,7 +121,11 @@ function Referrals({ connectWallet, setPendingTxns, pendingTxns }) {
               Get fee discounts and earn rebates through the MMX referral program.
               <br />
               For more information, please read the{" "}
-              <a target="_blank" rel="noopener noreferrer" href="https://mmfinance.gitbook.io/docs/mmx/referrals">
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                href="https://mmfinance.gitbook.io/madmex-spot-and-perps/referrals"
+              >
                 referral program details
               </a>
               .
