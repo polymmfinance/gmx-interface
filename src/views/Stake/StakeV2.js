@@ -69,22 +69,24 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
 
   // const hasInsurance = true;
 
-  // const [isStakeModalVisible, setIsStakeModalVisible] = useState(false);
-  // const [stakeModalTitle, setStakeModalTitle] = useState("");
-  // const [stakeModalMaxAmount, setStakeModalMaxAmount] = useState(undefined);
-  // const [stakeValue, setStakeValue] = useState("");
-  // const [stakingTokenSymbol, setStakingTokenSymbol] = useState("");
-  // const [stakingTokenAddress, setStakingTokenAddress] = useState("");
-  // const [stakingFarmAddress, setStakingFarmAddress] = useState("");
-  // const [stakeMethodName, setStakeMethodName] = useState("");
+  const [isStakeModalVisible, setIsStakeModalVisible] = useState(false);
+  const [stakeModalTitle, setStakeModalTitle] = useState("");
+  const [stakeModalMaxAmount, setStakeModalMaxAmount] = useState(undefined);
+  const [stakeValue, setStakeValue] = useState("");
+  const [stakingTokenSymbol, setStakingTokenSymbol] = useState("");
+  const [stakingTokenAddress, setStakingTokenAddress] = useState("");
+  const [stakingFarmAddress, setStakingFarmAddress] = useState("");
+  const [stakeMethodName, setStakeMethodName] = useState("");
+  const [stakePid, setStakePid] = useState(13);
 
-  // const [isUnstakeModalVisible, setIsUnstakeModalVisible] = useState(false);
-  // const [unstakeModalTitle, setUnstakeModalTitle] = useState("");
-  // const [unstakeModalMaxAmount, setUnstakeModalMaxAmount] = useState(undefined);
-  // const [unstakeModalReservedAmount, setUnstakeModalReservedAmount] = useState(undefined);
-  // const [unstakeValue, setUnstakeValue] = useState("");
-  // const [unstakingTokenSymbol, setUnstakingTokenSymbol] = useState("");
-  // const [unstakeMethodName, setUnstakeMethodName] = useState("");
+  const [isUnstakeModalVisible, setIsUnstakeModalVisible] = useState(false);
+  const [unstakeModalTitle, setUnstakeModalTitle] = useState("");
+  const [unstakeModalMaxAmount, setUnstakeModalMaxAmount] = useState(undefined);
+  const [unstakeModalReservedAmount, setUnstakeModalReservedAmount] = useState(undefined);
+  const [unstakeValue, setUnstakeValue] = useState("");
+  const [unstakingTokenSymbol, setUnstakingTokenSymbol] = useState("");
+  const [unstakeMethodName, setUnstakeMethodName] = useState("");
+  const [unstakePid, setUnstakePid] = useState(13);
 
   // const [isVesterDepositModalVisible, setIsVesterDepositModalVisible] = useState(false);
   // const [vesterDepositTitle, setVesterDepositTitle] = useState("");
@@ -117,7 +119,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
   const esGmxAddress = getContract(chainId, "ES_GMX");
   const bnGmxAddress = getContract(chainId, "BN_GMX");
   const glpAddress = getContract(chainId, "MLP");
-  const masterchefAddress = getContract(chainId, "MasterChef")
+  const masterchefAddress = getContract(chainId, "MasterChef");
 
   const stakedGmxTrackerAddress = getContract(chainId, "StakedGmxTracker");
   const bonusGmxTrackerAddress = getContract(chainId, "BonusGmxTracker");
@@ -220,7 +222,10 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
     }
   );
 
-  const { data: mmfPairs } = useSWR(`https://api.dexscreener.com/latest/dex/tokens/0x22a31bD4cB694433B6de19e0aCC2899E553e9481`, { fetcher: httpFetcher })
+  const { data: mmfPairs } = useSWR(
+    `https://api.dexscreener.com/latest/dex/tokens/0x22a31bD4cB694433B6de19e0aCC2899E553e9481`,
+    { fetcher: httpFetcher }
+  );
 
   // const { data: totalTokenWeights } = useSWR(
   //   [`GlpSwap:totalTokenWeights:${active}`, chainId, vaultAddress, "totalTokenWeights"],
@@ -249,12 +254,18 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
   let stakedAmountUSD;
   let totalMlpStakedPrice;
   if (glpStakeInMasterChef && glpStakeInMasterChef.amount && totalGlpStakedInMasterchef) {
-    stakedAmount = glpStakeInMasterChef.amount
+    stakedAmount = glpStakeInMasterChef.amount;
     stakedAmountUSD = glpStakeInMasterChef.amount.mul(glpPrice).div(expandDecimals(1, GLP_DECIMALS));
     totalMlpStakedPrice = totalGlpStakedInMasterchef.mul(glpPrice).div(expandDecimals(1, GLP_DECIMALS));
   }
 
-  const masterChefData = getMasterchefData(masterPoolInfo, masterPoolTotalAlloc, totalGlpStakedInMasterchef, formatAmount(glpPrice, USD_DECIMALS, 3, true), mmfPairs);
+  const masterChefData = getMasterchefData(
+    masterPoolInfo,
+    masterPoolTotalAlloc,
+    totalGlpStakedInMasterchef,
+    formatAmount(glpPrice, USD_DECIMALS, 3, true),
+    mmfPairs
+  );
 
   // const { data: walletBalances } = useSWR(
   //   [
@@ -418,21 +429,21 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
   //   }
   // }
 
-  // const showStakeGmxModal = () => {
-  //   if (!isGmxTransferEnabled) {
-  //     helperToast.error("GMX transfers not yet enabled");
-  //     return;
-  //   }
-
-  //   setIsStakeModalVisible(true);
-  //   setStakeModalTitle("Stake GMX");
-  //   setStakeModalMaxAmount(processedData.gmxBalance);
-  //   setStakeValue("");
-  //   setStakingTokenSymbol("GMX");
-  //   setStakingTokenAddress(gmxAddress);
-  //   setStakingFarmAddress(stakedGmxTrackerAddress);
-  //   setStakeMethodName("stakeGmx");
-  // };
+  const showStakeMLPModal = () => {
+    // if (!isGmxTransferEnabled) {
+    //   helperToast.error("GMX transfers not yet enabled");
+    //   return;
+    // }
+    setIsStakeModalVisible(true);
+    setStakeModalTitle("Stake MLP");
+    setStakeModalMaxAmount(glpBalance);
+    setStakeValue("");
+    setStakingTokenSymbol("MLP");
+    setStakingTokenAddress(glpAddress);
+    setStakingFarmAddress(masterchefAddress);
+    setStakeMethodName("deposit");
+    setStakePid(13);
+  };
 
   // const showStakeEsGmxModal = () => {
   //   setIsStakeModalVisible(true);
@@ -509,29 +520,30 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
   //   setVesterWithdrawAddress(glpVesterAddress);
   // };
 
-  // const showUnstakeGmxModal = () => {
-  //   if (!isGmxTransferEnabled) {
-  //     helperToast.error("GMX transfers not yet enabled");
-  //     return;
-  //   }
-  //   setIsUnstakeModalVisible(true);
-  //   setUnstakeModalTitle("Unstake GMX");
-  //   let maxAmount = processedData.gmxInStakedGmx;
-  //   if (
-  //     processedData.gmxInStakedGmx &&
-  //     vestingData &&
-  //     vestingData.gmxVesterPairAmount.gt(0) &&
-  //     maxUnstakeableGmx &&
-  //     maxUnstakeableGmx.lt(processedData.gmxInStakedGmx)
-  //   ) {
-  //     maxAmount = maxUnstakeableGmx;
-  //   }
-  //   setUnstakeModalMaxAmount(maxAmount);
-  //   setUnstakeModalReservedAmount(vestingData.gmxVesterPairAmount);
-  //   setUnstakeValue("");
-  //   setUnstakingTokenSymbol("GMX");
-  //   setUnstakeMethodName("unstakeGmx");
-  // };
+  const showUnstakeMLPModal = () => {
+    // if (!isGmxTransferEnabled) {
+    //   helperToast.error("GMX transfers not yet enabled");
+    //   return;
+    // }
+    setIsUnstakeModalVisible(true);
+    setUnstakeModalTitle("Unstake MLP");
+    let maxAmount = glpStakeInMasterChef.amount;
+    // if (
+    //   glpStakeInMasterChef &&
+    //   vestingData &&
+    //   vestingData.gmxVesterPairAmount.gt(0) &&
+    //   maxUnstakeableGmx &&
+    //   maxUnstakeableGmx.lt(glpStakeInMasterChef)
+    // ) {
+    //   maxAmount = maxUnstakeableGmx;
+    // }
+    setUnstakeModalMaxAmount(maxAmount);
+    // setUnstakeModalReservedAmount(vestingData.gmxVesterPairAmount);
+    setUnstakeValue("");
+    setUnstakingTokenSymbol("MLP");
+    setUnstakeMethodName("withdraw");
+    setUnstakePid(13);
+  };
 
   // const showUnstakeEsGmxModal = () => {
   //   setIsUnstakeModalVisible(true);
@@ -611,7 +623,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
 
   return (
     <div className="default-container page-layout">
-      {/* <StakeModal
+      <StakeModal
         isVisible={isStakeModalVisible}
         setIsVisible={setIsStakeModalVisible}
         chainId={chainId}
@@ -625,9 +637,10 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
         stakingTokenSymbol={stakingTokenSymbol}
         stakingTokenAddress={stakingTokenAddress}
         farmAddress={stakingFarmAddress}
-        rewardRouterAddress={rewardRouterAddress}
+        rewardRouterAddress={masterchefAddress}
         stakeMethodName={stakeMethodName}
-        hasMultiplierPoints={hasMultiplierPoints}
+        pid={stakePid}
+        // hasMultiplierPoints={hasMultiplierPoints}
         setPendingTxns={setPendingTxns}
         nativeTokenSymbol={nativeTokenSymbol}
         wrappedTokenSymbol={wrappedTokenSymbol}
@@ -644,12 +657,13 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
         setValue={setUnstakeValue}
         library={library}
         unstakingTokenSymbol={unstakingTokenSymbol}
-        rewardRouterAddress={rewardRouterAddress}
+        rewardRouterAddress={masterchefAddress}
         unstakeMethodName={unstakeMethodName}
-        multiplierPointsAmount={multiplierPointsAmount}
-        bonusGmxInFeeGmx={bonusGmxInFeeGmx}
+        pid={unstakePid}
+        // multiplierPointsAmount={multiplierPointsAmount}
+        // bonusGmxInFeeGmx={bonusGmxInFeeGmx}
       />
-      <VesterDepositModal
+      {/*<VesterDepositModal
         isVisible={isVesterDepositModalVisible}
         setIsVisible={setIsVesterDepositModalVisible}
         chainId={chainId}
@@ -1047,9 +1061,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
                       return (
                         <>
                           <div className="Tooltip-row">
-                            <span className="label">
-                              Fees APR
-                            </span>
+                            <span className="label">Fees APR</span>
                             <span>{formatKeyAmount(processedData, "glpAprForNativeToken", 2, 2, true)}%</span>
                           </div>
                           <div className="Tooltip-row">
@@ -1076,9 +1088,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
                       return (
                         <>
                           <div className="Tooltip-row">
-                            <span className="label">
-                              MMF
-                            </span>
+                            <span className="label">MMF</span>
                             <span>
                               {formatKeyAmount(processedData, "feeGlpTrackerRewards", 18, 4)} ($
                               {formatKeyAmount(processedData, "feeGlpTrackerRewardsUsd", USD_DECIMALS, 2, true)})
@@ -1120,14 +1130,24 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
                 <Link className="App-button-option App-card-option" to="/buy_mlp#redeem">
                   Sell MLP
                 </Link>
-                <a
+                {active && glpBalance?.gt(0) && (
+                  <button className="App-button-option App-card-option" onClick={() => showStakeMLPModal()}>
+                    Stake
+                  </button>
+                )}
+                {active && glpStakeInMasterChef?.amount?.gt(0) && (
+                  <button className="App-button-option App-card-option" onClick={() => showUnstakeMLPModal()}>
+                    Unstake
+                  </button>
+                )}
+                {/* <a
                   href="https://polymm.finance/farms"
                   target="_blank"
                   rel="noreferrer"
                   className="App-button-option App-card-option"
                 >
                   Stake
-                </a>
+                </a> */}
                 <a
                   href="https://mmfinance.gitbook.io/madmex-spot-and-perps/mlp"
                   target="_blank"
@@ -1558,280 +1578,285 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
 //   );
 // }
 
-// function StakeModal(props) {
-//   const {
-//     isVisible,
-//     setIsVisible,
-//     chainId,
-//     title,
-//     maxAmount,
-//     value,
-//     setValue,
-//     active,
-//     account,
-//     library,
-//     stakingTokenSymbol,
-//     stakingTokenAddress,
-//     farmAddress,
-//     rewardRouterAddress,
-//     stakeMethodName,
-//     setPendingTxns,
-//   } = props;
-//   const [isStaking, setIsStaking] = useState(false);
-//   const [isApproving, setIsApproving] = useState(false);
+function StakeModal(props) {
+  const {
+    isVisible,
+    setIsVisible,
+    chainId,
+    title,
+    maxAmount,
+    value,
+    setValue,
+    active,
+    account,
+    library,
+    stakingTokenSymbol,
+    stakingTokenAddress,
+    farmAddress,
+    rewardRouterAddress,
+    stakeMethodName,
+    setPendingTxns,
+    pid,
+  } = props;
+  const [isStaking, setIsStaking] = useState(false);
+  const [isApproving, setIsApproving] = useState(false);
 
-//   const { data: tokenAllowance } = useSWR(
-//     active && stakingTokenAddress && [active, chainId, stakingTokenAddress, "allowance", account, farmAddress],
-//     {
-//       fetcher: fetcher(library, Token),
-//     }
-//   );
+  const { data: tokenAllowance } = useSWR(
+    active && stakingTokenAddress && [active, chainId, stakingTokenAddress, "allowance", account, farmAddress],
+    {
+      fetcher: fetcher(library, Token),
+    }
+  );
 
-//   let amount = parseValue(value, 18);
-//   const needApproval = farmAddress !== AddressZero && tokenAllowance && amount && amount.gt(tokenAllowance);
+  let amount = parseValue(value, 18);
+  const needApproval = farmAddress !== AddressZero && tokenAllowance && amount && amount.gt(tokenAllowance);
 
-//   const getError = () => {
-//     if (!amount || amount.eq(0)) {
-//       return "Enter an amount";
-//     }
-//     if (maxAmount && amount.gt(maxAmount)) {
-//       return "Max amount exceeded";
-//     }
-//   };
+  const getError = () => {
+    if (!amount || amount.eq(0)) {
+      return "Enter an amount";
+    }
+    if (maxAmount && amount.gt(maxAmount)) {
+      return "Max amount exceeded";
+    }
+  };
 
-//   const onClickPrimary = () => {
-//     if (needApproval) {
-//       approveTokens({
-//         setIsApproving,
-//         library,
-//         tokenAddress: stakingTokenAddress,
-//         spender: farmAddress,
-//         chainId,
-//       });
-//       return;
-//     }
+  const onClickPrimary = () => {
+    if (needApproval) {
+      approveTokens({
+        setIsApproving,
+        library,
+        tokenAddress: stakingTokenAddress,
+        spender: farmAddress,
+        chainId,
+      });
+      return;
+    }
 
-//     setIsStaking(true);
-//     const contract = new ethers.Contract(rewardRouterAddress, RewardRouter.abi, library.getSigner());
+    setIsStaking(true);
+    const contract = new ethers.Contract(rewardRouterAddress, Masterchef.abi, library.getSigner());
+    callContract(chainId, contract, stakeMethodName, [pid, amount, "0x0000000000000000000000000000000000000000"], {
+      sentMsg: "Stake submitted!",
+      failMsg: "Stake failed.",
+      setPendingTxns,
+    })
+      .then(async (res) => {
+        setIsVisible(false);
+      })
+      .finally(() => {
+        setIsStaking(false);
+      });
+  };
 
-//     callContract(chainId, contract, stakeMethodName, [amount], {
-//       sentMsg: "Stake submitted!",
-//       failMsg: "Stake failed.",
-//       setPendingTxns,
-//     })
-//       .then(async (res) => {
-//         setIsVisible(false);
-//       })
-//       .finally(() => {
-//         setIsStaking(false);
-//       });
-//   };
+  const isPrimaryEnabled = () => {
+    const error = getError();
+    if (error) {
+      return false;
+    }
+    if (isApproving) {
+      return false;
+    }
+    if (isStaking) {
+      return false;
+    }
+    return true;
+  };
 
-//   const isPrimaryEnabled = () => {
-//     const error = getError();
-//     if (error) {
-//       return false;
-//     }
-//     if (isApproving) {
-//       return false;
-//     }
-//     if (isStaking) {
-//       return false;
-//     }
-//     return true;
-//   };
+  const getPrimaryText = () => {
+    const error = getError();
+    if (error) {
+      return error;
+    }
+    if (isApproving) {
+      return `Approving ${stakingTokenSymbol}...`;
+    }
+    if (needApproval) {
+      return `Approve ${stakingTokenSymbol}`;
+    }
+    if (isStaking) {
+      return "Staking...";
+    }
+    return "Stake";
+  };
 
-//   const getPrimaryText = () => {
-//     const error = getError();
-//     if (error) {
-//       return error;
-//     }
-//     if (isApproving) {
-//       return `Approving ${stakingTokenSymbol}...`;
-//     }
-//     if (needApproval) {
-//       return `Approve ${stakingTokenSymbol}`;
-//     }
-//     if (isStaking) {
-//       return "Staking...";
-//     }
-//     return "Stake";
-//   };
+  return (
+    <div className="StakeModal">
+      <Modal isVisible={isVisible} setIsVisible={setIsVisible} label={title}>
+        <div className="Exchange-swap-section">
+          <div className="Exchange-swap-section-top">
+            <div className="muted">
+              <div className="Exchange-swap-usd">Stake</div>
+            </div>
+            <div className="muted align-right clickable" onClick={() => setValue(formatAmountFree(maxAmount, 18, 18))}>
+              Max: {formatAmount(maxAmount, 18, 4, true)}
+            </div>
+          </div>
+          <div className="Exchange-swap-section-bottom">
+            <div>
+              <input
+                type="number"
+                placeholder="0.0"
+                className="Exchange-swap-input"
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+              />
+            </div>
+            <div className="PositionEditor-token-symbol">{stakingTokenSymbol}</div>
+          </div>
+        </div>
+        <div className="Exchange-swap-button-container">
+          <button className="App-cta Exchange-swap-button" onClick={onClickPrimary} disabled={!isPrimaryEnabled()}>
+            {getPrimaryText()}
+          </button>
+        </div>
+      </Modal>
+    </div>
+  );
+}
 
-//   return (
-//     <div className="StakeModal">
-//       <Modal isVisible={isVisible} setIsVisible={setIsVisible} label={title}>
-//         <div className="Exchange-swap-section">
-//           <div className="Exchange-swap-section-top">
-//             <div className="muted">
-//               <div className="Exchange-swap-usd">Stake</div>
-//             </div>
-//             <div className="muted align-right clickable" onClick={() => setValue(formatAmountFree(maxAmount, 18, 18))}>
-//               Max: {formatAmount(maxAmount, 18, 4, true)}
-//             </div>
-//           </div>
-//           <div className="Exchange-swap-section-bottom">
-//             <div>
-//               <input
-//                 type="number"
-//                 placeholder="0.0"
-//                 className="Exchange-swap-input"
-//                 value={value}
-//                 onChange={(e) => setValue(e.target.value)}
-//               />
-//             </div>
-//             <div className="PositionEditor-token-symbol">{stakingTokenSymbol}</div>
-//           </div>
-//         </div>
-//         <div className="Exchange-swap-button-container">
-//           <button className="App-cta Exchange-swap-button" onClick={onClickPrimary} disabled={!isPrimaryEnabled()}>
-//             {getPrimaryText()}
-//           </button>
-//         </div>
-//       </Modal>
-//     </div>
-//   );
-// }
+function UnstakeModal(props) {
+  const {
+    isVisible,
+    setIsVisible,
+    chainId,
+    title,
+    maxAmount,
+    value,
+    setValue,
+    library,
+    unstakingTokenSymbol,
+    rewardRouterAddress,
+    unstakeMethodName,
+    // multiplierPointsAmount,
+    reservedAmount,
+    // bonusGmxInFeeGmx,
+    setPendingTxns,
+    pid,
+  } = props;
+  const [isUnstaking, setIsUnstaking] = useState(false);
 
-// function UnstakeModal(props) {
-//   const {
-//     isVisible,
-//     setIsVisible,
-//     chainId,
-//     title,
-//     maxAmount,
-//     value,
-//     setValue,
-//     library,
-//     unstakingTokenSymbol,
-//     rewardRouterAddress,
-//     unstakeMethodName,
-//     multiplierPointsAmount,
-//     reservedAmount,
-//     bonusGmxInFeeGmx,
-//     setPendingTxns,
-//   } = props;
-//   const [isUnstaking, setIsUnstaking] = useState(false);
+  let amount = parseValue(value, 18);
+  // let burnAmount;
 
-//   let amount = parseValue(value, 18);
-//   let burnAmount;
+  // if (
+  //   multiplierPointsAmount &&
+  //   multiplierPointsAmount.gt(0) &&
+  //   amount &&
+  //   amount.gt(0) &&
+  //   bonusGmxInFeeGmx &&
+  //   bonusGmxInFeeGmx.gt(0)
+  // ) {
+  //   burnAmount = multiplierPointsAmount.mul(amount).div(bonusGmxInFeeGmx);
+  // }
 
-//   if (
-//     multiplierPointsAmount &&
-//     multiplierPointsAmount.gt(0) &&
-//     amount &&
-//     amount.gt(0) &&
-//     bonusGmxInFeeGmx &&
-//     bonusGmxInFeeGmx.gt(0)
-//   ) {
-//     burnAmount = multiplierPointsAmount.mul(amount).div(bonusGmxInFeeGmx);
-//   }
+  // const shouldShowReductionAmount = true;
+  // let rewardReductionBasisPoints;
+  // if (burnAmount && bonusGmxInFeeGmx) {
+  //   rewardReductionBasisPoints = burnAmount.mul(BASIS_POINTS_DIVISOR).div(bonusGmxInFeeGmx);
+  // }
 
-//   const shouldShowReductionAmount = true;
-//   let rewardReductionBasisPoints;
-//   if (burnAmount && bonusGmxInFeeGmx) {
-//     rewardReductionBasisPoints = burnAmount.mul(BASIS_POINTS_DIVISOR).div(bonusGmxInFeeGmx);
-//   }
+  const getError = () => {
+    if (!amount) {
+      return "Enter an amount";
+    }
+    if (amount.gt(maxAmount)) {
+      return "Max amount exceeded";
+    }
+  };
 
-//   const getError = () => {
-//     if (!amount) {
-//       return "Enter an amount";
-//     }
-//     if (amount.gt(maxAmount)) {
-//       return "Max amount exceeded";
-//     }
-//   };
+  const onClickPrimary = () => {
+    setIsUnstaking(true);
+    const contract = new ethers.Contract(rewardRouterAddress, Masterchef.abi, library.getSigner());
+    callContract(chainId, contract, unstakeMethodName, [pid, amount], {
+      sentMsg: "Unstake submitted!",
+      failMsg: "Unstake failed.",
+      successMsg: "Unstake completed!",
+      setPendingTxns,
+    })
+      .then(async (res) => {
+        setIsVisible(false);
+      })
+      .finally(() => {
+        setIsUnstaking(false);
+      });
+  };
 
-//   const onClickPrimary = () => {
-//     setIsUnstaking(true);
-//     const contract = new ethers.Contract(rewardRouterAddress, RewardRouter.abi, library.getSigner());
-//     callContract(chainId, contract, unstakeMethodName, [amount], {
-//       sentMsg: "Unstake submitted!",
-//       failMsg: "Unstake failed.",
-//       successMsg: "Unstake completed!",
-//       setPendingTxns,
-//     })
-//       .then(async (res) => {
-//         setIsVisible(false);
-//       })
-//       .finally(() => {
-//         setIsUnstaking(false);
-//       });
-//   };
+  const isPrimaryEnabled = () => {
+    const error = getError();
+    if (error) {
+      return false;
+    }
+    if (isUnstaking) {
+      return false;
+    }
+    return true;
+  };
 
-//   const isPrimaryEnabled = () => {
-//     const error = getError();
-//     if (error) {
-//       return false;
-//     }
-//     if (isUnstaking) {
-//       return false;
-//     }
-//     return true;
-//   };
+  const getPrimaryText = () => {
+    const error = getError();
+    if (error) {
+      return error;
+    }
+    if (isUnstaking) {
+      return "Unstaking...";
+    }
+    return "Unstake";
+  };
 
-//   const getPrimaryText = () => {
-//     const error = getError();
-//     if (error) {
-//       return error;
-//     }
-//     if (isUnstaking) {
-//       return "Unstaking...";
-//     }
-//     return "Unstake";
-//   };
-
-//   return (
-//     <div className="StakeModal">
-//       <Modal isVisible={isVisible} setIsVisible={setIsVisible} label={title}>
-//         <div className="Exchange-swap-section">
-//           <div className="Exchange-swap-section-top">
-//             <div className="muted">
-//               <div className="Exchange-swap-usd">Unstake</div>
-//             </div>
-//             <div className="muted align-right clickable" onClick={() => setValue(formatAmountFree(maxAmount, 18, 18))}>
-//               Max: {formatAmount(maxAmount, 18, 4, true)}
-//             </div>
-//           </div>
-//           <div className="Exchange-swap-section-bottom">
-//             <div>
-//               <input
-//                 type="number"
-//                 placeholder="0.0"
-//                 className="Exchange-swap-input"
-//                 value={value}
-//                 onChange={(e) => setValue(e.target.value)}
-//               />
-//             </div>
-//             <div className="PositionEditor-token-symbol">{unstakingTokenSymbol}</div>
-//           </div>
-//         </div>
-//         {reservedAmount && reservedAmount.gt(0) && (
-//           <div className="Modal-note">
-//             You have {formatAmount(reservedAmount, 18, 2, true)} tokens reserved for vesting.
-//           </div>
-//         )}
-//         {burnAmount && burnAmount.gt(0) && rewardReductionBasisPoints && rewardReductionBasisPoints.gt(0) && (
-//           <div className="Modal-note">
-//             Unstaking will burn&nbsp;
-//             <a href="https://mmfinance.gitbook.io/madmex-spot-and-perps/rewards" target="_blank" rel="noopener noreferrer">
-//               {formatAmount(burnAmount, 18, 4, true)} Multiplier Points
-//             </a>
-//             .&nbsp;
-//             {shouldShowReductionAmount && (
-//               <span>Boost Percentage: -{formatAmount(rewardReductionBasisPoints, 2, 2)}%.</span>
-//             )}
-//           </div>
-//         )}
-//         <div className="Exchange-swap-button-container">
-//           <button className="App-cta Exchange-swap-button" onClick={onClickPrimary} disabled={!isPrimaryEnabled()}>
-//             {getPrimaryText()}
-//           </button>
-//         </div>
-//       </Modal>
-//     </div>
-//   );
-// }
+  return (
+    <div className="StakeModal">
+      <Modal isVisible={isVisible} setIsVisible={setIsVisible} label={title}>
+        <div className="Exchange-swap-section">
+          <div className="Exchange-swap-section-top">
+            <div className="muted">
+              <div className="Exchange-swap-usd">Unstake</div>
+            </div>
+            <div className="muted align-right clickable" onClick={() => setValue(formatAmountFree(maxAmount, 18, 18))}>
+              Max: {formatAmount(maxAmount, 18, 4, true)}
+            </div>
+          </div>
+          <div className="Exchange-swap-section-bottom">
+            <div>
+              <input
+                type="number"
+                placeholder="0.0"
+                className="Exchange-swap-input"
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+              />
+            </div>
+            <div className="PositionEditor-token-symbol">{unstakingTokenSymbol}</div>
+          </div>
+        </div>
+        {/* {reservedAmount && reservedAmount.gt(0) && (
+          <div className="Modal-note">
+            You have {formatAmount(reservedAmount, 18, 2, true)} tokens reserved for vesting.
+          </div>
+        )} */}
+        {/* {burnAmount && burnAmount.gt(0) && rewardReductionBasisPoints && rewardReductionBasisPoints.gt(0) && (
+          <div className="Modal-note">
+            Unstaking will burn&nbsp;
+            <a
+              href="https://mmfinance.gitbook.io/madmex-spot-and-perps/rewards"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {formatAmount(burnAmount, 18, 4, true)} Multiplier Points
+            </a>
+            .&nbsp;
+            {shouldShowReductionAmount && (
+              <span>Boost Percentage: -{formatAmount(rewardReductionBasisPoints, 2, 2)}%.</span>
+            )}
+          </div>
+        )} */}
+        <div className="Exchange-swap-button-container">
+          <button className="App-cta Exchange-swap-button" onClick={onClickPrimary} disabled={!isPrimaryEnabled()}>
+            {getPrimaryText()}
+          </button>
+        </div>
+      </Modal>
+    </div>
+  );
+}
 
 // function VesterDepositModal(props) {
 //   const {
