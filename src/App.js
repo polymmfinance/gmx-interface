@@ -782,9 +782,9 @@ function FullApp() {
               <Route exact path="/">
                 <Home showRedirectModal={showRedirectModal} redirectPopupTimestamp={redirectPopupTimestamp} />
               </Route>
-              <Route exact path="/referral-terms">
+              {/* <Route exact path="/referral-terms">
                 <ReferralTerms />
-              </Route>
+              </Route> */}
               <Route exact path="/terms-and-conditions">
                 <TermsAndConditions />
               </Route>
@@ -848,12 +848,12 @@ function FullApp() {
               <Route exact path="/referrals/:account">
                 <Referrals pendingTxns={pendingTxns} connectWallet={connectWallet} setPendingTxns={setPendingTxns} />
               </Route>
-              <Route exact path="/nft_wallet">
+              {/* <Route exact path="/nft_wallet">
                 <NftWallet />
-              </Route>
-              <Route exact path="/claim_es_gmx">
+              </Route> */}
+              {/* <Route exact path="/claim_es_gmx">
                 <ClaimEsGmx setPendingTxns={setPendingTxns} />
-              </Route>
+              </Route> */}
               <Route exact path="/actions">
                 <Actions />
               </Route>
@@ -866,12 +866,12 @@ function FullApp() {
               <Route exact path="/positions_overview">
                 <PositionsOverview />
               </Route>
-              <Route exact path="/begin_account_transfer">
+              {/* <Route exact path="/begin_account_transfer">
                 <BeginAccountTransfer setPendingTxns={setPendingTxns} />
-              </Route>
-              <Route exact path="/complete_account_transfer/:sender/:receiver">
+              </Route> */}
+              {/* <Route exact path="/complete_account_transfer/:sender/:receiver">
                 <CompleteAccountTransfer setPendingTxns={setPendingTxns} />
-              </Route>
+              </Route> */}
               <Route path="*">
                 <PageNotFound />
               </Route>

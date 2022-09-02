@@ -1,36 +1,36 @@
 // date format: d MMM yyyy, H:mm, time should be specifed based on UTC time
 
 export const homeEventsData = [
-  {
-    id: "app-gmx-io-launch",
-    title: "Frontend Updates",
-    isActive: true,
-    validTill: "10 Jul 2022, 12:00",
-    bodyText:
-      "Updates have been applied to the GMX frontend to inform users of the separation between madmex.io and app.madmex.io",
-    buttons: [
-      {
-        text: "Read More",
-        link: "https://medium.com/@madmex.io/gmx-frontend-updates-8d13f2346e1e",
-        newTab: true,
-      },
-    ],
-  },
-  {
-    id: "arbitrum-nitro-plan",
-    title: "Arbitrum Nitro Upgrade",
-    isActive: true,
-    validTill: "29 Aug 2022, 12:00",
-    bodyText:
-      "There will be some expected downtime during the Arbitrum Nitro upgrade on Wednesday, 31 Aug 2022, 2:30 PM UTC.",
-    buttons: [
-      {
-        text: "Read More",
-        link: "https://medium.com/@madmex.io/arbitrum-nitro-5f88c03a46fe",
-        newTab: true,
-      },
-    ],
-  },
+  // {
+  //   id: "app-gmx-io-launch",
+  //   title: "Frontend Updates",
+  //   isActive: true,
+  //   validTill: "10 Jul 2022, 12:00",
+  //   bodyText:
+  //     "Updates have been applied to the GMX frontend to inform users of the separation between madmex.io and app.madmex.io",
+  //   buttons: [
+  //     {
+  //       text: "Read More",
+  //       link: "https://medium.com/@madmex.io/gmx-frontend-updates-8d13f2346e1e",
+  //       newTab: true,
+  //     },
+  //   ],
+  // },
+  // {
+  //   id: "arbitrum-nitro-plan",
+  //   title: "Arbitrum Nitro Upgrade",
+  //   isActive: true,
+  //   validTill: "29 Aug 2022, 12:00",
+  //   bodyText:
+  //     "There will be some expected downtime during the Arbitrum Nitro upgrade on Wednesday, 31 Aug 2022, 2:30 PM UTC.",
+  //   buttons: [
+  //     {
+  //       text: "Read More",
+  //       link: "https://medium.com/@madmex.io/arbitrum-nitro-5f88c03a46fe",
+  //       newTab: true,
+  //     },
+  //   ],
+  // },
 ];
 
 export const appEventsData = [
@@ -174,49 +174,49 @@ export const appEventsData = [
   //     },
   //   ],
   // },
-  {
-    id: "app-gmx-io-settings",
-    title: "Frontend Updates",
-    isActive: true,
-    validTill: "10 Jul 2022, 12:00",
-    bodyText:
-      "You are currently using app.madmex.io. Customized settings have been reset, you may need to adjust your settings by clicking on the menu in the top right after connecting your wallet.",
-    buttons: [
-      {
-        text: "Read More",
-        link: "https://medium.com/@madmex.io/gmx-frontend-updates-8d13f2346e1e",
-        newTab: true,
-      },
-    ],
-  },
-  {
-    id: "use-alchemy-rpc-url",
-    title: "Use Alchemy RPC URL",
-    isActive: true,
-    validTill: "10 Jul 2022, 12:00",
-    bodyText:
-      "If you experience data loading or transaction issues on Arbitrum, please use a free RPC URL from Alchemy.",
-    buttons: [
-      {
-        text: "Learn More",
-        link: "https://mmfinance.gitbook.io/docs/mmx/trading#backup-rpc-urls",
-        newTab: true,
-      },
-    ],
-  },
-  {
-    id: "arbitrum-nitro-plan",
-    title: "Arbitrum Nitro Upgrade",
-    isActive: true,
-    validTill: "29 Aug 2022, 12:00",
-    bodyText:
-      "There will be some expected downtime during the Arbitrum Nitro upgrade on Wednesday, 31 Aug 2022, 2:30 PM UTC.",
-    buttons: [
-      {
-        text: "Read More",
-        link: "https://medium.com/@madmex.io/arbitrum-nitro-5f88c03a46fe",
-        newTab: true,
-      },
-    ],
-  },
+  // {
+  //   id: "app-gmx-io-settings",
+  //   title: "Frontend Updates",
+  //   isActive: true,
+  //   validTill: "10 Jul 2022, 12:00",
+  //   bodyText:
+  //     "You are currently using app.madmex.io. Customized settings have been reset, you may need to adjust your settings by clicking on the menu in the top right after connecting your wallet.",
+  //   buttons: [
+  //     {
+  //       text: "Read More",
+  //       link: "https://medium.com/@madmex.io/gmx-frontend-updates-8d13f2346e1e",
+  //       newTab: true,
+  //     },
+  //   ],
+  // },
+  // {
+  //   id: "use-alchemy-rpc-url",
+  //   title: "Use Alchemy RPC URL",
+  //   isActive: true,
+  //   validTill: "10 Jul 2022, 12:00",
+  //   bodyText:
+  //     "If you experience data loading or transaction issues on Arbitrum, please use a free RPC URL from Alchemy.",
+  //   buttons: [
+  //     {
+  //       text: "Learn More",
+  //       link: "https://mmfinance.gitbook.io/docs/mmx/trading#backup-rpc-urls",
+  //       newTab: true,
+  //     },
+  //   ],
+  // },
+  // {
+  //   id: "arbitrum-nitro-plan",
+  //   title: "Arbitrum Nitro Upgrade",
+  //   isActive: true,
+  //   validTill: "29 Aug 2022, 12:00",
+  //   bodyText:
+  //     "There will be some expected downtime during the Arbitrum Nitro upgrade on Wednesday, 31 Aug 2022, 2:30 PM UTC.",
+  //   buttons: [
+  //     {
+  //       text: "Read More",
+  //       link: "https://medium.com/@madmex.io/arbitrum-nitro-5f88c03a46fe",
+  //       newTab: true,
+  //     },
+  //   ],
+  // },
 ];

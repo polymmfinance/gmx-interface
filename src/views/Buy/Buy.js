@@ -8,7 +8,7 @@ import { getPageTitle } from "../../Helpers";
 
 export default function BuyGMXGLP() {
   return (
-    <SEO title={getPageTitle("Buy MLP or GMX")}>
+    <SEO title={getPageTitle("Buy MLP")}>
       <div className="BuyGMXGLP page-layout">
         <div className="BuyGMXGLP-container default-container">
           <div className="section-title-block">
@@ -17,7 +17,7 @@ export default function BuyGMXGLP() {
             </div> */}
             <div className="section-title-content">
               <div className="Page-title">Buy MLP</div>
-              {/* <div className="Page-title">Buy GMX or MLP</div> */}
+              {/* <div className="Page-title">Buy MLP</div> */}
             </div>
           </div>
           <TokenCard />

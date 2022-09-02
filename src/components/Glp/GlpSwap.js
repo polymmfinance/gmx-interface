@@ -166,7 +166,7 @@ export default function GlpSwap(props) {
   const redemptionTime = lastPurchaseTime ? lastPurchaseTime.add(GLP_COOLDOWN_DURATION) : undefined;
   const inCooldownWindow = redemptionTime && parseInt(Date.now() / 1000) < redemptionTime;
 
-  // GLP supply and prices 
+  // GLP supply and prices
   const { data: balancesAndSupplies } = useSWR(
     [
       `GlpSwap:getTokenBalancesWithSupplies:${active}`,
@@ -179,7 +179,6 @@ export default function GlpSwap(props) {
       fetcher: fetcher(library, ReaderV2, [tokensForBalanceAndSupplyQuery]),
     }
   );
-
 
   // TODO: Use masterchef to calculate staked amounts?
   const { data: glpBalance } = useSWR(
@@ -747,7 +746,7 @@ export default function GlpSwap(props) {
                           <span>{formatAmount(feeGlpTrackerApr, 2, 2, false)}%</span>
                         </div>
                         {/* <div className="Tooltip-row">
-                          <span className="label">Escrowed GMX APR</span>
+                          <span className="label">Escrowed MMX APR</span>
                           <span>{formatAmount(stakedGlpTrackerApr, 2, 2, false)}%</span>
                         </div> */}
                       </>
