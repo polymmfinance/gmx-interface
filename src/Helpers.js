@@ -2554,8 +2554,8 @@ export function getMasterchefData(masterPoolInfo, masterPoolTotalAlloc, stakedGl
   const MMF_PER_YEAR = MMF_PER_BLOCK * BLOCKS_PER_YEAR
   const yearlyMMFRewardAllocation = poolWeight * MMF_PER_YEAR;
   const apr = yearlyMMFRewardAllocation * Number.parseFloat(mmfPrice) / poolLiquidityUsd * 100
-
-  return { apr, poolLiquidityUsd, poolWeight };
+console.log({apr})
+  return { apr: isNaN(apr) ? 0 : apr, poolLiquidityUsd, poolWeight };
 }
 
 export function getStakingData(stakingInfo) {

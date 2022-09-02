@@ -1041,7 +1041,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
                 <div>
                   {/* TODO: need to add MATIC APR into total */}
                   <Tooltip
-                    handle={`${formatAmount(masterChefData.apr, 2, 2, true)}%`}
+                    handle={`${formatAmount(masterChefData?.apr ?? 0, 2, 2, true)}%`}
                     position="right-bottom"
                     renderContent={() => {
                       return (
@@ -1054,7 +1054,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
                           </div>
                           <div className="Tooltip-row">
                             <span className="label">Liquid Staking APR</span>
-                            <span>{formatAmount(masterChefData.apr, 2, 2, true)}%</span>
+                            <span>{formatAmount(masterChefData?.apr ?? 0, 2, 2, true)}%</span>
                           </div>
                           <br />
                           <div className="muted">
