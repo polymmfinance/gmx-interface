@@ -4,8 +4,6 @@ import {
   isAddressZero,
   USD_DECIMALS,
   MAX_REFERRAL_CODE_LENGTH,
-  ARBITRUM,
-  AVALANCHE,
   POLYGON,
 } from "../../Helpers";
 import { encodeReferralCode, getReferralCodeOwner } from "../../Api/referrals";
@@ -22,26 +20,15 @@ export function isRecentReferralCodeNotExpired(referralCodeInfo) {
 
 export async function getReferralCodeTakenStatus(account, referralCode, chainId) {
   const referralCodeBytes32 = encodeReferralCode(referralCode);
-  const [ownerArbitrum, ownerAvax, ownerPolygon] = await Promise.all([
-    getReferralCodeOwner(ARBITRUM, referralCodeBytes32),
-    getReferralCodeOwner(AVALANCHE, referralCodeBytes32),
-    getReferralCodeOwner(POLYGON, referralCodeBytes32),
-  ]);
+  const [ownerPolygon] = await Promise.all([getReferralCodeOwner(POLYGON, referralCodeBytes32)]);
 
-  const takenOnArb =
-    !isAddressZero(ownerArbitrum) && (ownerArbitrum !== account || (ownerArbitrum === account && chainId === ARBITRUM));
-  const takenOnAvax =
-    !isAddressZero(ownerAvax) && (ownerAvax !== account || (ownerAvax === account && chainId === AVALANCHE));
   const takenOnPolygon =
     !isAddressZero(ownerPolygon) && (ownerPolygon !== account || (ownerPolygon === account && chainId === POLYGON));
 
   const referralCodeTakenInfo = {
-    [ARBITRUM]: takenOnArb,
-    [AVALANCHE]: takenOnAvax,
     [POLYGON]: takenOnPolygon,
-    both: takenOnArb && takenOnAvax && takenOnPolygon,
-    ownerArbitrum,
-    ownerAvax,
+    both: takenOnPolygon,
+
     ownerPolygon,
   };
 
@@ -50,9 +37,6 @@ export async function getReferralCodeTakenStatus(account, referralCode, chainId)
   }
   if (referralCodeTakenInfo[chainId]) {
     return { status: "current", info: referralCodeTakenInfo };
-  }
-  if (chainId === POLYGON ? referralCodeTakenInfo[ARBITRUM] : referralCodeTakenInfo[POLYGON]) {
-    return { status: "other", info: referralCodeTakenInfo };
   }
   return { status: "none", info: referralCodeTakenInfo };
 }
