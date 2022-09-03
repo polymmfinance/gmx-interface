@@ -122,7 +122,7 @@ export function AffiliateCodeForm({
     }
 
     if (takenStatus === "none" || takenStatus === "other") {
-      const ownerOnOtherNetwork = takenInfo[chainId === ARBITRUM ? "ownerAvax" : "ownerArbitrum"];
+      const ownerOnOtherNetwork = "0x0000000000000000000000000000000000000000";
       try {
         const tx = await handleCreateReferralCode(referralCode);
         if (callAfterSuccess) {

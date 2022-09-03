@@ -120,7 +120,8 @@ export function getCodeError(value) {
 }
 
 export function getTwitterShareUrl(referralCode) {
-  const message = "Trying out trading on @GMX_IO, up to 30x leverage on $BTC, $ETH 📈%0a%0aFor fee discounts use:";
+  const message =
+    "Trying out trading on MadMeX, up to 30x leverage on $MATIC, $BTC, $ETH 📈%0a%0aFor fee discounts use:";
 
   return `http://twitter.com/intent/tweet?text=${message}&url=https://madmex.io?ref=${referralCode}`;
 }
