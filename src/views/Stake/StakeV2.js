@@ -204,6 +204,13 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
     }
   );
 
+  const { data: pendingMmfRewards } = useSWR(
+    [`Masterchef:pendingMeerkat:${active}`, chainId, masterchefAddress, "pendingMeerkat"],
+    {
+      fetcher: fetcher(library, Masterchef, [13, account]),
+    }
+  );
+
   const { data: aums } = useSWR([`GlpSwap:getAums:${active}`, chainId, glpManagerAddress, "getAums"], {
     fetcher: fetcher(library, GlpManager),
   });
@@ -1086,7 +1093,9 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
                 <div className="label">Rewards</div>
                 <div>
                   <Tooltip
-                    handle={`$${formatKeyAmount(processedData, "totalGlpRewardsUsd", USD_DECIMALS, 2, true)}`}
+                    handle={`$${(
+                      parseFloat(formatAmount(pendingMmfRewards, GLP_DECIMALS, 10, true)) * masterChefData?.mmfPrice
+                    ).toFixed(2)}`}
                     position="right-bottom"
                     renderContent={() => {
                       return (
@@ -1094,8 +1103,12 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
                           <div className="Tooltip-row">
                             <span className="label">MMF</span>
                             <span>
-                              {formatKeyAmount(processedData, "feeGlpTrackerRewards", 18, 4)} ($
-                              {formatKeyAmount(processedData, "feeGlpTrackerRewardsUsd", USD_DECIMALS, 2, true)})
+                              {formatAmount(pendingMmfRewards, GLP_DECIMALS, 3, true)} ($
+                              {(
+                                parseFloat(formatAmount(pendingMmfRewards, GLP_DECIMALS, 10, true)) *
+                                masterChefData?.mmfPrice
+                              ).toFixed(2)}
+                              )
                             </span>
                           </div>
                           {/* <div className="Tooltip-row">
