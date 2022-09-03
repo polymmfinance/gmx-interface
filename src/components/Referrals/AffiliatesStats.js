@@ -160,7 +160,7 @@ function AffiliatesStats({
                           >
                             <FiTwitter />
                           </a>
-                          {ownerOnOtherChain && !ownerOnOtherChain?.isTaken && (
+                          {/* {ownerOnOtherChain && !ownerOnOtherChain?.isTaken && (
                             <div className="info">
                               <TooltipWithPortal
                                 position="right"
@@ -177,8 +177,8 @@ function AffiliatesStats({
                                 )}
                               />
                             </div>
-                          )}
-                          {ownerOnOtherChain && ownerOnOtherChain?.isTaken && !ownerOnOtherChain?.isTakenByCurrentUser && (
+                          )} */}
+                          {/* {ownerOnOtherChain && ownerOnOtherChain?.isTaken && !ownerOnOtherChain?.isTakenByCurrentUser && (
                             <div className="info">
                               <TooltipWithPortal
                                 position="right"
@@ -192,7 +192,7 @@ function AffiliatesStats({
                                 )}
                               />
                             </div>
-                          )}
+                          )} */}
                         </div>
                       </td>
                       <td data-label="Total Volume">{getUSDValue(stat.volume)}</td>
