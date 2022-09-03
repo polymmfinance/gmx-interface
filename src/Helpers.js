@@ -275,7 +275,7 @@ export const ICONLINKS = {
     // },
     MLP: {
       coingecko: "https://www.coingecko.com/",
-      polygon: "https://polygonscan.com",
+      polygon: "https://polygonscan.com/token/0x0d5665A2319526A117E68E38EBEA4610aA8298F8",
     },
     ETH: {
       coingecko: "https://www.coingecko.com/en/coins/weth",
@@ -293,6 +293,17 @@ export const ICONLINKS = {
 };
 
 export const platformTokens = {
+  137: {
+    // polygon
+
+    MLP: {
+      name: "MLP",
+      symbol: "MLP",
+      decimals: 18,
+      address: getContract(POLYGON, "MLP"),
+      imageUrl: "https://polymm.finance/images/tokens/0x0d5665A2319526A117E68E38EBEA4610aA8298F8.svg",
+    },
+  },
   42161: {
     // arbitrum
     GMX: {
