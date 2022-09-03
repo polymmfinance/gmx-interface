@@ -796,14 +796,17 @@ export default function DashboardV2() {
                       <TooltipComponent
                         position="right-bottom"
                         className="nowrap"
-                        handle={`$${numberWithCommas(totalFees?.[chainId])}`}
+                        handle={`$0`}
+                        // handle={`$${numberWithCommas(totalFees?.[chainId])}`}
                         renderContent={() => (
                           <TooltipCard
                             title="Total Fees"
                             // arbitrum={totalFees?.[ARBITRUM]}
                             // avax={totalFees?.[AVALANCHE]}
-                            polygon={totalFees?.[POLYGON]}
-                            total={totalFees?.total}
+                            polygon={0}
+                            // polygon={totalFees?.[POLYGON]}
+                            // total={totalFees?.total}
+                            total={0}
                             decimalsForConversion={0}
                           />
                         )}

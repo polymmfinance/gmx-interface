@@ -122,6 +122,8 @@ export function useInfoTokens(library, chainId, active, tokenBalances, fundingRa
     refreshWhenHidden: true,
   });
 
+  console.log(indexPrices)
+
   return {
     infoTokens: getInfoTokens(
       tokens,
