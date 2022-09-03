@@ -17,7 +17,7 @@ import {
   REFERRAL_CODE_KEY,
   POLYGON,
 } from "../Helpers";
-import { arbitrumReferralsGraphClient, avalancheReferralsGraphClient } from "./common";
+import { arbitrumReferralsGraphClient, avalancheReferralsGraphClient, polygonReferralGraphClient } from "./common";
 import { getContract } from "../Addresses";
 import { callContract } from ".";
 import { REGEX_VERIFY_BYTES32 } from "../components/Referrals/referralsHelper";
@@ -33,7 +33,7 @@ function getGraphClient(chainId) {
     return avalancheReferralsGraphClient;
   } else if (chainId === POLYGON) {
     // TODO: @jerry need replace this referral graph client
-    return avalancheReferralsGraphClient;
+    return polygonReferralGraphClient
   }
   throw new Error(`Unsupported chain ${chainId}`);
 }

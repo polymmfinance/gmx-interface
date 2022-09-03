@@ -11,6 +11,8 @@ export const avalancheReferralsGraphClient = createClient(
   "https://api.thegraph.com/subgraphs/name/gmx-io/gmx-avalanche-referrals"
 );
 export const polygonGraphClient = createClient("https://api.thegraph.com/subgraphs/name/polymmfinance/dsf-subgraph-stats")
+export const polygonReferralGraphClient = createClient("https://api.thegraph.com/subgraphs/name/polymmfinance/mlp-referral")
+
 
 function createClient(uri) {
   return new ApolloClient({
