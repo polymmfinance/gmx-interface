@@ -728,7 +728,11 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
               GMX
             </a>{" "}
             and{" "} */}
-            <a href="https://mmfinance.gitbook.io/madmex-spot-and-perps/mlp" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://mmfinance.gitbook.io/madmex-spot-and-perps/liquid-staking-of-usdmlp"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               MLP
             </a>{" "}
             to earn rewards.
