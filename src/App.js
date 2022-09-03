@@ -193,6 +193,11 @@ function AppHeaderLinks({ HeaderLink, small, openSettings, clickCloseIcon }) {
           About
         </a>
       </div>
+      <div className="App-header-link-container">
+        <a href="https://polymm.finance" target="_blank" rel="noopener noreferrer">
+          MMF Dex
+        </a>
+      </div>
       {small && !isHomeSite() && (
         <div className="App-header-link-container">
           {/* eslint-disable-next-line */}
