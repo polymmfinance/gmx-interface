@@ -452,6 +452,22 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
     setStakePid(13);
   };
 
+  const onClickHarvest = () => {
+    const contract = new ethers.Contract(masterchefAddress, Masterchef.abi, library.getSigner());
+    callContract(chainId, contract, "deposit", [13, "0", "0x0000000000000000000000000000000000000000"], {
+      sentMsg: "Harvest submitted!",
+      failMsg: "Harvest failed.",
+      successMsg: "Harvest completed!",
+      setPendingTxns,
+    });
+    // .then(async (res) => {
+    //   setIsVisible(false);
+    // })
+    // .finally(() => {
+    //   setIsUnstaking(false);
+    // });
+  };
+
   // const showStakeEsGmxModal = () => {
   //   setIsStakeModalVisible(true);
   //   setStakeModalTitle("Stake esGMX");
@@ -1147,6 +1163,11 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
                 <Link className="App-button-option App-card-option" to="/buy_mlp#redeem">
                   Sell MLP
                 </Link>
+                {active && pendingMmfRewards?.gt(0) && (
+                  <button className="App-button-option App-card-option" onClick={() => onClickHarvest()}>
+                    Harvest
+                  </button>
+                )}
                 {active && glpBalance?.gt(0) && (
                   <button className="App-button-option App-card-option" onClick={() => showStakeMLPModal()}>
                     Stake
