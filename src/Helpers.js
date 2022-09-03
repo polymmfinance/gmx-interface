@@ -1484,7 +1484,7 @@ export function useEagerConnect(setActivatingConnector) {
           setActivatingConnector(connector);
           await activate(connector, undefined, true);
         }
-      } catch (ex) { }
+      } catch (ex) {}
 
       setTried(true);
     })();
@@ -2546,14 +2546,14 @@ export function getMasterchefData(masterPoolInfo, masterPoolTotalAlloc, stakedGl
   const tokenPrice = Number.parseFloat(glpPrice);
   const poolWeight = allocPoint / (totalAllocPoint ?? 1);
 
-  const poolLiquidityUsd = Number.parseFloat(ethers.utils.formatEther(glpSupply.toString())) * tokenPrice
+  const poolLiquidityUsd = Number.parseFloat(ethers.utils.formatEther(glpSupply.toString())) * tokenPrice;
   const mmfPrice = mmfPairs?.pairs?.[0]?.priceUsd ?? "0";
 
-  const MMF_PER_BLOCK = 30
-  const BLOCKS_PER_YEAR = (60 / 2.3) * 60 * 24 * 365 // 10512000
-  const MMF_PER_YEAR = MMF_PER_BLOCK * BLOCKS_PER_YEAR
+  const MMF_PER_BLOCK = 30;
+  const BLOCKS_PER_YEAR = (60 / 2.3) * 60 * 24 * 365; // 10512000
+  const MMF_PER_YEAR = MMF_PER_BLOCK * BLOCKS_PER_YEAR;
   const yearlyMMFRewardAllocation = poolWeight * MMF_PER_YEAR;
-  const apr = yearlyMMFRewardAllocation * Number.parseFloat(mmfPrice) / poolLiquidityUsd * 100
+  const apr = ((yearlyMMFRewardAllocation * Number.parseFloat(mmfPrice)) / poolLiquidityUsd) * 100;
 
   return { apr: !apr || isNaN(apr) || !Number.isFinite(apr) ? 0 : apr, poolLiquidityUsd, poolWeight };
 }
@@ -2757,7 +2757,7 @@ export function sleep(ms) {
 
 export function getPageTitle(data) {
   return `${data} | Decentralized
-  Perpetual Exchange | GMX`;
+  Perpetual Exchange`;
 }
 
 export function isHashZero(value) {
