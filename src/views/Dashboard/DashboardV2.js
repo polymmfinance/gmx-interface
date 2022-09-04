@@ -745,12 +745,7 @@ export default function DashboardV2() {
                       <TooltipComponent
                         position="right-bottom"
                         className="nowrap"
-                        handle={`$${formatAmount(
-                          positionStatsInfo?.[chainId].totalShortPositionSizes,
-                          USD_DECIMALS,
-                          0,
-                          true
-                        )}`}
+                        handle={`$${formatAmount(positionStatsInfo?.[chainId].totalShortPositionSizes, 0, 0, true)}`}
                         renderContent={() => (
                           <TooltipCard
                             title="Short Positions"
