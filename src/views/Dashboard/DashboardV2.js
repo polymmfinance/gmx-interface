@@ -752,6 +752,7 @@ export default function DashboardV2() {
                             polygon={positionStatsInfo?.[POLYGON].totalShortPositionSizes}
                             // avax={positionStatsInfo?.[AVALANCHE].totalShortPositionSizes}
                             total={positionStatsInfo?.totalShortPositionSizes}
+                            decimalsForConversion={0}
                           />
                         )}
                       />
@@ -768,7 +769,7 @@ export default function DashboardV2() {
                           renderContent={() => (
                             <TooltipCard
                               title="Fees"
-                              arbitrum={currentFees?.[ARBITRUM]}
+                              // arbitrum={currentFees?.[ARBITRUM]}
                               polygon={currentFees?.[POLYGON]}
                               total={currentFees?.total}
                             />
