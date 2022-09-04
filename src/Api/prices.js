@@ -5,7 +5,7 @@ import { ethers } from "ethers";
 
 import { USD_DECIMALS, CHART_PERIODS, formatAmount, sleep } from "../Helpers";
 import { chainlinkClient } from "./common";
-
+import { isLocal } from "../Helpers";
 const BigNumber = ethers.BigNumber;
 
 // Ethereum network, Chainlink Aggregator contracts
@@ -61,7 +61,7 @@ async function getChartPricesFromStats(chainId, symbol, period) {
     symbol = "BTC";
   }
   // const hostname = "https://stats.madmex.io/";
-  const hostname = "http://localhost:3113/";
+  const hostname = isLocal() ? "http://localhost:3113" : "https://stats.madmex.io";
   const timeDiff = CHART_PERIODS[period] * 3000;
   const from = Math.floor(Date.now() / 1000 - timeDiff);
   const url = `${hostname}api/candles/${symbol}?preferableChainId=${chainId}&period=${period}&from=${from}&preferableSource=fast`;

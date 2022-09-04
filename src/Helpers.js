@@ -502,7 +502,7 @@ export function getServerBaseUrl(chainId) {
   //   return "https://gmx-avax-server.uc.r.appspot.com";
   // }
   // return "https://gmx-server-mainnet.uw.r.appspot.com";
-  return "http://localhost:3113";
+  return isLocal() ? "http://localhost:3113" : "https://stats.madmex.io";
 }
 
 export function getServerUrl(chainId, path) {
