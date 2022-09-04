@@ -1055,6 +1055,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
               <br />
               Accrues 70% of the platform's generated fees.
             </div>
+            <div>Fees are distributed into the MLP pool weekly and it will reflect via the change in MLP price.</div>
             <div className="App-card-divider"></div>
             <div className="App-card-content">
               <div className="App-card-row">
