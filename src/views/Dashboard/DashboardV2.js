@@ -981,7 +981,7 @@ export default function DashboardV2() {
                             </div>
                           </div>
                         </td>
-                        <td>${formatKeyAmount(tokenInfo, "minPrice", USD_DECIMALS, 2, true)}</td>
+                        <td>${formatKeyAmount(tokenInfo, "minPrice", USD_DECIMALS, 3, true)}</td>
                         <td>
                           <TooltipComponent
                             handle={`$${formatKeyAmount(tokenInfo, "managedUsd", USD_DECIMALS, 0, true)}`}

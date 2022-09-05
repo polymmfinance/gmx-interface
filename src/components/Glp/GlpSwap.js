@@ -1076,7 +1076,7 @@ export default function GlpSwap(props) {
                       </div>
                     </div>
                   </td>
-                  <td>${formatKeyAmount(tokenInfo, "minPrice", USD_DECIMALS, 2, true)}</td>
+                  <td>${formatKeyAmount(tokenInfo, "minPrice", USD_DECIMALS, 3, true)}</td>
                   <td>
                     {isBuying && (
                       <div>

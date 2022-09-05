@@ -589,7 +589,7 @@ export default function PositionsList(props) {
                 </td>
                 <td className="clickable" onClick={() => onPositionClick(position)}>
                   <Tooltip
-                    handle={`$${formatAmount(position.markPrice, USD_DECIMALS, 2, true)}`}
+                    handle={`$${formatAmount(position.markPrice, USD_DECIMALS, 3, true)}`}
                     position="left-bottom"
                     handleClassName="plain clickable"
                     renderContent={() => {
@@ -606,10 +606,10 @@ export default function PositionsList(props) {
                   />
                 </td>
                 <td className="clickable" onClick={() => onPositionClick(position)}>
-                  ${formatAmount(position.averagePrice, USD_DECIMALS, 2, true)}
+                  ${formatAmount(position.averagePrice, USD_DECIMALS, 3, true)}
                 </td>
                 <td className="clickable" onClick={() => onPositionClick(position)}>
-                  ${formatAmount(liquidationPrice, USD_DECIMALS, 2, true)}
+                  ${formatAmount(liquidationPrice, USD_DECIMALS, 3, true)}
                 </td>
 
                 <td>
