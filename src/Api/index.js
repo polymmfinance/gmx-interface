@@ -47,7 +47,7 @@ import {
 } from "../Helpers";
 import { getTokens, getTokenBySymbol, getWhitelistedTokens } from "../data/Tokens";
 
-import { nissohGraphClient, arbitrumGraphClient, avalancheGraphClient, polygonGraphClient } from "./common";
+import { nissohGraphClient, arbitrumGraphClient, avalancheGraphClient, polygonGraphClient, polygonVaultActionGraphClient } from "./common";
 import { groupBy } from "lodash";
 import BigNumber from "bignumber.js";
 export * from "./prices";
@@ -354,6 +354,39 @@ function invariant(condition, errorMsg) {
   if (!condition) {
     throw new Error(errorMsg);
   }
+}
+
+export function useTradesFromGraph(chainId, account) {
+  console.log(chainId, account)
+  const [trades, setTrades] = useState();
+  const [reload, setReload] = useState(1);
+  const updateTrades = ()=>{setReload(reload+1)}
+
+  useEffect(() => {
+    
+    const queryString = account && account.length > 0 ? `where : { account: "${account.toLowerCase()}"}` : ``;
+    const query = gql(`{
+      actionDatas ( orderBy: timestamp orderDirection: desc first:50 ${queryString} ) {
+        id
+        action
+        account
+        txhash
+        blockNumber
+        timestamp
+        params
+      }
+    }`);
+
+    // fix for non account queries slow load times
+    if(queryString){
+      setInterval(()=>polygonVaultActionGraphClient.query({ query }).then(setTrades),1000)
+    }else{
+      // polygonVaultActionGraphClient.query({ query }).then(setTrades)
+    }
+
+  }, [setTrades, chainId, account, reload]);
+
+  return { trades, updateTrades };
 }
 
 export function useTrades(chainId, account, forSingleAccount) {

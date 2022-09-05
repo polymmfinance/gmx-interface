@@ -15,7 +15,7 @@ import {
   getExchangeRateDisplay,
   bigNumberify,
 } from "../../Helpers";
-import { useTrades, useLiquidationsData } from "../../Api";
+import { useTrades, useLiquidationsData, useTradesFromGraph } from "../../Api";
 import { getContract } from "../../Addresses";
 
 import "./TradeHistory.css";
@@ -78,7 +78,12 @@ function getLiquidationData(liquidationsDataMap, key, timestamp) {
 
 export default function TradeHistory(props) {
   const { account, infoTokens, getTokenInfo, chainId, nativeTokenAddress } = props;
-  const { trades, updateTrades } = useTrades(chainId, account, props.forSingleAccount);
+  // const { trades, updateTrades } = useTrades(chainId, account, props.forSingleAccount);
+  Object.keys(infoTokens).forEach(k=> infoTokens[k.toLowerCase()] = infoTokens[k]);
+
+
+  const{ trades, updateTrades } = useTradesFromGraph(chainId, account);
+
 
   const liquidationsData = useLiquidationsData(chainId, account);
   const liquidationsDataMap = useMemo(() => {
@@ -101,9 +106,10 @@ export default function TradeHistory(props) {
 
   const getMsg = useCallback(
     (trade) => {
-      const tradeData = trade.data;
+      const tradeData = trade;
       const params = JSON.parse(tradeData.params);
       const defaultMsg = "";
+      // debugger
 
       if (tradeData.action === "BuyUSDG") {
         const token = getTokenInfo(infoTokens, params.token, true, nativeTokenAddress);
@@ -163,7 +169,7 @@ export default function TradeHistory(props) {
         )} USD, Acceptable Price: ${params.isLong ? "<" : ">"} ${formatAmount(
           params.acceptablePrice,
           USD_DECIMALS,
-          2,
+          indexToken.displayDecimals,
           true
         )} USD`;
       }
@@ -186,7 +192,7 @@ export default function TradeHistory(props) {
         )} USD, Acceptable Price: ${params.isLong ? ">" : "<"} ${formatAmount(
           params.acceptablePrice,
           USD_DECIMALS,
-          2,
+          indexToken.displayDecimals,
           true
         )} USD`;
       }
@@ -212,7 +218,7 @@ export default function TradeHistory(props) {
             {params.isLong ? "<" : ">"}&nbsp;
             <Tooltip
               position="left-top"
-              handle={`${formatAmount(params.acceptablePrice, USD_DECIMALS, 2, true)} USD`}
+              handle={`${formatAmount(params.acceptablePrice, USD_DECIMALS, indexToken.displayDecimals, true)} USD`}
               renderContent={() => <>Try increasing the "Allowed Slippage", under the Settings menu on the top right</>}
             />
           </>
@@ -236,7 +242,7 @@ export default function TradeHistory(props) {
             {params.isLong ? ">" : "<"}&nbsp;
             <Tooltip
               position="left-top"
-              handle={`${formatAmount(params.acceptablePrice, USD_DECIMALS, 2, true)} USD`}
+              handle={`${formatAmount(params.acceptablePrice, USD_DECIMALS, indexToken.displayDecimals, true)} USD`}
               renderContent={() => <>Try increasing the "Allowed Slippage", under the Settings menu on the top right</>}
             />
           </>
@@ -262,7 +268,7 @@ export default function TradeHistory(props) {
           USD_DECIMALS,
           2,
           true
-        )} USD, ${indexToken.symbol} Price: ${formatAmount(params.price, USD_DECIMALS, 2, true)} USD`;
+        )} USD, ${indexToken.symbol} Price: ${formatAmount(params.price, USD_DECIMALS, indexToken.displayDecimals, true)} USD`;
       }
 
       if (tradeData.action === "DecreasePosition-Long" || tradeData.action === "DecreasePosition-Short") {
@@ -287,7 +293,7 @@ export default function TradeHistory(props) {
             <>
               {renderLiquidationTooltip(liquidationData, "Partial Liquidation")} {indexToken.symbol}{" "}
               {params.isLong ? "Long" : "Short"}, -{formatAmount(params.sizeDelta, USD_DECIMALS, 2, true)} USD,{" "}
-              {indexToken.symbol}&nbsp; Price: ${formatAmount(params.price, USD_DECIMALS, 2, true)} USD
+              {indexToken.symbol}&nbsp; Price: ${formatAmount(params.price, USD_DECIMALS, indexToken.displayDecimals, true)} USD
             </>
           );
         }
@@ -295,7 +301,7 @@ export default function TradeHistory(props) {
         return `
         ${actionDisplay} ${indexToken.symbol} ${params.isLong ? "Long" : "Short"},
         -${formatAmount(params.sizeDelta, USD_DECIMALS, 2, true)} USD,
-        ${indexToken.symbol} Price: ${formatAmount(params.price, USD_DECIMALS, 2, true)} USD
+        ${indexToken.symbol} Price: ${formatAmount(params.price, USD_DECIMALS, indexToken.displayDecimals, true)} USD
       `;
       }
 
@@ -310,14 +316,14 @@ export default function TradeHistory(props) {
             <>
               {renderLiquidationTooltip(liquidationData, "Liquidated")} {indexToken.symbol}{" "}
               {params.isLong ? "Long" : "Short"}, -{formatAmount(params.size, USD_DECIMALS, 2, true)} USD,&nbsp;
-              {indexToken.symbol} Price: ${formatAmount(params.markPrice, USD_DECIMALS, 2, true)} USD
+              {indexToken.symbol} Price: ${formatAmount(params.markPrice, USD_DECIMALS, indexToken.displayDecimals, true)} USD
             </>
           );
         }
         return `
         Liquidated ${indexToken.symbol} ${params.isLong ? "Long" : "Short"},
         -${formatAmount(params.size, USD_DECIMALS, 2, true)} USD,
-        ${indexToken.symbol} Price: ${formatAmount(params.markPrice, USD_DECIMALS, 2, true)} USD
+        ${indexToken.symbol} Price: ${formatAmount(params.markPrice, USD_DECIMALS, indexToken.displayDecimals, true)} USD
       `;
       }
 
@@ -328,7 +334,7 @@ export default function TradeHistory(props) {
           return defaultMsg;
         }
         const longShortDisplay = order.isLong ? "Long" : "Short";
-        const executionPriceDisplay = formatAmount(order.executionPrice, USD_DECIMALS, 2, true);
+        const executionPriceDisplay = formatAmount(order.executionPrice, USD_DECIMALS, indexToken.displayDecimals, true);
         const sizeDeltaDisplay = `${order.type === "Increase" ? "+" : "-"}${formatAmount(
           order.sizeDelta,
           USD_DECIMALS,
@@ -361,7 +367,7 @@ export default function TradeHistory(props) {
         const priceDisplay = `${order.triggerAboveThreshold ? ">" : "<"} ${formatAmount(
           order.triggerPrice,
           USD_DECIMALS,
-          2,
+          indexToken.displayDecimals,
           true
         )}`;
         return `
@@ -372,39 +378,41 @@ export default function TradeHistory(props) {
       }
 
       if (tradeData.action === "ExecuteSwapOrder") {
-        const order = deserialize(params.order);
         const nativeTokenAddress = getContract(chainId, "NATIVE_TOKEN");
-        const fromToken = getTokenInfo(infoTokens, order.path[0] === nativeTokenAddress ? AddressZero : order.path[0]);
-        const toToken = getTokenInfo(infoTokens, order.shouldUnwrap ? AddressZero : order.path[order.path.length - 1]);
+        // const fromToken = getTokenInfo(infoTokens, params.fromToken === nativeTokenAddress ? AddressZero : params.fromToken);
+        // const toToken = getTokenInfo(infoTokens, params.shouldUnwrap ? AddressZero : params.toToken);
+        const fromToken = {symbol:""}
+        const toToken = {symbol:""}
         if (!fromToken || !toToken) {
           return defaultMsg;
         }
-        const fromAmountDisplay = formatAmount(order.amountIn, fromToken.decimals, fromToken.isStable ? 2 : 4, true);
-        const toAmountDisplay = formatAmount(order.amountOut, toToken.decimals, toToken.isStable ? 2 : 4, true);
+        const fromAmountDisplay = formatAmount(params.amountIn, fromToken.decimals, fromToken.isStable ? 2 : 4, true);
+        const toAmountDisplay = formatAmount(params.amountOut, toToken.decimals, toToken.isStable ? 2 : 4, true);
         return `
         Execute Order: Swap ${fromAmountDisplay} ${fromToken.symbol} for ${toAmountDisplay} ${toToken.symbol}
       `;
       }
 
       if (["CreateSwapOrder", "UpdateSwapOrder", "CancelSwapOrder"].includes(tradeData.action)) {
-        const order = deserialize(params.order);
         const nativeTokenAddress = getContract(chainId, "NATIVE_TOKEN");
-        const fromToken = getTokenInfo(infoTokens, order.path[0] === nativeTokenAddress ? AddressZero : order.path[0]);
-        const toToken = getTokenInfo(infoTokens, order.shouldUnwrap ? AddressZero : order.path[order.path.length - 1]);
+        // const fromToken = getTokenInfo(infoTokens, params.fromToken === nativeTokenAddress ? AddressZero : params.fromToken);
+        // const toToken = getTokenInfo(infoTokens, params.shouldUnwrap ? AddressZero : params.toToken);
+        const fromToken = {symbol:""}
+        const toToken = {symbol:""}
         if (!fromToken || !toToken) {
           return defaultMsg;
         }
         const amountInDisplay = fromToken
-          ? formatAmount(order.amountIn, fromToken.decimals, fromToken.isStable ? 2 : 4, true)
+          ? formatAmount(params.amountIn, fromToken.decimals, fromToken.isStable ? 2 : 4, true)
           : "";
         const minOutDisplay = toToken
-          ? formatAmount(order.minOut, toToken.decimals, toToken.isStable ? 2 : 4, true)
+          ? formatAmount(params.minOut, toToken.decimals, toToken.isStable ? 2 : 4, true)
           : "";
 
         return `
         ${getOrderActionTitle(tradeData.action)}:
         Swap ${amountInDisplay} ${fromToken?.symbol || ""} for ${minOutDisplay} ${toToken?.symbol || ""},
-        Price: ${getExchangeRateDisplay(order.triggerRatio, fromToken, toToken)}`;
+        Price: ${getExchangeRateDisplay(params.triggerRatio, fromToken, toToken)}`;
       }
     },
     [getTokenInfo, infoTokens, nativeTokenAddress, chainId, liquidationsDataMap]
@@ -415,20 +423,19 @@ export default function TradeHistory(props) {
       return [];
     }
 
-    return trades
-      .map((trade) => ({
+    return trades.data.actionDatas.map((trade) => ({
         msg: getMsg(trade),
         ...trade,
       }))
       .filter((trade) => trade.msg);
   }, [trades, getMsg]);
-
+  // console.log(tradesWithMessages)
   return (
     <div className="TradeHistory">
       {tradesWithMessages.length === 0 && <div className="TradeHistory-row App-box">No trades yet</div>}
       {tradesWithMessages.length > 0 &&
         tradesWithMessages.map((trade, index) => {
-          const tradeData = trade.data;
+          const tradeData = trade
           const txUrl = getExplorerUrl(chainId) + "tx/" + tradeData.txhash;
 
           let msg = getMsg(trade);
