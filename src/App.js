@@ -110,6 +110,7 @@ import { useLocalStorage } from "react-use";
 import { RedirectPopupModal } from "./components/ModalViews/RedirectModal";
 import { REDIRECT_POPUP_TIMESTAMP_KEY } from "./utils/constants";
 import Jobs from "./views/Jobs/Jobs";
+import Rebates from "./views/Rebates/Rebates";
 
 if ("ethereum" in window) {
   window.ethereum.autoRefreshOnNetworkChange = false;
@@ -181,6 +182,9 @@ function AppHeaderLinks({ HeaderLink, small, openSettings, clickCloseIcon }) {
       </div> */}
       <div className="App-header-link-container">
         <HeaderLink to="/referrals">Referrals</HeaderLink>
+      </div>
+      <div className="App-header-link-container">
+        <HeaderLink to="/rebates">Rebates</HeaderLink>
       </div>
       <div className="App-header-link-container">
         {/* <HeaderLink to="/ecosystem">Ecosystem</HeaderLink> */}
@@ -852,6 +856,9 @@ function FullApp() {
               </Route>
               <Route exact path="/referrals/:account">
                 <Referrals pendingTxns={pendingTxns} connectWallet={connectWallet} setPendingTxns={setPendingTxns} />
+              </Route>
+              <Route exact path="/rebates">
+                <Rebates pendingTxns={pendingTxns} connectWallet={connectWallet} setPendingTxns={setPendingTxns} />
               </Route>
               {/* <Route exact path="/nft_wallet">
                 <NftWallet />
