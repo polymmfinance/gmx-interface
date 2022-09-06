@@ -1,4 +1,6 @@
 import { useRef, useState } from "react";
+import { FiPlus } from "react-icons/fi";
+import { useWeb3React } from "@web3-react/core";
 import Card from "../Common/Card";
 import Tooltip from "../Tooltip/Tooltip";
 import { getNativeToken, getToken } from "../../data/Tokens";
@@ -9,9 +11,14 @@ import { getTierIdDisplay, getUSDValue, tierDiscountInfo } from "./referralsHelp
 import Checkbox from "../Checkbox/Checkbox";
 import { BigNumber } from "bignumber.js";
 import { BIG_TEN } from "../../Api";
+import { toggleDeductMMF, toggleEnableFeature } from "../../Api/rebates";
+import Modal from "../Modal/Modal";
+import DepositAmountForm from "./DepositAmountForm";
 
-function TradersStats({ referralsData, chainId, walletBalance, setPendingTxns, pendingTxns }) {
-
+function TradersStats({ referralsData, chainId, walletBalance, deductMMF, enableFeature }) {
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const editModalRef = useRef(null);
+  const { active, account: walletAccount, library } = useWeb3React();
   let traderTier = "0"
   const walletBalanceBN = new BigNumber(walletBalance)
   if (walletBalanceBN.gt(BIG_TEN.pow(18).times(10000))) {
@@ -19,6 +26,27 @@ function TradersStats({ referralsData, chainId, walletBalance, setPendingTxns, p
   } else if (walletBalanceBN.gt(BIG_TEN.pow(18).times(20000))) {
     traderTier = "2"
   }
+
+  async function clickEnableFeature() {
+    toggleEnableFeature({
+      library,
+      chainId,
+      onSubmitted: () => { },
+      enable: !enableFeature,
+    })
+  }
+
+  async function clickDeductMMF() {
+    toggleDeductMMF({
+      library,
+      chainId,
+      onSubmitted: () => { },
+      enable: !deductMMF,
+    })
+  }
+
+  const open = () => setIsEditModalOpen(true);
+  const close = () => setIsEditModalOpen(false);
 
   return (
     <div className="rebate-container">
@@ -39,6 +67,14 @@ function TradersStats({ referralsData, chainId, walletBalance, setPendingTxns, p
             <div className="active-referral-code">
               <div className="edit">
                 <span>{formatAmount(walletBalance, 18, 2, true)} MMF</span>
+
+                <Tooltip
+                  handle={<FiPlus onClick={() => open()} />}
+                  position="right-bottom"
+                  renderContent={() =>
+                    `Click to deposit MMF into wallet to receive your tier-ed discount`
+                  }
+                />
               </div>
               {traderTier && (
                 <div className="tier">
@@ -59,7 +95,7 @@ function TradersStats({ referralsData, chainId, walletBalance, setPendingTxns, p
           data={
             <div className="active-referral-code">
               <div className="edit">
-                <Checkbox setIsChecked={() => { }}>Enable</Checkbox>
+                <Checkbox isChecked={enableFeature} setIsChecked={() => { clickEnableFeature() }}>{enableFeature ? "Enabled" : "Enable"}</Checkbox>
               </div>
               <div className="tier">
                 <Tooltip
@@ -79,7 +115,7 @@ function TradersStats({ referralsData, chainId, walletBalance, setPendingTxns, p
           data={
             <div className="active-referral-code">
               <div className="edit">
-                <Checkbox setIsChecked={() => { }}>Deduct MMF</Checkbox>
+                <Checkbox isChecked={deductMMF} setIsChecked={() => { clickDeductMMF() }}>{deductMMF ? "Will Deduct MMF" : "Deduct MMF"}</Checkbox>
               </div>
               <div className="tier">
                 <Tooltip
@@ -93,6 +129,25 @@ function TradersStats({ referralsData, chainId, walletBalance, setPendingTxns, p
             </div>
           }
         />
+
+        <Modal
+          className="Connect-wallet-modal"
+          isVisible={isEditModalOpen}
+          setIsVisible={close}
+          label="Edit Deposit Amount"
+          onAfterOpen={() => editModalRef.current?.focus()}
+        >
+          <div className="edit-referral-modal">
+            <DepositAmountForm
+              active={active}
+              // userReferralCodeString={userReferralCodeString}
+              // setPendingTxns={setPendingTxns}
+              // pendingTxns={pendingTxns}
+              type="edit"
+              callAfterSuccess={() => setIsEditModalOpen(false)}
+            />
+          </div>
+        </Modal>
 
       </div>
       {referralsData?.discountDistributions.length > 0 ? (

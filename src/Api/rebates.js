@@ -18,6 +18,7 @@ import {
   REFERRAL_CODE_KEY,
   POLYGON,
   PLACEHOLDER_ACCOUNT,
+  getExplorerUrl,
 } from "../Helpers";
 import { arbitrumReferralsGraphClient, avalancheReferralsGraphClient, polygonReferralGraphClient } from "./common";
 import { getContract } from "../Addresses";
@@ -96,4 +97,121 @@ export function useRebatesData(library, chainId, account) {
     enableFeature,
     loading: !balance && !deductMMF && !enableFeature
   };
+}
+
+
+export function toggleEnableFeature({
+  library,
+  chainId,
+  onSubmitted,
+  enable,
+}) {
+  // setIsApproving(true);
+  const rebateAddress = getContract(chainId, "TradingFeeRebates");
+  const contract = new ethers.Contract(rebateAddress, TradingFeeRebates.abi, library.getSigner());
+  contract
+    .toggleFeature(enable)
+    .then(async (res) => {
+      const txUrl = getExplorerUrl(chainId) + "tx/" + res.hash;
+      helperToast.success(
+        <div>
+          Toggle feature submitted!{" "}
+          <a href={txUrl} target="_blank" rel="noopener noreferrer">
+            View status.
+          </a>
+          <br />
+        </div>
+      );
+      if (onSubmitted) {
+        onSubmitted();
+      }
+    })
+    .catch((e) => {
+      console.error(e);
+      let failMsg;
+      if (
+        ["not enough funds for gas", "failed to execute call with revert code InsufficientGasFunds"].includes(
+          e.data?.message
+        )
+      ) {
+        failMsg = (
+          <div>
+            There is not enough gas in your account to send this transaction.
+          </div>
+        );
+      } else if (e.message?.includes("User denied transaction signature")) {
+        failMsg = "Toggle was cancelled";
+      } else {
+        failMsg = "Toggle failed";
+      }
+      helperToast.error(failMsg);
+    })
+    .finally(() => {
+      // setIsApproving(false);
+    });
+}
+
+export function toggleDeductMMF({
+  library,
+  chainId,
+  onSubmitted,
+  enable,
+}) {
+  // setIsApproving(true);
+  const rebateAddress = getContract(chainId, "TradingFeeRebates");
+  const contract = new ethers.Contract(rebateAddress, TradingFeeRebates.abi, library.getSigner());
+  contract
+    .toggleDeductMMF(enable)
+    .then(async (res) => {
+      const txUrl = getExplorerUrl(chainId) + "tx/" + res.hash;
+      helperToast.success(
+        <div>
+          Toggle deduct MMF submitted!{" "}
+          <a href={txUrl} target="_blank" rel="noopener noreferrer">
+            View status.
+          </a>
+          <br />
+        </div>
+      );
+      if (onSubmitted) {
+        onSubmitted();
+      }
+    })
+    .catch((e) => {
+      console.error(e);
+      let failMsg;
+      if (
+        ["not enough funds for gas", "failed to execute call with revert code InsufficientGasFunds"].includes(
+          e.data?.message
+        )
+      ) {
+        failMsg = (
+          <div>
+            There is not enough gas in your account to send this transaction.
+          </div>
+        );
+      } else if (e.message?.includes("User denied transaction signature")) {
+        failMsg = "Toggle was cancelled";
+      } else {
+        failMsg = "Toggle failed";
+      }
+      helperToast.error(failMsg);
+    })
+    .finally(() => {
+      // setIsApproving(false);
+    });
+}
+
+
+export async function depositMMF(chainId, depositAmount, library, opts) {
+
+  const rebateAddress = getContract(chainId, "TradingFeeRebates");
+  const contract = new ethers.Contract(rebateAddress, TradingFeeRebates.abi, library.getSigner());
+
+  // if (isAddressZero(codeOwner)) {
+  //   const errorMsg = "Referral code does not exist";
+  //   helperToast.error(errorMsg);
+  //   return Promise.reject(errorMsg);
+  // }
+  return callContract(chainId, contract, "depositMMF", [depositAmount], opts);
 }

@@ -81,6 +81,8 @@ function Rebates({ connectWallet, setPendingTxns, pendingTxns }) {
         setPendingTxns={setPendingTxns}
         pendingTxns={pendingTxns}
         walletBalance={balance?.toString?.() ?? "0"}
+        deductMMF={deductMMF}
+        enableFeature={enableFeature}
       />
     );
   }
