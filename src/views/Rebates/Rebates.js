@@ -15,15 +15,11 @@ import {
   REBATES_SELECTED_TAB_KEY,
 } from "../../Helpers";
 import {
-  useReferralsData,
-  registerReferralCode,
   useCodeOwner,
   useReferrerTier,
-  useUserReferralCode,
-} from "../../Api/referrals";
-import JoinReferralCode from "../../components/Rebates/JoinReferralCode";
+  useRebatesData
+} from "../../Api/rebates";
 import TradersStats from "../../components/Rebates/TradersStats";
-import AddAffiliateCode from "../../components/Rebates/AddAffiliateCode";
 import { deserializeSampleStats, isRecentReferralCodeNotExpired } from "../../components/Rebates/referralsHelper";
 import { ethers } from "ethers";
 import HistoryStats from "../../components/Rebates/HistoryStats";
@@ -43,69 +39,48 @@ function Rebates({ connectWallet, setPendingTxns, pendingTxns }) {
   }
   const { chainId } = useChainId();
   const [activeTab, setActiveTab] = useLocalStorage(REBATES_SELECTED_TAB_KEY, CURRENT_WINDOW);
-  const { data: referralsData, loading } = useReferralsData(chainId, account);
   const [recentlyAddedCodes, setRecentlyAddedCodes] = useLocalStorageSerializeKey([chainId, "REFERRAL", account], [], {
     deserializer: deserializeSampleStats,
   });
-  const { userReferralCode, userReferralCodeString } = useUserReferralCode(library, chainId, account);
-  const { codeOwner } = useCodeOwner(library, chainId, account, userReferralCode);
-  const { referrerTier: traderTier } = useReferrerTier(library, chainId, codeOwner);
 
-  function handleCreateReferralCode(referralCode) {
-    return registerReferralCode(chainId, referralCode, library, {
-      sentMsg: "Referral code submitted!",
-      failMsg: "Referral code creation failed.",
-      pendingTxns,
-    });
-  }
+  const { balance, deductMMF, enableFeature, loading } = useRebatesData(library, chainId, account);
+
+  console.log({ balance, deductMMF, enableFeature })
 
   function renderHistoryTab() {
-    const isReferralCodeAvailable =
-      referralsData?.codes?.length > 0 || recentlyAddedCodes?.filter(isRecentReferralCodeNotExpired).length > 0;
+
     if (loading) return <Loader />;
-    if (isReferralCodeAvailable) {
-      return (
-        <HistoryStats
-          referralsData={referralsData}
-          handleCreateReferralCode={handleCreateReferralCode}
-          setRecentlyAddedCodes={setRecentlyAddedCodes}
-          recentlyAddedCodes={recentlyAddedCodes}
-          chainId={chainId}
-        />
-      );
-    } else {
-      return (
-        <AddAffiliateCode
-          handleCreateReferralCode={handleCreateReferralCode}
-          active={active}
-          connectWallet={connectWallet}
-          recentlyAddedCodes={recentlyAddedCodes}
-          setRecentlyAddedCodes={setRecentlyAddedCodes}
-        />
-      );
-    }
+    return (
+      <HistoryStats
+        // referralsData={referralsData}
+        // handleCreateReferralCode={handleCreateReferralCode}
+        setRecentlyAddedCodes={setRecentlyAddedCodes}
+        recentlyAddedCodes={recentlyAddedCodes}
+        chainId={chainId}
+      />
+    );
   }
 
   function renderCurrentWindowTab() {
     if (loading) return <Loader />;
-    if (isHashZero(userReferralCode) || !account || !userReferralCode) {
-      return (
-        <JoinReferralCode
-          connectWallet={connectWallet}
-          active={active}
-          setPendingTxns={setPendingTxns}
-          pendingTxns={pendingTxns}
-        />
-      );
-    }
+    // if (isHashZero(userReferralCode) || !account || !userReferralCode) {
+    //   return (
+    //     <JoinReferralCode
+    //       connectWallet={connectWallet}
+    //       active={active}
+    //       setPendingTxns={setPendingTxns}
+    //       pendingTxns={pendingTxns}
+    //     />
+    //   );
+    // }
     return (
       <TradersStats
-        userReferralCodeString={userReferralCodeString}
+        // userReferralCodeString={userReferralCodeString}
         chainId={chainId}
-        referralsData={referralsData}
+        // referralsData={referralsData}
         setPendingTxns={setPendingTxns}
         pendingTxns={pendingTxns}
-        traderTier={traderTier}
+        walletBalance={balance?.toString?.() ?? "0"}
       />
     );
   }
@@ -118,7 +93,7 @@ function Rebates({ connectWallet, setPendingTxns, pendingTxns }) {
           <div className="section-title-content">
             <div className="Page-title">Rebates</div>
             <div className="Page-description">
-              Get trading fee rebates when you lock your MMF into the rebate wallet. 
+              Get trading fee rebates when you lock your MMF into the rebate wallet.
               You can choose whether to pay off your trading fees with MMF tokens, in doing so, MMF tokens will be deducted from your wallet, and the equivalent amount in rebates will be paid out to you.
               <br />
               For more information, please read the{" "}

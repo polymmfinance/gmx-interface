@@ -1,22 +1,25 @@
 import { useRef, useState } from "react";
-import { BiEditAlt } from "react-icons/bi";
 import Card from "../Common/Card";
-import Modal from "../Modal/Modal";
 import Tooltip from "../Tooltip/Tooltip";
 import { getNativeToken, getToken } from "../../data/Tokens";
 import { formatAmount, formatDate, getExplorerUrl, shortenAddress } from "../../Helpers";
 import EmptyMessage from "./EmptyMessage";
 import InfoCard from "./InfoCard";
 import { getTierIdDisplay, getUSDValue, tierDiscountInfo } from "./referralsHelper";
-import { ReferralCodeForm } from "./JoinReferralCode";
 import Checkbox from "../Checkbox/Checkbox";
+import { BigNumber } from "bignumber.js";
+import { BIG_TEN } from "../../Api";
 
-function TradersStats({ referralsData, traderTier, chainId, walletBalance, setPendingTxns, pendingTxns }) {
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const editModalRef = useRef(null);
+function TradersStats({ referralsData, chainId, walletBalance, setPendingTxns, pendingTxns }) {
 
-  const open = () => setIsEditModalOpen(true);
-  const close = () => setIsEditModalOpen(false);
+  let traderTier = "0"
+  const walletBalanceBN = new BigNumber(walletBalance)
+  if (walletBalanceBN.gt(BIG_TEN.pow(18).times(10000))) {
+    traderTier = "1"
+  } else if (walletBalanceBN.gt(BIG_TEN.pow(18).times(20000))) {
+    traderTier = "2"
+  }
+
   return (
     <div className="rebate-container">
       <div className="referral-stats">
@@ -35,7 +38,7 @@ function TradersStats({ referralsData, traderTier, chainId, walletBalance, setPe
           data={
             <div className="active-referral-code">
               <div className="edit">
-                <span>{walletBalance}</span>
+                <span>{formatAmount(walletBalance, 18, 2, true)} MMF</span>
               </div>
               {traderTier && (
                 <div className="tier">
@@ -72,7 +75,7 @@ function TradersStats({ referralsData, traderTier, chainId, walletBalance, setPe
         />
 
         <InfoCard
-          label="Enable Fee Rebates"
+          label="Enable Deduct MMF"
           data={
             <div className="active-referral-code">
               <div className="edit">
