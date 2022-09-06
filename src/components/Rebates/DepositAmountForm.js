@@ -1,16 +1,21 @@
 import { useEffect, useRef, useState } from "react";
 import { useWeb3React } from "@web3-react/core";
-import { useDebounce } from "../../Helpers";
+import { approveTokens, fetcher, useDebounce } from "../../Helpers";
 import { depositMMF } from "../../Api/rebates";
+import Token from "../../abis/Token.json";
+import { getContract } from "../../Addresses";
+import useSWR from "swr";
+import { BigNumber } from "ethers";
+import { BIG_TEN } from "../../Api";
 
-function DepositAmountForm({ setPendingTxns, pendingTxns, active, connectWallet }) {
+function DepositAmountForm({ setPendingTxns, pendingTxns, active, connectWallet, callAfterSuccess }) {
   return (
     <div className="referral-card section-center mt-medium">
       <h2 className="title">Enter Deposit Amount</h2>
       <p className="sub-title">Please input an amount to deposit into funding wallet.</p>
       <div className="card-action">
         {active ? (
-          <DepositAmountFormComponent setPendingTxns={setPendingTxns} pendingTxns={pendingTxns} />
+          <DepositAmountFormComponent setPendingTxns={setPendingTxns} pendingTxns={pendingTxns} callAfterSuccess={callAfterSuccess} />
         ) : (
           <button className="App-cta Exchange-swap-button" type="submit" onClick={connectWallet}>
             Connect Wallet
@@ -27,11 +32,23 @@ export function DepositAmountFormComponent({
   callAfterSuccess,
   userReferralCodeString = "",
 }) {
-  const { account, library, chainId } = useWeb3React();
-  const [depositAmount, setReferralCode] = useState("");
+  const { active, account, library, chainId } = useWeb3React();
+  const mmfAddress = getContract(chainId, "MMF");
+  const rebatesAddress = getContract(chainId, "TradingFeeRebates");
+  const [depositAmount, setDepositAmount] = useState("");
   const inputRef = useRef("");
+  const [isApproving, setIsApproving] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const debouncedReferralCode = useDebounce(depositAmount, 300);
+
+  const { data: tokenAllowance, mutate: updateTokenAllowance } = useSWR(
+    [active, chainId, mmfAddress, "allowance", account, rebatesAddress],
+    {
+      fetcher: fetcher(library, Token),
+    }
+  );
+
+  const needApproval = !tokenAllowance?.gt?.(0) ?? true;
 
   function getPrimaryText() {
     if (isSubmitting) {
@@ -39,6 +56,14 @@ export function DepositAmountFormComponent({
     }
     if (debouncedReferralCode === "") {
       return "Enter Deposit Amount";
+    }
+
+    if (isApproving) {
+      return "Approving...";
+    }
+
+    if (needApproval) {
+      return "Allow MMF Spend";
     }
 
     return "Submit";
@@ -56,10 +81,25 @@ export function DepositAmountFormComponent({
 
   async function handleSubmit(event) {
     event.preventDefault();
-    setIsSubmitting(true);
+    
+
+    if (needApproval) {
+      return approveTokens({
+        setIsApproving,
+        library,
+        tokenAddress: mmfAddress,
+        spender: rebatesAddress,
+        chainId: chainId,
+        onApproveSubmitted: () => {
+          setIsApproving(false);
+          updateTokenAllowance();
+        },
+      });
+    }
 
     try {
-      const tx = await depositMMF(chainId, depositAmount, library, {
+      setIsSubmitting(true);
+      const tx = await depositMMF(chainId, BigNumber.from(depositAmount).mul(BIG_TEN.pow(18).toString()), library, {
         account,
         successMsg: "Deposited MMF!",
         failMsg: "Failed to deposit MMF",
@@ -71,7 +111,7 @@ export function DepositAmountFormComponent({
       }
       const receipt = await tx.wait();
       if (receipt.status === 1) {
-        setReferralCode("");
+        setDepositAmount("");
       }
     } catch (error) {
       console.error(error);
@@ -95,7 +135,7 @@ export function DepositAmountFormComponent({
         value={depositAmount}
         onChange={({ target }) => {
           const { value } = target;
-          setReferralCode(value);
+          setDepositAmount(value);
         }}
       />
       <button type="submit" className="App-cta Exchange-swap-button" disabled={!isPrimaryEnabled()}>

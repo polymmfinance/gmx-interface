@@ -144,7 +144,7 @@ function TradersStats({ referralsData, chainId, walletBalance, deductMMF, enable
               // setPendingTxns={setPendingTxns}
               // pendingTxns={pendingTxns}
               type="edit"
-              callAfterSuccess={() => setIsEditModalOpen(false)}
+              callAfterSuccess={() => { setIsEditModalOpen(false) }}
             />
           </div>
         </Modal>
