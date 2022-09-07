@@ -4,7 +4,7 @@ import { useWeb3React } from "@web3-react/core";
 import Card from "../Common/Card";
 import Tooltip from "../Tooltip/Tooltip";
 import { getNativeToken, getToken } from "../../data/Tokens";
-import { formatAmount, formatDate, getExplorerUrl, shortenAddress } from "../../Helpers";
+import { formatAmount, formatDate, getExplorerUrl, limitDecimals, shortenAddress } from "../../Helpers";
 import EmptyMessage from "./EmptyMessage";
 import InfoCard from "./InfoCard";
 import { getTierIdDisplay, getUSDValue, tierDiscountInfo } from "./referralsHelper";
@@ -54,12 +54,13 @@ function TradersStats({ referralsData, chainId, walletBalance, deductMMF, enable
         <InfoCard
           label="Total Trading Fees Incurred"
           tooltipText="Trading fees incurred by this account in this trading window."
-          data={getUSDValue(referralsData?.referralTotalStats?.volume)}
+          data={limitDecimals(referralsData?.total,2)}
         />
         <InfoCard
           label="Total Rebates"
           tooltipText="Rebates earned by this account as a trader."
-          data={getUSDValue(referralsData?.referralTotalStats?.discountUsd, 4)}
+          // data={getUSDValue(referralsData?.referralTotalStats?.discountUsd, 4)}
+          data={limitDecimals(referralsData?.total,2)}
         />
         <InfoCard
           label="Funding Wallet Balance"
@@ -150,7 +151,7 @@ function TradersStats({ referralsData, chainId, walletBalance, deductMMF, enable
         </Modal>
 
       </div>
-      {referralsData?.discountDistributions.length > 0 ? (
+      {/* {referralsData?.discountDistributions.length > 0 ? (
         <div className="reward-history">
           <Card title="Rebates Distribution History" tooltipText="Rebates are airdropped weekly.">
             <div className="table-wrapper">
@@ -201,8 +202,8 @@ function TradersStats({ referralsData, chainId, walletBalance, deductMMF, enable
           </Card>
         </div>
       ) : (
-        <EmptyMessage message="No rebates distribution history yet." tooltipText="Rebates are airdropped weekly." />
-      )}
+        <EmptyMessage message="No rebates distribution history yet." tooltipText="Rebates are airdropped weekly." /> 
+      )}*/}
     </div>
   );
 }

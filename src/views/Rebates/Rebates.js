@@ -13,16 +13,14 @@ import {
   useLocalStorageSerializeKey,
   isHashZero,
   REBATES_SELECTED_TAB_KEY,
+  getServerUrl,
 } from "../../Helpers";
-import {
-  useCodeOwner,
-  useReferrerTier,
-  useRebatesData
-} from "../../Api/rebates";
+import { useCodeOwner, useReferrerTier, useRebatesData } from "../../Api/rebates";
 import TradersStats from "../../components/Rebates/TradersStats";
 import { deserializeSampleStats, isRecentReferralCodeNotExpired } from "../../components/Rebates/referralsHelper";
 import { ethers } from "ethers";
 import HistoryStats from "../../components/Rebates/HistoryStats";
+import useSWR from "swr";
 
 const CURRENT_WINDOW = "Current Window";
 const HISTORY = "History";
@@ -30,14 +28,23 @@ const TAB_OPTIONS = [CURRENT_WINDOW, HISTORY];
 
 function Rebates({ connectWallet, setPendingTxns, pendingTxns }) {
   const { active, account: walletAccount, library } = useWeb3React();
+  
   const { account: queryAccount } = useParams();
+  const { chainId } = useChainId();
+  
+  const smallCaseAddress = (walletAccount || "").toLocaleLowerCase();
+  const userFeesURL = getServerUrl(chainId, "/fees_by_user?user="+smallCaseAddress);
+
+  const { data: feesdata, mutate: updateFeeStats } = useSWR([userFeesURL], {
+    fetcher: (...args) =>  fetch(userFeesURL).then((res) => res.json()).catch(console.error),
+  });
+
   let account;
   if (queryAccount && ethers.utils.isAddress(queryAccount)) {
     account = ethers.utils.getAddress(queryAccount);
   } else {
     account = walletAccount;
   }
-  const { chainId } = useChainId();
   const [activeTab, setActiveTab] = useLocalStorage(REBATES_SELECTED_TAB_KEY, CURRENT_WINDOW);
   const [recentlyAddedCodes, setRecentlyAddedCodes] = useLocalStorageSerializeKey([chainId, "REFERRAL", account], [], {
     deserializer: deserializeSampleStats,
@@ -45,10 +52,9 @@ function Rebates({ connectWallet, setPendingTxns, pendingTxns }) {
 
   const { balance, deductMMF, enableFeature, loading } = useRebatesData(library, chainId, account);
 
-  console.log({ balance, deductMMF, enableFeature })
+  console.log({ balance, deductMMF, enableFeature });
 
   function renderHistoryTab() {
-
     if (loading) return <Loader />;
     return (
       <HistoryStats
@@ -62,7 +68,7 @@ function Rebates({ connectWallet, setPendingTxns, pendingTxns }) {
   }
 
   function renderCurrentWindowTab() {
-    if (loading) return <Loader />;
+    if (loading && !feesdata) return <Loader />;
     // if (isHashZero(userReferralCode) || !account || !userReferralCode) {
     //   return (
     //     <JoinReferralCode
@@ -77,7 +83,7 @@ function Rebates({ connectWallet, setPendingTxns, pendingTxns }) {
       <TradersStats
         // userReferralCodeString={userReferralCodeString}
         chainId={chainId}
-        // referralsData={referralsData}
+        referralsData={feesdata}
         setPendingTxns={setPendingTxns}
         pendingTxns={pendingTxns}
         walletBalance={balance?.toString?.() ?? "0"}
@@ -95,8 +101,9 @@ function Rebates({ connectWallet, setPendingTxns, pendingTxns }) {
           <div className="section-title-content">
             <div className="Page-title">Rebates</div>
             <div className="Page-description">
-              Get trading fee rebates when you lock your MMF into the rebate wallet.
-              You can choose whether to pay off your trading fees with MMF tokens, in doing so, MMF tokens will be deducted from your wallet, and the equivalent amount in rebates will be paid out to you.
+              Get trading fee rebates when you lock your MMF into the rebate wallet. You can choose whether to pay off
+              your trading fees with MMF tokens, in doing so, MMF tokens will be deducted from your wallet, and the
+              equivalent amount in rebates will be paid out to you.
               <br />
               For more information, please read the{" "}
               <a
