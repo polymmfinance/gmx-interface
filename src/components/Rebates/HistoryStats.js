@@ -27,7 +27,7 @@ import { AffiliateCodeForm } from "./AddAffiliateCode";
 import TooltipWithPortal from "../Tooltip/TooltipWithPortal";
 
 function HistoryStats({
-  referralsData,
+  referralsData = {},
   handleCreateReferralCode,
   chainId,
   setRecentlyAddedCodes,
@@ -40,7 +40,7 @@ function HistoryStats({
   const open = () => setIsAddReferralCodeModalOpen(true);
   const close = () => setIsAddReferralCodeModalOpen(false);
 
-  const { cumulativeStats, referrerTotalStats, rebateDistributions, referrerTierInfo } = referralsData;
+  const { cumulativeStats, referrerTotalStats = [], rebateDistributions, referrerTierInfo } = referralsData;
   const allReferralCodes = referrerTotalStats.map((c) => c.referralCode.trim());
   const finalAffiliatesTotalStats = useMemo(
     () =>

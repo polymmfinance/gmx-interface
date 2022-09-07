@@ -58,7 +58,7 @@ function Rebates({ connectWallet, setPendingTxns, pendingTxns }) {
     if (loading) return <Loader />;
     return (
       <HistoryStats
-        // referralsData={referralsData}
+        referralsData={feesdata}
         // handleCreateReferralCode={handleCreateReferralCode}
         setRecentlyAddedCodes={setRecentlyAddedCodes}
         recentlyAddedCodes={recentlyAddedCodes}
