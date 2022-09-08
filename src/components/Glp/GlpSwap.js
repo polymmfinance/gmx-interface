@@ -1000,16 +1000,17 @@ export default function GlpSwap(props) {
                 tokenFeeBps = feeBps;
               }
               const tokenInfo = getTokenInfo(infoTokens, token.address);
-              // console.log(tokenInfo)
               let managedUsd;
               if (tokenInfo && tokenInfo.managedUsd) {
                 managedUsd = tokenInfo.managedUsd;
               }
               let availableAmountUsd;
               if (tokenInfo && tokenInfo.minPrice && tokenInfo.availableAmount) {
+                // console.log(tokenInfo.availableAmount.toString(), tokenInfo.minPrice.toString(), tokenInfo.name)
                 availableAmountUsd = tokenInfo.availableAmount
                   .mul(tokenInfo.minPrice)
                   .div(expandDecimals(1, token.decimals));
+                
               }
               let balanceUsd;
               if (tokenInfo && tokenInfo.minPrice && tokenInfo.balance) {

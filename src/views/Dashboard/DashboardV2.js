@@ -162,6 +162,14 @@ export default function DashboardV2() {
     }
   );
 
+  const { data: totalFees2 } = useSWR(
+    ACTIVE_CHAIN_IDS.map((chainId) => getServerUrl(chainId, "/api/stats")),
+    {
+      fetcher: arrayURLFetcher,
+    }
+  );
+  
+  // console.log(`$${formatAmount(totalFees2 && parseInt(totalFees2[0].totalFees.total), 0, 0, true)}`)
   // let { total: totalGmxSupply } = useTotalGmxSupply();
 
   const currentVolumeInfo = getVolumeInfo(hourlyVolumes);
@@ -792,17 +800,17 @@ export default function DashboardV2() {
                       <TooltipComponent
                         position="right-bottom"
                         className="nowrap"
-                        handle={`$0`}
-                        // handle={`$${numberWithCommas(totalFees?.[chainId])}`}
+                        // handle={`$0`} 
+                        handle={`$${formatAmount(totalFees2 && parseInt(totalFees2[0].totalFees.total), 0, 0, true)}`}
                         renderContent={() => (
                           <TooltipCard
                             title="Total Fees"
                             // arbitrum={totalFees?.[ARBITRUM]}
                             // avax={totalFees?.[AVALANCHE]}
-                            polygon={0}
+                            polygon={totalFees2 && parseInt(totalFees2[0].totalFees.total)}
                             // polygon={totalFees?.[POLYGON]}
                             // total={totalFees?.total}
-                            total={0}
+                            total={totalFees2 && parseInt(totalFees2[0].totalFees.total)}
                             decimalsForConversion={0}
                           />
                         )}
