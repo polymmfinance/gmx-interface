@@ -7,7 +7,7 @@ import { getNativeToken, getToken } from "../../data/Tokens";
 import { formatAmount, formatDate, getExplorerUrl, limitDecimals, shortenAddress } from "../../Helpers";
 import EmptyMessage from "./EmptyMessage";
 import InfoCard from "./InfoCard";
-import { getTierIdDisplay, getUSDValue, tierDiscountInfo } from "./referralsHelper";
+import { getTierIdDisplay, getUSDValue, tierDiscountInfo, tradingTierDiscountInfo } from "./referralsHelper";
 import Checkbox from "../Checkbox/Checkbox";
 import { BigNumber } from "bignumber.js";
 import { BIG_TEN } from "../../Api";
@@ -25,6 +25,10 @@ function TradersStats({ referralsData, chainId, walletBalance, deductMMF, enable
     traderTier = "1"
   } else if (walletBalanceBN.gt(BIG_TEN.pow(18).times(20000))) {
     traderTier = "2"
+  }  else if (walletBalanceBN.gt(BIG_TEN.pow(18).times(50000))) {
+    traderTier = "3"
+  }  else if (walletBalanceBN.gt(BIG_TEN.pow(18).times(100000))) {
+    traderTier = "4"
   }
 
   async function clickEnableFeature() {
@@ -48,6 +52,8 @@ function TradersStats({ referralsData, chainId, walletBalance, deductMMF, enable
   const open = () => setIsEditModalOpen(true);
   const close = () => setIsEditModalOpen(false);
 
+  const totalRebates = tradingTierDiscountInfo[traderTier] * (referralsData?.total ?? 0) / 100;
+
   return (
     <div className="rebate-container">
       <div className="referral-stats">
@@ -58,9 +64,9 @@ function TradersStats({ referralsData, chainId, walletBalance, deductMMF, enable
         />
         <InfoCard
           label="Total Rebates"
-          tooltipText="Rebates earned by this account as a trader."
+          tooltipText={`Rebates earned by this account as a trader this window.${enableFeature ? "" : " Enable feature to view rebates accrued."}`}
           // data={getUSDValue(referralsData?.referralTotalStats?.discountUsd, 4)}
-          data={limitDecimals(referralsData?.total ?? 0, 2)}
+          data={limitDecimals(enableFeature ? (totalRebates ?? 0) : 0, 2)}
         />
         <InfoCard
           label="Funding Wallet Balance"
