@@ -60,13 +60,13 @@ function TradersStats({ referralsData, chainId, walletBalance, deductMMF, enable
         <InfoCard
           label="Total Trading Fees Incurred"
           tooltipText="Trading fees incurred by this account in this trading window."
-          data={limitDecimals(referralsData?.total ?? 0, 2)}
+          data={`$${limitDecimals(referralsData?.total ?? 0, 2)}`}
         />
         <InfoCard
           label="Total Rebates"
           tooltipText={`Rebates earned by this account as a trader this window.${enableFeature ? "" : " Enable feature to view rebates accrued."}`}
           // data={getUSDValue(referralsData?.referralTotalStats?.discountUsd, 4)}
-          data={limitDecimals(enableFeature ? (totalRebates ?? 0) : 0, 2)}
+          data={`$${limitDecimals(enableFeature ? (totalRebates ?? 0) : 0, 2)}`}
         />
         <InfoCard
           label="Funding Wallet Balance"
