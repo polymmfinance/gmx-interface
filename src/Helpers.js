@@ -153,6 +153,7 @@ export const SHOULD_SHOW_POSITION_LINES_KEY = "Exchange-swap-should-show-positio
 export const REFERRAL_CODE_KEY = "MMX-referralCode";
 export const REFERRAL_CODE_QUERY_PARAM = "ref";
 export const REFERRALS_SELECTED_TAB_KEY = "Referrals-selected-tab";
+export const REBATES_SELECTED_TAB_KEY = "Rebates-selected-tab";
 export const MAX_REFERRAL_CODE_LENGTH = 20;
 
 export const TRIGGER_PREFIX_ABOVE = ">";
