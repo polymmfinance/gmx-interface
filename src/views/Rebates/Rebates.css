@@ -57,32 +57,36 @@
 .reward-history {
   margin-top: 3.1rem;
 }
-.active-referral-code .edit {
+
+.active-rebates .edit {
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.active-referral-code .edit span {
-  margin-right: 1.5rem;
+.active-rebates .edit span {
 }
-.active-referral-code .edit svg {
+.active-rebates .edit .button {
+  margin-left: 6px;
+  margin-right: 6px;
+}
+.active-rebates .edit svg {
   cursor: pointer;
 }
-.active-referral-code .edit svg:hover {
+.active-rebates .edit svg:hover {
   opacity: 0.75;
 }
-.active-referral-code .tier {
+.active-rebates .tier {
   margin-top: 0.775rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 1.5rem;
 }
-.active-referral-code .tier span {
+.active-rebates .tier span {
   font-size: 1.3175rem;
   color: #a9a9b0;
-  margin-right: 0.775rem;
 }
-.active-referral-code .tier a {
+.active-rebates .tier a {
   text-decoration: none;
   font-size: 0;
 }

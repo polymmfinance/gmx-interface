@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { FiPlus } from "react-icons/fi";
+import { FiPlus, FiMinus } from "react-icons/fi";
 import { useWeb3React } from "@web3-react/core";
 import Card from "../Common/Card";
 import Tooltip from "../Tooltip/Tooltip";
@@ -14,45 +14,52 @@ import { BIG_TEN } from "../../Api";
 import { toggleDeductMMF, toggleEnableFeature } from "../../Api/rebates";
 import Modal from "../Modal/Modal";
 import DepositAmountForm from "./DepositAmountForm";
+import WithdrawAmountForm from "./WithdrawAmountForm";
 
-function TradersStats({ referralsData, chainId, walletBalance, deductMMF, enableFeature }) {
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const editModalRef = useRef(null);
+function TradersStats({ referralsData, chainId, walletBalance, deductMMF, enableFeature, setPendingTxns }) {
+  const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
+  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
+
+  const depositModalRef = useRef(null);
+  const withdrawModalRef = useRef(null);
+
   const { active, account: walletAccount, library } = useWeb3React();
-  let traderTier = "0"
-  const walletBalanceBN = new BigNumber(walletBalance)
+  let traderTier = "0";
+  const walletBalanceBN = new BigNumber(walletBalance);
   if (walletBalanceBN.gt(BIG_TEN.pow(18).times(10000))) {
-    traderTier = "1"
+    traderTier = "1";
   } else if (walletBalanceBN.gt(BIG_TEN.pow(18).times(20000))) {
-    traderTier = "2"
-  }  else if (walletBalanceBN.gt(BIG_TEN.pow(18).times(50000))) {
-    traderTier = "3"
-  }  else if (walletBalanceBN.gt(BIG_TEN.pow(18).times(100000))) {
-    traderTier = "4"
+    traderTier = "2";
+  } else if (walletBalanceBN.gt(BIG_TEN.pow(18).times(50000))) {
+    traderTier = "3";
+  } else if (walletBalanceBN.gt(BIG_TEN.pow(18).times(100000))) {
+    traderTier = "4";
   }
 
   async function clickEnableFeature() {
     toggleEnableFeature({
       library,
       chainId,
-      onSubmitted: () => { },
+      onSubmitted: () => {},
       enable: !enableFeature,
-    })
+    });
   }
 
   async function clickDeductMMF() {
     toggleDeductMMF({
       library,
       chainId,
-      onSubmitted: () => { },
+      onSubmitted: () => {},
       enable: !deductMMF,
-    })
+    });
   }
 
-  const open = () => setIsEditModalOpen(true);
-  const close = () => setIsEditModalOpen(false);
+  const openDeposit = () => setIsDepositModalOpen(true);
+  const closeDeposit = () => setIsDepositModalOpen(false);
+  const openWithdraw = () => setIsWithdrawModalOpen(true);
+  const closeWithdraw = () => setIsWithdrawModalOpen(false);
 
-  const totalRebates = tradingTierDiscountInfo[traderTier] * (referralsData?.total ?? 0) / 100;
+  const totalRebates = (tradingTierDiscountInfo[traderTier] * (referralsData?.total ?? 0)) / 100;
 
   return (
     <div className="rebate-container">
@@ -64,24 +71,32 @@ function TradersStats({ referralsData, chainId, walletBalance, deductMMF, enable
         />
         <InfoCard
           label="Total Rebates"
-          tooltipText={`Rebates earned by this account as a trader this window.${enableFeature ? "" : " Enable feature to view rebates accrued."}`}
+          tooltipText={`Rebates earned by this account as a trader this window.${
+            enableFeature ? "" : " Enable feature to view rebates accrued."
+          }`}
           // data={getUSDValue(referralsData?.referralTotalStats?.discountUsd, 4)}
-          data={`$${limitDecimals(enableFeature ? (totalRebates ?? 0) : 0, 2)}`}
+          data={`$${limitDecimals(enableFeature ? totalRebates ?? 0 : 0, 2)}`}
         />
         <InfoCard
           label="Funding Wallet Balance"
           data={
-            <div className="active-referral-code">
+            <div className="active-rebates">
               <div className="edit">
+                <span className="button">
+                  <Tooltip
+                    handle={<FiMinus size={18} onClick={() => openWithdraw()} />}
+                    position="right-bottom"
+                    renderContent={() => `Click to withdraw MMF from wallet`}
+                  />
+                </span>
                 <span>{formatAmount(walletBalance, 18, 2, true)} MMF</span>
-
-                <Tooltip
-                  handle={<FiPlus onClick={() => open()} />}
-                  position="right-bottom"
-                  renderContent={() =>
-                    `Click to deposit MMF into wallet to receive your tier-ed discount`
-                  }
-                />
+                <span className="button">
+                  <Tooltip
+                    handle={<FiPlus size={18} onClick={() => openDeposit()} />}
+                    position="right-bottom"
+                    renderContent={() => `Click to deposit MMF into wallet to receive your tier-ed discount`}
+                  />
+                </span>
               </div>
               {traderTier && (
                 <div className="tier">
@@ -100,17 +115,22 @@ function TradersStats({ referralsData, chainId, walletBalance, deductMMF, enable
         <InfoCard
           label="Enable Fee Rebates"
           data={
-            <div className="active-referral-code">
+            <div className="active-rebates">
               <div className="edit">
-                <Checkbox isChecked={enableFeature} setIsChecked={() => { clickEnableFeature() }}>{enableFeature ? "Enabled" : "Enable"}</Checkbox>
+                <Checkbox
+                  isChecked={enableFeature}
+                  setIsChecked={() => {
+                    clickEnableFeature();
+                  }}
+                >
+                  {enableFeature ? "Enabled" : "Enable"}
+                </Checkbox>
               </div>
               <div className="tier">
                 <Tooltip
                   handle={`Click to toggle`}
                   position="right-bottom"
-                  renderContent={() =>
-                    `Opt-in to trading fee rebates programme`
-                  }
+                  renderContent={() => `Opt-in to trading fee rebates programme`}
                 />
               </div>
             </div>
@@ -120,17 +140,22 @@ function TradersStats({ referralsData, chainId, walletBalance, deductMMF, enable
         <InfoCard
           label="Enable Deduct MMF"
           data={
-            <div className="active-referral-code">
+            <div className="active-rebates">
               <div className="edit">
-                <Checkbox isChecked={deductMMF} setIsChecked={() => { clickDeductMMF() }}>{deductMMF ? "Will Deduct MMF" : "Deduct MMF"}</Checkbox>
+                <Checkbox
+                  isChecked={deductMMF}
+                  setIsChecked={() => {
+                    clickDeductMMF();
+                  }}
+                >
+                  {deductMMF ? "Will Deduct MMF" : "Deduct MMF"}
+                </Checkbox>
               </div>
               <div className="tier">
                 <Tooltip
                   handle={`Click to toggle`}
                   position="right-bottom"
-                  renderContent={() =>
-                    `Opt-in to use MMF as trading fees`
-                  }
+                  renderContent={() => `Opt-in to use MMF as trading fees`}
                 />
               </div>
             </div>
@@ -139,10 +164,10 @@ function TradersStats({ referralsData, chainId, walletBalance, deductMMF, enable
 
         <Modal
           className="Connect-wallet-modal"
-          isVisible={isEditModalOpen}
-          setIsVisible={close}
+          isVisible={isDepositModalOpen}
+          setIsVisible={closeDeposit}
           label="Edit Deposit Amount"
-          onAfterOpen={() => editModalRef.current?.focus()}
+          onAfterOpen={() => depositModalRef.current?.focus()}
         >
           <div className="edit-referral-modal">
             <DepositAmountForm
@@ -151,11 +176,33 @@ function TradersStats({ referralsData, chainId, walletBalance, deductMMF, enable
               // setPendingTxns={setPendingTxns}
               // pendingTxns={pendingTxns}
               type="edit"
-              callAfterSuccess={() => { setIsEditModalOpen(false) }}
+              callAfterSuccess={() => {
+                setIsDepositModalOpen(false);
+              }}
             />
           </div>
         </Modal>
-
+        <Modal
+          className="Connect-wallet-modal"
+          isVisible={isWithdrawModalOpen}
+          setIsVisible={closeWithdraw}
+          label="Edit Withdraw Amount"
+          onAfterOpen={() => withdrawModalRef.current?.focus()}
+        >
+          <div className="edit-referral-modal">
+            <WithdrawAmountForm
+              active={active}
+              walletBalance={walletBalance}
+              // userReferralCodeString={userReferralCodeString}
+              // setPendingTxns={setPendingTxns}
+              // pendingTxns={pendingTxns}
+              type="edit"
+              callAfterSuccess={() => {
+                setIsWithdrawModalOpen(false);
+              }}
+            />
+          </div>
+        </Modal>
       </div>
       {/* {referralsData?.discountDistributions.length > 0 ? (
         <div className="reward-history">
