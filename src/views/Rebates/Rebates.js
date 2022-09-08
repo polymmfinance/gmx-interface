@@ -28,15 +28,18 @@ const TAB_OPTIONS = [CURRENT_WINDOW, HISTORY];
 
 function Rebates({ connectWallet, setPendingTxns, pendingTxns }) {
   const { active, account: walletAccount, library } = useWeb3React();
-  
+
   const { account: queryAccount } = useParams();
   const { chainId } = useChainId();
-  
+
   const smallCaseAddress = (walletAccount || "").toLocaleLowerCase();
-  const userFeesURL = getServerUrl(chainId, "/fees_by_user?user="+smallCaseAddress);
+  const userFeesURL = getServerUrl(chainId, "/fees_by_user?user=" + smallCaseAddress);
 
   const { data: feesdata, mutate: updateFeeStats } = useSWR([userFeesURL], {
-    fetcher: (...args) =>  fetch(userFeesURL).then((res) => res.json()).catch(console.error),
+    fetcher: (...args) =>
+      fetch(userFeesURL)
+        .then((res) => res.json())
+        .catch(console.error),
   });
 
   let account;
@@ -101,19 +104,28 @@ function Rebates({ connectWallet, setPendingTxns, pendingTxns }) {
           <div className="section-title-content">
             <div className="Page-title">Rebates</div>
             <div className="Page-description">
-              Get trading fee rebates when you lock your MMF into the rebate wallet. You can choose whether to pay off
-              your trading fees with MMF tokens, in doing so, MMF tokens will be deducted from your wallet, and the
-              equivalent amount in rebates will be paid out to you.
-              <br />
-              For more information, please read the{" "}
+              <div style={{ marginBottom: "4px" }}>
+                Receive up to 50% trading fee rebates in the form of USDC when you stake MMF into the rebate funding
+                wallet.
+              </div>
+              <div style={{ marginBottom: "4px" }}>
+                Receive to 100% trading fee rebates in the form of USDC when you qualify for the highest tier & have
+                enabled deduction of MMF.
+              </div>
+              <div style={{ marginBottom: "4px" }}>
+                Purchase MMF tokens{" "}
+                <a target="_blank" rel="noopener noreferrer" href="https://polymm.finance/swap">
+                  here
+                </a>{" "}
+              </div>
+              For more information, please read:{" "}
               <a
                 target="_blank"
                 rel="noopener noreferrer"
                 href="https://mmfinance.gitbook.io/madmex-spot-and-perps/rebates"
               >
-                trading rebate program details
+                Trading Rebate Program Details
               </a>
-              .
             </div>
           </div>
         </div>
