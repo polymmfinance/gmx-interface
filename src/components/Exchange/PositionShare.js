@@ -44,7 +44,7 @@ function PositionShare({ setIsPositionShareModalOpen, isPositionShareModalOpen, 
   const sharePositionBgImg = useLoadImage(shareBgImg);
   const positionRef = useRef();
   const tweetLink = getTwitterIntentURL(
-    `Latest $${positionToShare?.indexToken?.symbol} trade on @GMX_IO`,
+    `Latest $${positionToShare?.indexToken?.symbol} trade on @MMFcrypto`,
     getShareURL(uploadedImageInfo, userAffiliateCode)
   );
 
