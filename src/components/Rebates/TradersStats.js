@@ -7,7 +7,7 @@ import { getNativeToken, getToken } from "../../data/Tokens";
 import { formatAmount, formatDate, getExplorerUrl, limitDecimals, shortenAddress } from "../../Helpers";
 import EmptyMessage from "./EmptyMessage";
 import InfoCard from "./InfoCard";
-import { getTierIdDisplay, getUSDValue, tierDiscountInfo, tradingTierDiscountInfo } from "./referralsHelper";
+import { getTierIdDisplay, tradingTierDiscountInfo } from "./referralsHelper";
 import Checkbox from "../Checkbox/Checkbox";
 import { BigNumber } from "bignumber.js";
 import { BIG_TEN } from "../../Api";
@@ -101,10 +101,10 @@ function TradersStats({ referralsData, chainId, walletBalance, deductMMF, enable
               {traderTier && (
                 <div className="tier">
                   <Tooltip
-                    handle={`Tier ${getTierIdDisplay(traderTier)} (${tierDiscountInfo[traderTier]}% discount)`}
+                    handle={`Tier ${getTierIdDisplay(traderTier)} (${tradingTierDiscountInfo[traderTier]}% discount)`}
                     position="right-bottom"
                     renderContent={() =>
-                      `You will receive a ${tierDiscountInfo[traderTier]}% discount on your opening and closing fees, this discount will be airdropped to your account every Wednesday`
+                      `You will receive a ${tradingTierDiscountInfo[traderTier]}% discount on your opening and closing fees, this discount will be airdropped to your account every Wednesday`
                     }
                   />
                 </div>
