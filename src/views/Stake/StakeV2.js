@@ -274,6 +274,11 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
     mmfPairs
   );
 
+  const WEEKLY_FEES_IN_USD = 107000; // 107k USD
+  const stakingApr = masterChefData?.apr ?? 0;
+  const feesApr = WEEKLY_FEES_IN_USD / 7 * 365 / parseFloat(formatAmount(glpSupplyUsd, USD_DECIMALS, 2, false)) * 100;
+  const totalApr = stakingApr + feesApr;
+
   // const { data: walletBalances } = useSWR(
   //   [
   //     `StakeV2:walletBalances:${active}`,
@@ -683,8 +688,8 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
         rewardRouterAddress={masterchefAddress}
         unstakeMethodName={unstakeMethodName}
         pid={unstakePid}
-        // multiplierPointsAmount={multiplierPointsAmount}
-        // bonusGmxInFeeGmx={bonusGmxInFeeGmx}
+      // multiplierPointsAmount={multiplierPointsAmount}
+      // bonusGmxInFeeGmx={bonusGmxInFeeGmx}
       />
       {/*<VesterDepositModal
         isVisible={isVesterDepositModalVisible}
@@ -1083,14 +1088,14 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
                 <div>
                   {/* TODO: need to add MATIC APR into total */}
                   <Tooltip
-                    handle={`${(masterChefData?.apr ?? 0).toFixed(2)}%`}
+                    handle={`${(totalApr).toFixed(2)}%`}
                     position="right-bottom"
                     renderContent={() => {
                       return (
                         <>
                           <div className="Tooltip-row">
                             <span className="label">Fees APR</span>
-                            <span>{formatKeyAmount(processedData, "glpAprForNativeToken", 2, 2, true)}%</span>
+                            <span>{(feesApr ?? 0).toFixed(2)}%</span>
                           </div>
                           <div className="Tooltip-row">
                             <span className="label">Liquid Staking APR</span>
