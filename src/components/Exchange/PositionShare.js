@@ -44,8 +44,9 @@ function PositionShare({ setIsPositionShareModalOpen, isPositionShareModalOpen, 
   const sharePositionBgImg = useLoadImage(shareBgImg);
   const positionRef = useRef();
   const tweetLink = getTwitterIntentURL(
-    `Latest $${positionToShare?.indexToken?.symbol} trade on @MMFcrypto`,
-    getShareURL(uploadedImageInfo, userAffiliateCode)
+    `🚀 Latest $${positionToShare?.indexToken?.symbol} trade on @MMFcrypto%0A%0A🔥 Trade at over 30x leverage with low fees only at Madmex.io%0A%0A🎉 Use my referral link here:`,
+    getShareURL(uploadedImageInfo, userAffiliateCode),
+    "#MadMexReferral"
   );
 
   useEffect(() => {
