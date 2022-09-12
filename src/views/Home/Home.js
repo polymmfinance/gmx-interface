@@ -151,7 +151,7 @@ export default function Home({ showRedirectModal, redirectPopupTimestamp }) {
               Perpetual Exchange
             </div>
             <div className="Home-description">
-              Trade BTC, ETH, AVAX and other top cryptocurrencies with up to 30x leverage directly from your wallet
+              Trade BTC, ETH, MATIC and other top cryptocurrencies with up to 30x leverage directly from your wallet
             </div>
             <LaunchExchangeButton />
           </div>
