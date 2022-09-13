@@ -766,7 +766,7 @@ export default function DashboardV2() {
                       />
                     </div>
                   </div>
-                  {feeHistory.length ? (
+                  {/* {feeHistory.length ? (
                     <div className="App-card-row">
                       <div className="label">Fees since {formatDate(feeHistory[0].to)}</div>
                       <div>
@@ -785,7 +785,7 @@ export default function DashboardV2() {
                         />
                       </div>
                     </div>
-                  ) : null}
+                  ) : null} */}
                 </div>
               </div>
             </div>

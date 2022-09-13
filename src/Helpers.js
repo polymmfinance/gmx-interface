@@ -2857,7 +2857,7 @@ export function getTwitterIntentURL(text, url = "", hashtag = "") {
     finalURL += encodeURIComponent(text.replace(/[\r\n]+/g, " "))
       .replace(/\*%7C/g, "*|URL:")
       .replace(/%7C\*/g, "|*");
-
+    finalURL = finalURL.replaceAll("%250A", "%0A");
     if (hashtag.length > 0) {
       finalURL += "&hashtags=" + encodeURIComponent(hashtag.replace(/#/g, ""));
     }

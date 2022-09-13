@@ -28,11 +28,14 @@ function TradersStats({ referralsData, chainId, walletBalance, deductMMF, enable
   const walletBalanceBN = new BigNumber(walletBalance);
   if (walletBalanceBN.gt(BIG_TEN.pow(18).times(10000))) {
     traderTier = "1";
-  } else if (walletBalanceBN.gt(BIG_TEN.pow(18).times(20000))) {
+  }
+  if (walletBalanceBN.gt(BIG_TEN.pow(18).times(20000))) {
     traderTier = "2";
-  } else if (walletBalanceBN.gt(BIG_TEN.pow(18).times(50000))) {
+  }
+  if (walletBalanceBN.gt(BIG_TEN.pow(18).times(50000))) {
     traderTier = "3";
-  } else if (walletBalanceBN.gt(BIG_TEN.pow(18).times(100000))) {
+  }
+  if (walletBalanceBN.gt(BIG_TEN.pow(18).times(100000))) {
     traderTier = "4";
   }
 
