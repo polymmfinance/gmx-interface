@@ -401,7 +401,7 @@ export default function PositionsList(props) {
                               Your position will be liquidated when it drops to 0% health. Please ensure you have sufficient collateral.
                               <br />
                               <br />
-                              In order to protect liqudity providers, a position can be liquidated by keepers if the losses of the position reduces the collateral to the point where position size / remaining collateral is more than the max allowed leverage (100x).
+                              In order to protect liquidity providers, a position can be liquidated by keepers if the losses of the position reduces the collateral to the point where position size / remaining collateral is more than the max allowed leverage (100x).
                               <br />
                               <br />
                               Your leverage: ${(formatAmount(position.size, USD_DECIMALS, 3, true))} / ${formatAmount(position.netValue, USD_DECIMALS, 2, true)} =&gt; {((position?.size ?? 0) / (position?.netValue) ?? 0).toFixed(1)}x
@@ -656,7 +656,7 @@ export default function PositionsList(props) {
                           Your position will be liquidated when it drops to 0% health. Please ensure you have sufficient collateral.
                           <br />
                           <br />
-                          In order to protect liqudity providers, a position can be liquidated by keepers if the losses of the position reduces the collateral to the point where position size / remaining collateral is more than the max allowed leverage (100x).
+                          In order to protect liquidity providers, a position can be liquidated by keepers if the losses of the position reduces the collateral to the point where position size / remaining collateral is more than the max allowed leverage (100x).
                           <br />
                           <br />
                           Your leverage: ${(formatAmount(position.size, USD_DECIMALS, 3, true))} / ${formatAmount(position.netValue, USD_DECIMALS, 2, true)} =&gt; {((position?.size ?? 0) / (position?.netValue) ?? 0).toFixed(1)}x
