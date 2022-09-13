@@ -23,6 +23,7 @@ import {
   SHORT,
   INCREASE,
   DECREASE,
+  MAX_LEVERAGE,
 } from "../../Helpers";
 import PositionShare from "./PositionShare";
 import PositionDropdown from "./PositionDropdown";
@@ -226,6 +227,7 @@ export default function PositionsList(props) {
               const hasPositionProfit = position[showPnlAfterFees ? "hasProfitAfterFees" : "hasProfit"];
               const positionDelta =
                 position[showPnlAfterFees ? "pendingDeltaAfterFees" : "pendingDelta"] || bigNumberify(0);
+              const positionHealth = (1 - (Number.parseFloat(formatAmount(position.size, USD_DECIMALS, 3, true)) / Number.parseFloat(formatAmount(position.netValue, USD_DECIMALS, 2, true)) / (MAX_LEVERAGE / 10000))) * 100;
               let borrowFeeText;
               if (position.collateralToken && position.collateralToken.fundingRate) {
                 const borrowFeeRate = position.collateralToken.fundingRate
@@ -383,7 +385,30 @@ export default function PositionsList(props) {
                       <div className="label">Liq. Price</div>
                       <div>${formatAmount(liquidationPrice, USD_DECIMALS, 2, true)}</div>
                     </div>
+                    <div className="App-card-row">
+                      <div className="label">Pos. Health</div>
+                      <Tooltip
+                        handle={`${positionHealth.toFixed(1)}%`}
+                        position="right-bottom"
+                        className={cx("Exchange-list-info-label", {
+                          positive: positionHealth > 60,
+                          negative: positionHealth < 40,
+                          muted: positionHealth <= 60 && positionHealth >= 40,
+                        })}
+                        renderContent={() => {
+                          return (
+                            <span style={{ color: "#fff" }}>
+                              Your position will be liquidated when it drops to 0% health. Please ensure you have sufficient collateral.
+                              <br />
+                              <br />
+                              In order to protect liqudity providers, a position can be liquidated by keepers if the losses of the position reduces the collateral to the point where position size / remaining collateral is more than the max allowed leverage (100x).
+                            </span>
+                          );
+                        }}
+                      />
+                    </div>
                   </div>
+
                   <div className="App-card-divider"></div>
                   <div className="App-card-options">
                     <button
@@ -427,6 +452,7 @@ export default function PositionsList(props) {
             <th>Mark Price</th>
             <th>Entry Price</th>
             <th>Liq. Price</th>
+            <th>Health</th>
             <th></th>
             <th></th>
           </tr>
@@ -451,6 +477,8 @@ export default function PositionsList(props) {
             const hasPositionProfit = position[showPnlAfterFees ? "hasProfitAfterFees" : "hasProfit"];
             const positionDelta =
               position[showPnlAfterFees ? "pendingDeltaAfterFees" : "pendingDelta"] || bigNumberify(0);
+            const positionHealth = (1 - (Number.parseFloat(formatAmount(position.size, USD_DECIMALS, 3, true)) / Number.parseFloat(formatAmount(position.netValue, USD_DECIMALS, 2, true)) / (MAX_LEVERAGE / 10000))) * 100;
+
             let borrowFeeText;
             if (position.collateralToken && position.collateralToken.fundingRate) {
               const borrowFeeRate = position.collateralToken.fundingRate
@@ -610,6 +638,26 @@ export default function PositionsList(props) {
                 </td>
                 <td className="clickable" onClick={() => onPositionClick(position)}>
                   ${formatAmount(liquidationPrice, USD_DECIMALS, 3, true)}
+                </td>
+                <td>
+                  <Tooltip
+                    handle={`${positionHealth.toFixed(1)}%`}
+                    className={cx("Exchange-list-info-label", {
+                      positive: positionHealth > 60,
+                      negative: positionHealth < 40,
+                      muted: positionHealth <= 60 && positionHealth >= 40,
+                    })}
+                    renderContent={() => {
+                      return (
+                        <span style={{ color: "#fff" }}>
+                          Your position will be liquidated when it drops to 0% health. Please ensure you have sufficient collateral.
+                          <br />
+                          <br />
+                          In order to protect liqudity providers, a position can be liquidated by keepers if the losses of the position reduces the collateral to the point where position size / remaining collateral is more than the max allowed leverage (100x).
+                        </span>
+                      );
+                    }}
+                  />
                 </td>
 
                 <td>
