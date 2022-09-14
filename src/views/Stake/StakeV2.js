@@ -276,7 +276,8 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
 
   const WEEKLY_FEES_IN_USD = 107000; // 107k USD
   const stakingApr = masterChefData?.apr ?? 0;
-  const feesApr = WEEKLY_FEES_IN_USD / 7 * 365 / parseFloat(formatAmount(glpSupplyUsd, USD_DECIMALS, 2, false)) * 100;
+  const feesApr =
+    (((WEEKLY_FEES_IN_USD / 7) * 365) / parseFloat(formatAmount(glpSupplyUsd, USD_DECIMALS, 2, false))) * 100;
   const totalApr = stakingApr + feesApr;
 
   // const { data: walletBalances } = useSWR(
@@ -688,8 +689,8 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
         rewardRouterAddress={masterchefAddress}
         unstakeMethodName={unstakeMethodName}
         pid={unstakePid}
-      // multiplierPointsAmount={multiplierPointsAmount}
-      // bonusGmxInFeeGmx={bonusGmxInFeeGmx}
+        // multiplierPointsAmount={multiplierPointsAmount}
+        // bonusGmxInFeeGmx={bonusGmxInFeeGmx}
       />
       {/*<VesterDepositModal
         isVisible={isVesterDepositModalVisible}
@@ -1056,9 +1057,14 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
               <img src={glpBigIcon} alt="glpBigIcon" /> MLP
             </div>
             <div className="Home-token-card-option-title-polygon">
-              MLP is the liquidity provider token.
-              <br />
-              Accrues 70% of the platform's generated fees.
+              MLP is the liquidity provider token. <br />
+              <a
+                href="https://mmfinance.gitbook.io/madmex-spot-and-perps/protocol-fee-distribution"
+                target={"_blank"}
+                rel="noreferrer"
+              >
+                Accrues 70% of the platform's generated fees.
+              </a>
             </div>
             <div>Fees are distributed into the MLP pool weekly and it will reflect via the change in MLP price.</div>
             <div className="App-card-divider"></div>
@@ -1088,7 +1094,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
                 <div>
                   {/* TODO: need to add MATIC APR into total */}
                   <Tooltip
-                    handle={`${(totalApr).toFixed(2)}%`}
+                    handle={`${totalApr.toFixed(2)}%`}
                     position="right-bottom"
                     renderContent={() => {
                       return (
