@@ -107,14 +107,96 @@ async function getChartPricesFromStats(chainId, symbol, period) {
     );
   }
 
-  prices = prices.map(({ t, o: open, c: close, h: high, l: low }) => ({
-    time: t + timezoneOffset,
-    open,
-    close,
-    high,
-    low,
-  }));
+  prices = prices.map(({ t, o: open, c: close, h: high, l: low }) => {
+    return fixPrices({
+      time: t + timezoneOffset,
+      open,
+      close,
+      high,
+      low,
+    }, symbol)
+  });
+  // console.log(prices)
+
   return prices;
+}
+
+function fixPrices(e, symbol) {
+  // console.log(e, symbol)
+  // let minPrices = {
+  //   "BTC": 10,
+  //   "MATIC": 0.1,
+  //   "ETH": 100,
+  // }
+  if (symbol == "MATIC") {
+    let maxPrice = 10 
+    if (e.open > maxPrice || e.high > maxPrice || e.low > maxPrice || e.close > maxPrice) {
+      let realPrice = median(...[e.open, e.close, e.high, e.low]);
+      console.log(realPrice);
+      return {
+        ...e,
+          open: realPrice,
+          close: realPrice,
+          high: realPrice,
+          low: realPrice,
+      }
+    }
+    else {
+      return e
+    }
+  }
+  if (symbol == "BTC") {
+    let minPrice = 10 
+    if (e.open < minPrice || e.high < minPrice || e.low < minPrice || e.close < minPrice) {
+      let realPrice = median(...[e.open, e.close, e.high, e.low]);
+      console.log(realPrice);
+      return {
+        ...e,
+          open: realPrice,
+          close: realPrice,
+          high: realPrice,
+          low: realPrice,
+      }
+    }
+    else {
+      return e
+    }
+  }
+
+  if (symbol == "ETH") {
+    let minPrice = 200
+    if (e.open < minPrice || e.high < minPrice || e.low < minPrice || e.close < minPrice) {
+      let realPrice = median(...[e.open, e.close, e.high, e.low]);
+      console.log(realPrice);
+      return {
+        ...e,
+          open: realPrice,
+          close: realPrice,
+          high: realPrice,
+          low: realPrice,
+      }
+    }
+    else {
+      return e
+    }
+  }
+
+  return e
+}
+
+function median(values){
+  if(values.length ===0) throw new Error("No inputs");
+
+  values.sort(function(a,b){
+    return a-b;
+  });
+
+  var half = Math.floor(values.length / 2);
+  
+  if (values.length % 2)
+    return values[half];
+  
+  return (values[half - 1] + values[half]) / 2.0;
 }
 
 function getCandlesFromPrices(prices, period) {

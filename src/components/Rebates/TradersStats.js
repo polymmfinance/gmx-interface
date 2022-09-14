@@ -19,7 +19,7 @@ import WithdrawAmountForm from "./WithdrawAmountForm";
 function TradersStats({ referralsData, chainId, walletBalance, deductMMF, enableFeature, setPendingTxns }) {
   const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
-
+  
   const depositModalRef = useRef(null);
   const withdrawModalRef = useRef(null);
 
