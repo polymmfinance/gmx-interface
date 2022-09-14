@@ -106,7 +106,8 @@ async function getChartPricesFromStats(chainId, symbol, period) {
         new Date().toISOString()
     );
   }
-
+  
+  const newPrices = []
   prices = prices.map(({ t, o, c, h, l }) => {
 
     var open = o;
@@ -114,58 +115,36 @@ async function getChartPricesFromStats(chainId, symbol, period) {
     var high = h;
     var low = l;
 
-    return fixPrices({
+    newPrices.push(fixPrices({
       time: t + timezoneOffset,
       open,
       close,
       high,
       low,
-    }, symbol)
+    }, newPrices.length > 0 ? newPrices[newPrices.length-1] : undefined, symbol))
   });
-  // console.log(prices)
 
-  return prices;
+  return newPrices;
 }
 
-function fixPrices(e, symbol) {
-  // console.log(e, symbol)
-  // let minPrices = {
-  //   "BTC": 10,
-  //   "MATIC": 0.1,
-  //   "ETH": 100,
-  // }
+function fixPrices(e, t, symbol) {
+  // TODO: write a better fn than this
   if (symbol == "MATIC") {
     let maxPrice = 10 
     if (e.open > maxPrice || e.high > maxPrice || e.low > maxPrice || e.close > maxPrice) {
-      let values = [e.open, e.close, e.high, e.low]
-      let realPrice = median(values);
-      console.log(values, realPrice)
-      console.log(realPrice);
-      return {
-        ...e,
-          open: realPrice,
-          close: realPrice,
-          high: realPrice,
-          low: realPrice,
-      }
+      let data = { ...t, time: e.time };
+      return data
     }
     else {
       return e
     }
   }
+
   if (symbol == "BTC") {
     let minPrice = 10 
     if (e.open < minPrice || e.high < minPrice || e.low < minPrice || e.close < minPrice) {
-      let values = [e.open, e.close, e.high, e.low]
-      let realPrice = median(values);
-      console.log(realPrice);
-      return {
-        ...e,
-          open: realPrice,
-          close: realPrice,
-          high: realPrice,
-          low: realPrice,
-      }
+      let data = { ...t, time: e.time };
+      return data
     }
     else {
       return e
@@ -174,21 +153,16 @@ function fixPrices(e, symbol) {
 
   if (symbol == "ETH") {
     let minPrice = 200
+    let maxPrice = 10000
     if (e.open < minPrice || e.high < minPrice || e.low < minPrice || e.close < minPrice) {
-      let values = [e.open, e.close, e.high, e.low]
-      let realPrice = median(values);
-      console.log(realPrice);
-      return {
-        ...e,
-          open: realPrice,
-          close: realPrice,
-          high: realPrice,
-          low: realPrice,
-      }
+       let data = { ...t, time: e.time };
+      return data
     }
-    else {
-      return e
+    if (e.open > maxPrice || e.high > maxPrice || e.low > maxPrice || e.close > maxPrice) {
+       let data = { ...t, time: e.time };
+      return data
     }
+    return e
   }
 
   return e
