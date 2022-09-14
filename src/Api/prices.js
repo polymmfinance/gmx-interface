@@ -107,7 +107,13 @@ async function getChartPricesFromStats(chainId, symbol, period) {
     );
   }
 
-  prices = prices.map(({ t, o: open, c: close, h: high, l: low }) => {
+  prices = prices.map(({ t, o, c, h, l }) => {
+
+    var open = o;
+    var close = c;
+    var high = h;
+    var low = l;
+
     return fixPrices({
       time: t + timezoneOffset,
       open,
@@ -131,7 +137,9 @@ function fixPrices(e, symbol) {
   if (symbol == "MATIC") {
     let maxPrice = 10 
     if (e.open > maxPrice || e.high > maxPrice || e.low > maxPrice || e.close > maxPrice) {
-      let realPrice = median(...[e.open, e.close, e.high, e.low]);
+      let values = [e.open, e.close, e.high, e.low]
+      let realPrice = median(values);
+      console.log(values, realPrice)
       console.log(realPrice);
       return {
         ...e,
@@ -148,7 +156,8 @@ function fixPrices(e, symbol) {
   if (symbol == "BTC") {
     let minPrice = 10 
     if (e.open < minPrice || e.high < minPrice || e.low < minPrice || e.close < minPrice) {
-      let realPrice = median(...[e.open, e.close, e.high, e.low]);
+      let values = [e.open, e.close, e.high, e.low]
+      let realPrice = median(values);
       console.log(realPrice);
       return {
         ...e,
@@ -166,7 +175,8 @@ function fixPrices(e, symbol) {
   if (symbol == "ETH") {
     let minPrice = 200
     if (e.open < minPrice || e.high < minPrice || e.low < minPrice || e.close < minPrice) {
-      let realPrice = median(...[e.open, e.close, e.high, e.low]);
+      let values = [e.open, e.close, e.high, e.low]
+      let realPrice = median(values);
       console.log(realPrice);
       return {
         ...e,
@@ -193,10 +203,10 @@ function median(values){
 
   var half = Math.floor(values.length / 2);
   
-  if (values.length % 2)
-    return values[half];
+  // if (values.length % 2)
+    return values[half-1];
   
-  return (values[half - 1] + values[half]) / 2.0;
+  // return (values[half - 1] + values[half]) / 2.0;
 }
 
 function getCandlesFromPrices(prices, period) {
