@@ -1063,7 +1063,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
                 target={"_blank"}
                 rel="noreferrer"
               >
-                Accrues 70% of the platform's generated fees.
+                Accrues 30% of the platform's generated fees.
               </a>
             </div>
             <div>Fees are distributed into the MLP pool weekly and it will reflect via the change in MLP price.</div>
