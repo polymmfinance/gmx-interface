@@ -2561,7 +2561,7 @@ export function getMasterchefData(masterPoolInfo, masterPoolTotalAlloc, stakedGl
   const poolLiquidityUsd = Number.parseFloat(ethers.utils.formatEther(glpSupply.toString())) * tokenPrice;
   const mmfPrice = mmfPairs?.pairs?.[0]?.priceUsd ?? "0";
 
-  const MMF_PER_BLOCK = 30;
+  const MMF_PER_BLOCK = 16;
   const BLOCKS_PER_YEAR = (60 / 2.3) * 60 * 24 * 365; // 10512000
   const MMF_PER_YEAR = MMF_PER_BLOCK * BLOCKS_PER_YEAR;
   const yearlyMMFRewardAllocation = poolWeight * MMF_PER_YEAR;
