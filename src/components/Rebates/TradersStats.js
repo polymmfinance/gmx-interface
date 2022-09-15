@@ -19,7 +19,7 @@ import WithdrawAmountForm from "./WithdrawAmountForm";
 function TradersStats({ referralsData, chainId, walletBalance, deductMMF, enableFeature, setPendingTxns }) {
   const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
-
+  
   const depositModalRef = useRef(null);
   const withdrawModalRef = useRef(null);
 
@@ -62,7 +62,7 @@ function TradersStats({ referralsData, chainId, walletBalance, deductMMF, enable
   const openWithdraw = () => setIsWithdrawModalOpen(true);
   const closeWithdraw = () => setIsWithdrawModalOpen(false);
 
-  const totalRebates = (tradingTierDiscountInfo[traderTier] * (referralsData?.total ?? 0)) / 100;
+  const totalRebates = (tradingTierDiscountInfo[traderTier] * (referralsData?.margin ?? 0)) / 100;
 
   return (
     <div className="rebate-container">
@@ -70,7 +70,7 @@ function TradersStats({ referralsData, chainId, walletBalance, deductMMF, enable
         <InfoCard
           label="Total Trading Fees Incurred"
           tooltipText="Trading fees incurred by this account in this trading window."
-          data={`$${limitDecimals(referralsData?.total ?? 0, 2)}`}
+          data={`$${limitDecimals(referralsData?.margin ?? 0, 2)}`}
         />
         <InfoCard
           label="Total Rebates"

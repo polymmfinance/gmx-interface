@@ -60,8 +60,8 @@ async function getChartPricesFromStats(chainId, symbol, period) {
   } else if (symbol === "BTC.b") {
     symbol = "BTC";
   }
-  // const hostname = "https://stats.madmex.io/";
-  const hostname = isLocal() ? "http://localhost:3113/" : "https://stats.madmex.io/";
+  const hostname = "https://api.madmex.io/";
+  // const hostname = isLocal() ? "http://localhost:3113/" : "https://stats.madmex.io/";
   const timeDiff = CHART_PERIODS[period] * 3000;
   const from = Math.floor(Date.now() / 1000 - timeDiff);
   const url = `${hostname}api/candles/${symbol}?preferableChainId=${chainId}&period=${period}&from=${from}&preferableSource=fast`;
@@ -106,15 +106,81 @@ async function getChartPricesFromStats(chainId, symbol, period) {
         new Date().toISOString()
     );
   }
+  
+  const newPrices = []
+  prices = prices.map(({ t, o, c, h, l }) => {
 
-  prices = prices.map(({ t, o: open, c: close, h: high, l: low }) => ({
-    time: t + timezoneOffset,
-    open,
-    close,
-    high,
-    low,
-  }));
-  return prices;
+    var open = o;
+    var close = c;
+    var high = h;
+    var low = l;
+
+    newPrices.push(fixPrices({
+      time: t + timezoneOffset,
+      open,
+      close,
+      high,
+      low,
+    }, newPrices.length > 0 ? newPrices[newPrices.length-1] : undefined, symbol))
+  });
+
+  return newPrices;
+}
+
+function fixPrices(e, t, symbol) {
+  // TODO: write a better fn than this
+  if (symbol == "MATIC") {
+    let maxPrice = 10 
+    if (e.open > maxPrice || e.high > maxPrice || e.low > maxPrice || e.close > maxPrice) {
+      let data = { ...t, time: e.time };
+      return data
+    }
+    else {
+      return e
+    }
+  }
+
+  if (symbol == "BTC") {
+    let minPrice = 10 
+    if (e.open < minPrice || e.high < minPrice || e.low < minPrice || e.close < minPrice) {
+      let data = { ...t, time: e.time };
+      return data
+    }
+    else {
+      return e
+    }
+  }
+
+  if (symbol == "ETH") {
+    let minPrice = 200
+    let maxPrice = 10000
+    if (e.open < minPrice || e.high < minPrice || e.low < minPrice || e.close < minPrice) {
+       let data = { ...t, time: e.time };
+      return data
+    }
+    if (e.open > maxPrice || e.high > maxPrice || e.low > maxPrice || e.close > maxPrice) {
+       let data = { ...t, time: e.time };
+      return data
+    }
+    return e
+  }
+
+  return e
+}
+
+function median(values){
+  if(values.length ===0) throw new Error("No inputs");
+
+  values.sort(function(a,b){
+    return a-b;
+  });
+
+  var half = Math.floor(values.length / 2);
+  
+  // if (values.length % 2)
+    return values[half-1];
+  
+  // return (values[half - 1] + values[half]) / 2.0;
 }
 
 function getCandlesFromPrices(prices, period) {
