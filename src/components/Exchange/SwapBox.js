@@ -1557,7 +1557,7 @@ export default function SwapBox(props) {
       toUsdMax,
       USD_DECIMALS,
       2
-    )} USD.`;
+    )} USD. Orders might not show up immediately because there might be on-chain congestion. If your transaction did not go through, you will be refunded in full.`;
 
     Api.callContract(chainId, contract, method, params, {
       value,
