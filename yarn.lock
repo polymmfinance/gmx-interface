@@ -9024,6 +9024,7 @@ __metadata:
     react-tabs: 3.2.3
     react-toastify: 6.0.9
     react-use: 17.3.1
+    react-wavify: ^1.6.2
     recharts: 2.1.8
     swr: 0.4.2
     web-vitals: 1.1.2
@@ -15058,6 +15059,17 @@ __metadata:
     react: ^16.8.0  || ^17.0.0
     react-dom: ^16.8.0  || ^17.0.0
   checksum: 0489a2603dc1a5e2666ae7643b42ec82d747a70476087b0965ee67048940a8dee912cd982d568ff97af703365914c8d8208216301b8489082be61d86561fb858
+  languageName: node
+  linkType: hard
+
+"react-wavify@npm:^1.6.2":
+  version: 1.6.2
+  resolution: "react-wavify@npm:1.6.2"
+  dependencies:
+    prop-types: ^15.8.1
+  peerDependencies:
+    react: ^0.13.0 || ^0.14.0 || >=15
+  checksum: c1a31ec914dd9374cff90ef83fd959c15de7d96f096e466c43e63dd97ee52c90065be6f43c40d936907d6e1992ebfd0787289808495796e50c7240797283eea7
   languageName: node
   linkType: hard
 

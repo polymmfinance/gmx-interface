@@ -10,6 +10,7 @@ import { BigNumber, ethers } from "ethers";
 
 import { getWhitelistedTokens, getTokenBySymbol } from "../../data/Tokens";
 import { getFeeHistory } from "../../data/Fees";
+import Wave from "react-wavify";
 
 import {
   fetcher,
@@ -168,7 +169,7 @@ export default function DashboardV2() {
       fetcher: arrayURLFetcher,
     }
   );
-  
+
   // console.log(`$${formatAmount(totalFees2 && parseInt(totalFees2[0].totalFees.total), 0, 0, true)}`)
   // let { total: totalGmxSupply } = useTotalGmxSupply();
 
@@ -535,6 +536,32 @@ export default function DashboardV2() {
 
   return (
     <SEO title={getPageTitle("Dashboard")}>
+      <Link className="feature-banner" style={{ cursor: "pointer", textDecoration: "none" }} to="/buy_mlp">
+        <Wave fill="url(#gradient2)" height={60} speed={0.15} style={{ height: "100px" }}>
+          <defs>
+            <linearGradient id="gradient2" gradientTransform="rotate(90)">
+              <stop offset="0%" stopColor="#7037dd" />
+              <stop offset="90%" stopColor="#0a0012" />
+            </linearGradient>
+          </defs>
+        </Wave>
+        <div className="background-text" style={{ textAlign: "center" }}>
+          Stake MLP & Earn Up to 60% APR
+          <div style={{ fontSize: "18px" }}>MLP is an index of BTCᳳETHᳳMATICᳳUSDC</div>
+        </div>
+
+        <Wave mask="url(#mask)" fill="#7037dd" style={{ height: "50px" }} speed={0.2}>
+          <defs>
+            <linearGradient id="gradient" gradientTransform="rotate(90)">
+              <stop offset="0" stopColor="white" />
+              <stop offset="0.5" stopColor="black" />
+            </linearGradient>
+            <mask id="mask">
+              <rect x="0" y="0" width="2000" height="100" fill="url(#gradient)" />
+            </mask>
+          </defs>
+        </Wave>
+      </Link>
       <div className="default-container DashboardV2 page-layout">
         <div className="section-title-block">
           <div className="section-title-icon"></div>
@@ -800,7 +827,7 @@ export default function DashboardV2() {
                       <TooltipComponent
                         position="right-bottom"
                         className="nowrap"
-                        // handle={`$0`} 
+                        // handle={`$0`}
                         handle={`$${formatAmount(totalFees2 && parseInt(totalFees2[0].totalFees.total), 0, 0, true)}`}
                         renderContent={() => (
                           <TooltipCard
