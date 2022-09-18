@@ -244,13 +244,19 @@ export default function ConfirmationBox(props) {
   };
 
   const isPrimaryEnabled = () => {
-    if (getError()) {
-      return false;
+    //TODO: DISABLE CREATING ORDER
+    if (isSwap) {
+      return true;
     }
-    if (decreaseOrdersThatWillBeExecuted.length > 0 && !isTriggerWarningAccepted) {
-      return false;
-    }
-    return !isPendingConfirmation && !isSubmitting;
+    return false;
+
+    // if (getError()) {
+    //   return false;
+    // }
+    // if (decreaseOrdersThatWillBeExecuted.length > 0 && !isTriggerWarningAccepted) {
+    //   return false;
+    // }
+    // return !isPendingConfirmation && !isSubmitting;
   };
 
   const nativeTokenAddress = getContract(chainId, "NATIVE_TOKEN");
