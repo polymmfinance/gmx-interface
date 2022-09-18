@@ -1,9 +1,9 @@
-import { bigNumberify, getInfoTokens, getNextToAmount, getServerUrl, PLACEHOLDER_ACCOUNT } from "../src/Helpers";
-import VaultV2 from "../src/abis/VaultV2.json";
-import ReaderV2 from "../src/abis/ReaderV2.json";
-import { ethers } from "ethers";
-import { getContract } from "../src/Addresses";
-import { getTokens, getWhitelistedTokens } from "../src/data/Tokens";
+const { bigNumberify, getInfoTokens, getNextToAmount, getServerUrl, PLACEHOLDER_ACCOUNT } = require("../src/Helpers");
+const VaultV2 = require("../src/abis/VaultV2.json");
+const ReaderV2 = require("../src/abis/ReaderV2.json");
+const { ethers } = require("ethers");
+const { getContract } = require("../src/Addresses");
+const { getTokens, getWhitelistedTokens } = require("../src/data/Tokens");
 
 const vaultAddress = "0xE990519F19DCc6c1589A544C331c4Ec046593e7A";
 const readerAddress = "0x6c563835B6208e0482336d404F5CAD572BEbe76B";
