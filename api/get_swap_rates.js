@@ -60,8 +60,8 @@ async function handler(req, res) {
     // console.log(vaultTokenInfo)
     // const vaultTokenInfo = []
     const indexPricesUrl = getServerUrl(chainId, "/prices");
-    const res = await fetch(indexPricesUrl)
-    const indexPrices = await res.json();
+    const response = await fetch(indexPricesUrl)
+    const indexPrices = await response.json();
 
     const infoTokens = getInfoTokens(
         tokens,
@@ -95,7 +95,7 @@ async function handler(req, res) {
 
     const { feeBasisPoints } = getNextToAmount(
         chainId,
-        fromAmount,
+        bigNumberify(fromAmount),
         fromTokenAddress,
         toTokenAddress,
         infoTokens,
