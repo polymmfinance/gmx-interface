@@ -9,7 +9,7 @@ const vaultAddress = "0xE990519F19DCc6c1589A544C331c4Ec046593e7A";
 const readerAddress = "0x6c563835B6208e0482336d404F5CAD572BEbe76B";
 const provider = new ethers.providers.StaticJsonRpcProvider("https://polygon-rpc.com", { chainId });
 
-export default async function handler(req, res) {
+async function handler(req, res) {
     // res.setHeader('Cache-Control', 's-maxage=86400');
     const { chainId = 137, fromAmount, fromTokenAddress, toTokenAddress } = req.query;
     const glpAddress = getContract(chainId, "MLP");
@@ -117,3 +117,5 @@ export default async function handler(req, res) {
 
     res.status(200).json({ feeBps: feeBps.toString(), feesUsd: feesUsd.toString(), fees: fees.toString() });
 }
+
+module.exports = handler;
