@@ -274,7 +274,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
     mmfPairs
   );
 
-  const WEEKLY_FEES_IN_USD = 107000; // 107k USD
+  const WEEKLY_FEES_IN_USD = 84808; // 84K USD
   const stakingApr = masterChefData?.apr ?? 0;
   const feesApr =
     (((WEEKLY_FEES_IN_USD / 7) * 365) / parseFloat(formatAmount(glpSupplyUsd, USD_DECIMALS, 2, false))) * 100;
