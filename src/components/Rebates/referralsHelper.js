@@ -41,8 +41,11 @@ export async function getReferralCodeTakenStatus(account, referralCode, chainId)
   return { status: "none", info: referralCodeTakenInfo };
 }
 
-export function getTierIdDisplay(tierId) {
-  return Number(tierId) + 1;
+export function getTierIdDisplay(tierId, mmfBalance) {
+  if (parseFloat(mmfBalance) > 0) {
+    return Number(tierId) + 1;
+  }
+  return 0;
 }
 
 export const tierRebateInfo = {

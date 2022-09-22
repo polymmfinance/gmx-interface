@@ -19,7 +19,7 @@ import WithdrawAmountForm from "./WithdrawAmountForm";
 function TradersStats({ referralsData, chainId, walletBalance, deductMMF, enableFeature, setPendingTxns }) {
   const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
-  
+
   const depositModalRef = useRef(null);
   const withdrawModalRef = useRef(null);
 
@@ -104,7 +104,9 @@ function TradersStats({ referralsData, chainId, walletBalance, deductMMF, enable
               {traderTier && (
                 <div className="tier">
                   <Tooltip
-                    handle={`Tier ${getTierIdDisplay(traderTier)} (${tradingTierDiscountInfo[traderTier]}% discount)`}
+                    handle={`Tier ${getTierIdDisplay(traderTier, walletBalance)} (${
+                      tradingTierDiscountInfo[traderTier]
+                    }% discount)`}
                     position="right-bottom"
                     renderContent={() =>
                       `You will receive a ${tradingTierDiscountInfo[traderTier]}% discount on your opening and closing fees, this discount will be airdropped to your account every Wednesday`
