@@ -33,7 +33,8 @@ const AFFILIATES = "Affiliates";
 const TAB_OPTIONS = [TRADERS, AFFILIATES];
 
 function Referrals({ connectWallet, setPendingTxns, pendingTxns }) {
-  const { active, account: walletAccount, library } = useWeb3React();
+  let { active, account: walletAccount, library } = useWeb3React();
+
   const { account: queryAccount } = useParams();
   let account;
   if (queryAccount && ethers.utils.isAddress(queryAccount)) {

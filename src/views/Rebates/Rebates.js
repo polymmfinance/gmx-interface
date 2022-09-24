@@ -27,7 +27,7 @@ const HISTORY = "History";
 const TAB_OPTIONS = [CURRENT_WINDOW, HISTORY];
 
 function Rebates({ connectWallet, setPendingTxns, pendingTxns }) {
-  const { active, account: walletAccount, library } = useWeb3React();
+  let { active, account: walletAccount, library } = useWeb3React();
 
   const { account: queryAccount } = useParams();
   const { chainId } = useChainId();
@@ -35,12 +35,14 @@ function Rebates({ connectWallet, setPendingTxns, pendingTxns }) {
   const smallCaseAddress = (walletAccount || "").toLocaleLowerCase();
   const userFeesURL = getServerUrl(chainId, "/fees_by_user?user=" + smallCaseAddress);
 
+
   const { data: feesdata, mutate: updateFeeStats } = useSWR([userFeesURL], {
     fetcher: (...args) =>
       fetch(userFeesURL)
         .then((res) => res.json())
         .catch(console.error),
   });
+  console.log(feesdata);
 
   let account;
   if (queryAccount && ethers.utils.isAddress(queryAccount)) {
