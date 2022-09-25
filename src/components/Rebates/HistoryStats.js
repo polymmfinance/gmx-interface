@@ -13,6 +13,7 @@ import {
   getExplorerUrl,
   shortenAddress,
   POLYGON,
+  limitDecimals,
 } from "../../Helpers";
 import EmptyMessage from "./EmptyMessage";
 import InfoCard from "./InfoCard";
@@ -25,6 +26,15 @@ import {
 } from "./referralsHelper";
 import { AffiliateCodeForm } from "./AddAffiliateCode";
 import TooltipWithPortal from "../Tooltip/TooltipWithPortal";
+
+function getPreviousWednesdayEnd(offsetWeek) {
+  const x = new Date();
+  const date = new Date();
+
+  x.setDate(date.getDate() - (offsetWeek*7) - ((date.getDay() + 3) % 7));
+  x.setHours(0, 0, 0, 0);
+  return x.toString()
+}
 
 function HistoryStats({
   referralsData = {},
@@ -40,24 +50,21 @@ function HistoryStats({
   const open = () => setIsAddReferralCodeModalOpen(true);
   const close = () => setIsAddReferralCodeModalOpen(false);
 
-  const { cumulativeStats, referrerTotalStats = [], rebateDistributions, referrerTierInfo } = referralsData;
-  const allReferralCodes = referrerTotalStats.map((c) => c.referralCode.trim());
-  const finalAffiliatesTotalStats = useMemo(
-    () =>
-      recentlyAddedCodes.filter(isRecentReferralCodeNotExpired).reduce((acc, cv) => {
-        if (!allReferralCodes.includes(cv.referralCode)) {
-          acc = acc.concat(cv);
-        }
-        return acc;
-      }, referrerTotalStats),
-    [allReferralCodes, referrerTotalStats, recentlyAddedCodes]
-  );
+  // const { cumulativeStats, referrerTotalStats = [], rebateDistributions, referrerTierInfo } = referralsData;
+  // const allReferralCodes = referrerTotalStats.map((c) => c.referralCode.trim());
+  const totalFees = useMemo(
+    () => {
+      let data = 0;
+      // console.log(referralsData)
+      Array.isArray(referralsData) && referralsData.map(x => data += x.total);
+      return data
+      }, [referralsData]);
 
-  const tierId = referrerTierInfo?.tierId;
-  let referrerRebates = bigNumberify(0);
-  if (cumulativeStats && cumulativeStats.totalRebateUsd && cumulativeStats.discountUsd) {
-    referrerRebates = cumulativeStats.totalRebateUsd.sub(cumulativeStats.discountUsd);
-  }
+  // const tierId = referrerTierInfo?.tierId;
+  // let referrerRebates = bigNumberify(0);
+  // if (cumulativeStats && cumulativeStats.totalRebateUsd && cumulativeStats.discountUsd) {
+  //   referrerRebates = cumulativeStats.totalRebateUsd.sub(cumulativeStats.discountUsd);
+  // }
 
   return (
     <div className="referral-body-container">
@@ -67,21 +74,21 @@ function HistoryStats({
           tooltipText="Amount of traders you referred."
           data={cumulativeStats?.registeredReferralsCount || "0"}
         /> */}
-        <InfoCard
+        {/* <InfoCard
           label="Total Trading Fees"
           tooltipText="Trading fees incurred by this account."
           data={getUSDValue(0)}
-        />
+        /> */}
         <InfoCard
           label="Total Rebates"
           tooltipText="Total rebates paid out to this account."
-          data={getUSDValue(referrerRebates, 4)}
+          data={limitDecimals(totalFees, 4)}
         />
       </div>
       
-      {rebateDistributions?.length > 0 ? (
+      {referralsData?.length > 0 ? (
         <div className="reward-history">
-          <Card title="Rewards Distribution History" tooltipText="Rewards are airdropped weekly.">
+          <Card title="Rebates Distribution History" tooltipText="Rebates are airdropped weekly.">
             <div className="table-wrapper">
               <table className="referral-table">
                 <thead>
@@ -92,29 +99,29 @@ function HistoryStats({
                     <th className="table-head" scope="col">
                       Amount
                     </th>
-                    <th className="table-head" scope="col">
+                    {/* <th className="table-head" scope="col">
                       Transaction
-                    </th>
+                    </th> */}
                   </tr>
                 </thead>
                 <tbody>
-                  {rebateDistributions.map((rebate, index) => {
-                    let tokenInfo;
-                    try {
-                      tokenInfo = getToken(chainId, rebate.token);
-                    } catch {
-                      tokenInfo = getNativeToken(chainId);
-                    }
-                    const explorerURL = getExplorerUrl(chainId);
+                  {referralsData.map((rebate, index) => {
+                    // let tokenInfo;
+                    // try {
+                    //   tokenInfo = getToken(chainId, rebate.token);
+                    // } catch {
+                    //   tokenInfo = getNativeToken(chainId);
+                    // }
+                    // const explorerURL = getExplorerUrl(chainId);
                     return (
                       <tr key={index}>
                         <td className="table-head" data-label="Date">
-                          {formatDate(rebate.timestamp)}
+                          { getPreviousWednesdayEnd(index)}
                         </td>
                         <td className="table-head" data-label="Amount">
-                          {formatAmount(rebate.amount, tokenInfo.decimals, 6, true)} {tokenInfo.symbol}
+                          $ {limitDecimals(rebate.total, 4)}
                         </td>
-                        <td className="table-head" data-label="Transaction">
+                        {/* <td className="table-head" data-label="Transaction">
                           <a
                             target="_blank"
                             rel="noopener noreferrer"
@@ -122,7 +129,7 @@ function HistoryStats({
                           >
                             {shortenAddress(rebate.transactionHash, 13)}
                           </a>
-                        </td>
+                        </td> */}
                       </tr>
                     );
                   })}

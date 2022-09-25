@@ -1,5 +1,5 @@
 import "./Rebates.css";
-import React from "react";
+import React, { useMemo } from "react";
 import { useLocalStorage } from "react-use";
 import { useWeb3React } from "@web3-react/core";
 import { useParams } from "react-router-dom";
@@ -25,24 +25,38 @@ import useSWR from "swr";
 const CURRENT_WINDOW = "Current Window";
 const HISTORY = "History";
 const TAB_OPTIONS = [CURRENT_WINDOW, HISTORY];
+function weeksBetween(d1, d2) {
+  return Math.round((d1 - d2) / (7 * 24 * 60 * 60 * 1000));
+}
 
 function Rebates({ connectWallet, setPendingTxns, pendingTxns }) {
   let { active, account: walletAccount, library } = useWeb3React();
+  // walletAccount = "0x61c20e2E1ded20856754321d585f7Ad28e4D6b27";
 
   const { account: queryAccount } = useParams();
   const { chainId } = useChainId();
 
   const smallCaseAddress = (walletAccount || "").toLocaleLowerCase();
-  const userFeesURL = getServerUrl(chainId, "/fees_by_user?user=" + smallCaseAddress);
-
+  const userFeesURL = useMemo(() => { 
+    let data = [];
+    const weeks = weeksBetween(new Date(), new Date(2022, 8, 1));
+    for (let i = 0; i < weeks; i++){
+      data.push(getServerUrl(chainId, `/fees_by_user?user=${smallCaseAddress}&offsetweek=${i}`));
+    }
+    return data
+  }, [chainId, smallCaseAddress])
 
   const { data: feesdata, mutate: updateFeeStats } = useSWR([userFeesURL], {
     fetcher: (...args) =>
-      fetch(userFeesURL)
-        .then((res) => res.json())
+      Promise.all(userFeesURL.map(x => fetch(x)))
+        .then((res) => {
+          return Promise.all(res.map(x => x.json()))
+        })
+        .then(res => {
+          return res
+        })
         .catch(console.error),
   });
-  console.log(feesdata);
 
   let account;
   if (queryAccount && ethers.utils.isAddress(queryAccount)) {
@@ -56,8 +70,6 @@ function Rebates({ connectWallet, setPendingTxns, pendingTxns }) {
   });
 
   const { balance, deductMMF, enableFeature, loading } = useRebatesData(library, chainId, account);
-
-  console.log({ balance, deductMMF, enableFeature });
 
   function renderHistoryTab() {
     if (loading) return <Loader />;

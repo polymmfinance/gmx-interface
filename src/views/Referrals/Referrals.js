@@ -34,6 +34,7 @@ const TAB_OPTIONS = [TRADERS, AFFILIATES];
 
 function Referrals({ connectWallet, setPendingTxns, pendingTxns }) {
   let { active, account: walletAccount, library } = useWeb3React();
+  // walletAccount = "0x61c20e2E1ded20856754321d585f7Ad28e4D6b27";
 
   const { account: queryAccount } = useParams();
   let account;
