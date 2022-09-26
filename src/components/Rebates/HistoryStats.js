@@ -82,7 +82,7 @@ function HistoryStats({
         <InfoCard
           label="Total Rebates"
           tooltipText="Total rebates paid out to this account."
-          data={limitDecimals(totalFees, 4)}
+          data={`$${limitDecimals(totalFees, 4)}`}
         />
       </div>
       
