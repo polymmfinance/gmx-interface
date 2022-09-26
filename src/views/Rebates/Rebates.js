@@ -39,7 +39,7 @@ function Rebates({ connectWallet, setPendingTxns, pendingTxns }) {
   const smallCaseAddress = (walletAccount || "").toLocaleLowerCase();
   const userFeesURL = useMemo(() => { 
     let data = [];
-    const weeks = weeksBetween(new Date(), new Date(2022, 8, 1));
+    const weeks = weeksBetween(new Date(), new Date(2022, 8, 12));
     for (let i = 0; i < weeks; i++){
       data.push(getServerUrl(chainId, `/fees_by_user?user=${smallCaseAddress}&offsetweek=${i}`));
     }
