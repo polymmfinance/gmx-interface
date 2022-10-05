@@ -36,6 +36,11 @@ function getPreviousWednesdayEnd(offsetWeek) {
   return x.toString()
 }
 
+function getDateString(b) {
+  const x = new Date(parseInt(b));
+  return x.toString()
+}
+
 function HistoryStats({
   referralsData = {},
   handleCreateReferralCode,
@@ -52,12 +57,15 @@ function HistoryStats({
 
   // const { cumulativeStats, referrerTotalStats = [], rebateDistributions, referrerTierInfo } = referralsData;
   // const allReferralCodes = referrerTotalStats.map((c) => c.referralCode.trim());
-  const totalFees = useMemo(
+  const totalRebates = useMemo(
     () => {
-      let data = 0;
-      // console.log(referralsData)
-      Array.isArray(referralsData) && referralsData.map(x => data += x.total);
-      return data
+      let data = bigNumberify(0);
+      console.log(referralsData)
+      Array.isArray(referralsData) && referralsData.forEach(x => {
+        data = data.add(bigNumberify(x.amount))
+        console.log(x.amount, data)
+      });
+      return formatAmount(data, 18)
       }, [referralsData]);
 
   // const tierId = referrerTierInfo?.tierId;
@@ -82,7 +90,7 @@ function HistoryStats({
         <InfoCard
           label="Total Rebates"
           tooltipText="Total rebates paid out to this account."
-          data={`$${limitDecimals(totalFees, 4)}`}
+          data={`$${limitDecimals(totalRebates, 4)}`}
         />
       </div>
       
@@ -116,10 +124,10 @@ function HistoryStats({
                     return (
                       <tr key={index}>
                         <td className="table-head" data-label="Date">
-                          { getPreviousWednesdayEnd(index)}
+                          { getDateString(rebate.timestamp) }
                         </td>
                         <td className="table-head" data-label="Amount">
-                          $ {limitDecimals(rebate.total, 4)}
+                          $ {limitDecimals(formatAmount(rebate.amount, 18), 4)}
                         </td>
                         {/* <td className="table-head" data-label="Transaction">
                           <a

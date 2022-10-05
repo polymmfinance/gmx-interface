@@ -31,7 +31,7 @@ function weeksBetween(d1, d2) {
 
 function Rebates({ connectWallet, setPendingTxns, pendingTxns }) {
   let { active, account: walletAccount, library } = useWeb3React();
-  // walletAccount = "0x61c20e2E1ded20856754321d585f7Ad28e4D6b27";
+  // walletAccount = "0x2005d56e8c51fd13c023485bfaf4741e3f4ddbd1";
 
   const { account: queryAccount } = useParams();
   const { chainId } = useChainId();
@@ -40,8 +40,8 @@ function Rebates({ connectWallet, setPendingTxns, pendingTxns }) {
   const userFeesURL = useMemo(() => { 
     let data = [];
     const weeks = weeksBetween(new Date(), new Date(2022, 8, 12));
-    for (let i = 0; i < weeks; i++){
-      data.push(getServerUrl(chainId, `/fees_by_user?user=${smallCaseAddress}&offsetweek=${i}`));
+    for (let i = 0; i < 1; i++){
+      data.push(getServerUrl(chainId, `/rebates_by_user?user=${smallCaseAddress}&offsetweek=${i}`));
     }
     return data
   }, [chainId, smallCaseAddress])
@@ -75,7 +75,7 @@ function Rebates({ connectWallet, setPendingTxns, pendingTxns }) {
     if (loading) return <Loader />;
     return (
       <HistoryStats
-        referralsData={feesdata}
+        referralsData={feesdata && feesdata[0]}
         // handleCreateReferralCode={handleCreateReferralCode}
         setRecentlyAddedCodes={setRecentlyAddedCodes}
         recentlyAddedCodes={recentlyAddedCodes}
