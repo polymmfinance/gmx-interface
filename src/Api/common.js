@@ -13,6 +13,7 @@ export const avalancheReferralsGraphClient = createClient(
 export const polygonGraphClient = createClient("https://api.thegraph.com/subgraphs/name/polymmfinance/dsf-subgraph-stats")
 export const polygonReferralGraphClient = createClient("https://api.thegraph.com/subgraphs/name/polymmfinance/mlp-referral")
 export const polygonVaultActionGraphClient = createClient("https://api.thegraph.com/subgraphs/name/polymmfinance/test-subgraph-mm")
+export const polygonRebatesClient = createClient("https://api.thegraph.com/subgraphs/name/polymmfinance/user-rebates")
 
 
 function createClient(uri) {

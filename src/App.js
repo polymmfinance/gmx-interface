@@ -111,6 +111,7 @@ import { RedirectPopupModal } from "./components/ModalViews/RedirectModal";
 import { REDIRECT_POPUP_TIMESTAMP_KEY } from "./utils/constants";
 import Jobs from "./views/Jobs/Jobs";
 import Rebates from "./views/Rebates/Rebates";
+import getuser from "./Api/rebatescurrent";
 
 if ("ethereum" in window) {
   window.ethereum.autoRefreshOnNetworkChange = false;
@@ -135,6 +136,7 @@ const Zoom = cssTransition({
 // const avaxWsProvider = new ethers.providers.JsonRpcProvider("https://api.avax.network/ext/bc/C/rpc");
 
 const polygonWsProvider = new ethers.providers.JsonRpcProvider("https://polygon-rpc.com");
+// getuser()
 
 function getWsProvider(active, chainId) {
   if (!active) {
