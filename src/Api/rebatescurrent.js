@@ -167,7 +167,7 @@ async function currentUserStates() {
   data = getAllMMFHoldings(obj);
 
   console.log(obj);
-  // return obj
+  return obj
 }
 
 export default currentUserStates;
