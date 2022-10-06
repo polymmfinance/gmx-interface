@@ -18,7 +18,7 @@ function getPreviousWednesdayEnd(offsetWeek) {
 function getTradingDiscount(balance) {
   const walletBalanceBN = new BigNumber(balance);
   const BIG_TEN = new BigNumber(10);
-  
+
   if (walletBalanceBN.gte(new BigNumber(100000))) {
     return 50; // 50%
   }
@@ -100,7 +100,7 @@ async function getFeesAccumulated(users, obj) {
 
 // Get fees for all users
 // NOTE: we don't have many users right now, this query will run faster than above
-async function getFeesAccumulatedBySubgraph(offsetweek =0) {
+async function getFeesAccumulatedBySubgraph(offsetweek = 0) {
   const from = parseInt(getPreviousWednesdayEnd(offsetweek) / 1000)
 
   let to = parseInt(Date.now() / 1000);
@@ -122,7 +122,12 @@ async function getAllMMFHoldings(obj) {
   let balance = await Promise.all(keys.map(x => contract.balanceOf(x)));
   balance.forEach((x, index) => {
     let t = bigNumberify(x).div(bigNumberify(10).pow(18)).toString(10);
-    obj[keys[index]] = {...obj[keys[index]], mmfBalance: t, tier: getTradingDiscount(t)}
+    obj[keys[index]] = {
+      ...obj[keys[index]],
+      mmfBalance: t,
+      tier: getTradingDiscount(t),
+      discount: getTradingDiscount(t) / 100 * obj[keys[index]].marginFees
+    }
   })
   return obj
 }
