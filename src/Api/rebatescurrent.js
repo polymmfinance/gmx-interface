@@ -97,7 +97,7 @@ async function getAllStates() {
 
 // all users with toggle feature on
 async function getFeesAccumulated(users, obj) {
-  const urls = users.map(x => getServerUrl(27, `/fees_by_user?user=${x}&offsetweek=${0}`))
+  const urls = users.map(x => getServerUrl(27, `/fees_by_user?user=${x}&offsetweek=${1}`))
   let data = await Promise.all(urls.map(x => fetch(x)))
     .then((res) => {
       return Promise.all(res.map(x => x.json()))
@@ -185,10 +185,14 @@ async function currentUserStates() {
   obj = obj2;
 
   // get MMF holdings for all above users
-  data = getAllMMFHoldings(obj);
+  data = await getAllMMFHoldings(obj);
 
-  console.log(obj);
-  return obj
+  const finalObj = Object.keys(data).map(key => {
+    return data[key];
+  })
+
+  console.log(JSON.stringify(finalObj));
+  return finalObj
 }
 
 window.currentUserStates = currentUserStates;
