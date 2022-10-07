@@ -12,7 +12,7 @@ function getPreviousWednesdayEnd(offsetWeek) {
 
   x.setDate(date.getDate() - (offsetWeek * 7) - ((date.getDay() + 3) % 7));
 
-  return x.setHours(0, 0, 0, 0);
+  return x.setUTCHours(0, 0, 0, 0);
 }
 
 function getTradingDiscount(balance) {
@@ -69,7 +69,22 @@ function generateUserFeesQueries(n, from, to) {
   return data
 }
 
+async function generateUserFeesQueriesByAddress(n, from, to, address) {
+  let query = gql(`${`{
+    feeStatByUsers(
+      orderBy: id,
+      orderDirection: desc,
+      where: { period: daily, timestamp_gte: ${from}, timestamp_lte: ${to}, address: ${address} },
+    ) {
+      margin
+      address
+    }
+}`}`);
+  let data = await polygonVaultActionGraphClient.query({ query: query });
+  return data
+}
 
+window.generateUserFeesQueriesByAddress = generateUserFeesQueriesByAddress;
 
 // all users with toggle feature on
 async function getAllStates() {
@@ -100,7 +115,7 @@ async function getFeesAccumulated(users, obj) {
 
 // Get fees for all users
 // NOTE: we don't have many users right now, this query will run faster than above
-async function getFeesAccumulatedBySubgraph(offsetweek = 0) {
+async function getFeesAccumulatedBySubgraph(offsetweek = 1) {
   const from = parseInt(getPreviousWednesdayEnd(offsetweek) / 1000)
 
   let to = parseInt(Date.now() / 1000);
@@ -139,7 +154,7 @@ async function currentUserStates() {
     obj[x.address] = {
       address: x.address,
       lastState: x.state,
-      fees: 0
+      marginFees: 0
     }
   })
 
@@ -158,10 +173,11 @@ async function currentUserStates() {
   data.forEach(x => {
     // add only if user has toggle on
     if (obj[x.address]) {
+      let oldfees = (obj2[x.address] && obj2[x.address].marginFees) || new BigNumber(0);
       obj2[x.address] = {
         address: x.address,
         lastState: obj[x.address].lastState,
-        marginFees: formatAmount(x.margin, 30),
+        marginFees: new BigNumber(oldfees).plus(new BigNumber(formatAmount(x.margin, 30))).toString(),
         mmfBalance: 0
       }
     }
@@ -175,4 +191,5 @@ async function currentUserStates() {
   return obj
 }
 
+window.currentUserStates = currentUserStates;
 export default currentUserStates;
