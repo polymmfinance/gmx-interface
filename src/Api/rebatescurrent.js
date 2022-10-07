@@ -55,6 +55,7 @@ function generateUserFeesQueries(n, from, to) {
 
     let query = gql(`${`{
     feeStatByUsers(
+      first: 100,
       orderBy: id,
       orderDirection: desc,
       skip: ${i * 100},
@@ -116,16 +117,25 @@ async function getFeesAccumulated(users, obj) {
 // Get fees for all users
 // NOTE: we don't have many users right now, this query will run faster than above
 async function getFeesAccumulatedBySubgraph(offsetweek = 1) {
-  const from = parseInt(getPreviousWednesdayEnd(offsetweek) / 1000)
+  // const from = parseInt(getPreviousWednesdayEnd(offsetweek) / 1000)
+  let date = new Date(2022, 8, 12);
+  const from = parseInt(date.setUTCHours(0, 0, 0, 0))/1000;
+  console.log(from)
 
   let to = parseInt(Date.now() / 1000);
   if (offsetweek > 0) {
     to = parseInt(getPreviousWednesdayEnd(offsetweek - 1) / 1000)
   }
 
-  const queries = generateUserFeesQueries(5, from, to);
+  // This parameter represents the expected number of API calls required
+  const expectedUsersAverage = 50;
+  const queries = generateUserFeesQueries(expectedUsersAverage, from, to);
   let data = await Promise.all(queries.map(x => polygonVaultActionGraphClient.query({ query: x })))
+  if (data.length > expectedUsersAverage * 90) {
+    console.warn("Please increase the expectedUsersAverage");
+  }
   data = data.map(x => x.data.feeStatByUsers).flatMap(x => x);
+  console.log(data);
   return data
 }
 
@@ -134,6 +144,7 @@ async function getAllMMFHoldings(obj) {
   const rebateAddress = getContract(POLYGON, "TradingFeeRebates");
   const contract = new ethers.Contract(rebateAddress, erc20, provider);
   const keys = Object.keys(obj);
+  console.log("getttings MMF balance of users:", keys.length)
   let balance = await Promise.all(keys.map(x => contract.balanceOf(x)));
   balance.forEach((x, index) => {
     let t = bigNumberify(x).div(bigNumberify(10).pow(18)).toString(10);
