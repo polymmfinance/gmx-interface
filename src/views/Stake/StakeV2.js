@@ -1099,7 +1099,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
                     renderContent={() => {
                       return (
                         <>
-                          <div className="Tooltip-row">
+                          {/* <div className="Tooltip-row">
                             <span className="label">Fees APR</span>
                             <span>{(feesApr ?? 0).toFixed(2)}%</span>
                           </div>
@@ -1107,9 +1107,14 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
                             <span className="label">Liquid Staking APR</span>
                             <span>{(masterChefData?.apr ?? 0).toFixed(2)}%</span>
                           </div>
+                          <br /> */}
+                          <div className="muted">
+                            APR comes from fees distribution from Madmex protocol and liquid staking rewards on
+                            polymm.finance
+                          </div>
                           <br />
                           <div className="muted">
-                            APRs are updated weekly on Wednesday and will depend on the fees collected for the week.
+                            APR is updated weekly on Thursday and will depend on the fees collected for the week.
                           </div>
                         </>
                       );
