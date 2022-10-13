@@ -44,10 +44,19 @@ import {
   INCREASE,
   DECREASE,
   POLYGON,
+  CRONOS,
 } from "../Helpers";
 import { getTokens, getTokenBySymbol, getWhitelistedTokens } from "../data/Tokens";
 
-import { nissohGraphClient, arbitrumGraphClient, avalancheGraphClient, polygonGraphClient, polygonVaultActionGraphClient } from "./common";
+import {
+  nissohGraphClient,
+  arbitrumGraphClient,
+  avalancheGraphClient,
+  polygonGraphClient,
+  polygonVaultActionGraphClient,
+  cronosGraphClient,
+  cronosVaultActionGraphClient,
+} from "./common";
 import { groupBy } from "lodash";
 import BigNumber from "bignumber.js";
 export * from "./prices";
@@ -61,7 +70,10 @@ function getGmxGraphClient(chainId) {
   //   return avalancheGraphClient;
   // }
   if (chainId === POLYGON) {
-    return polygonGraphClient; // TODO: need a graph client for polygon
+    return polygonGraphClient;
+  }
+  if (chainId === CRONOS) {
+    return cronosGraphClient;
   }
   throw new Error(`Unsupported chain ${chainId}`);
 }
@@ -357,13 +369,14 @@ function invariant(condition, errorMsg) {
 }
 
 export function useTradesFromGraph(chainId, account) {
-  console.log(chainId, account)
+  console.log(chainId, account);
   const [trades, setTrades] = useState();
   const [reload, setReload] = useState(1);
-  const updateTrades = ()=>{setReload(reload+1)}
+  const updateTrades = () => {
+    setReload(reload + 1);
+  };
 
   useEffect(() => {
-    
     const queryString = account && account.length > 0 ? `where : { account: "${account.toLowerCase()}"}` : ``;
     const query = gql(`{
       actionDatas ( orderBy: timestamp orderDirection: desc first:50 ${queryString} ) {
@@ -378,12 +391,15 @@ export function useTradesFromGraph(chainId, account) {
     }`);
 
     // fix for non account queries slow load times
-    if(queryString){
-      setInterval(()=>polygonVaultActionGraphClient.query({ query }).then(setTrades),1000)
-    }else{
+    if (queryString) {
+      if (chainId === POLYGON) {
+        setInterval(() => polygonVaultActionGraphClient.query({ query }).then(setTrades), 1000);
+      } else if (chainId === CRONOS) {
+        setInterval(() => cronosVaultActionGraphClient.query({ query }).then(setTrades), 1000);
+      }
+    } else {
       // polygonVaultActionGraphClient.query({ query }).then(setTrades)
     }
-
   }, [setTrades, chainId, account, reload]);
 
   return { trades, updateTrades };
@@ -489,6 +505,10 @@ export function useMinExecutionFee(library, active, chainId, infoTokens) {
     multiplier = 700000;
   }
 
+  if (chainId === CRONOS) {
+    multiplier = 700000;
+  }
+
   let finalExecutionFee = minExecutionFee;
 
   if (gasPrice && minExecutionFee) {
@@ -564,8 +584,8 @@ export function useGmxPrice(chainId, libraries, active) {
   return {
     gmxPrice: bigNumberify(0),
     gmxPriceFromArbitrum: bigNumberify(0),
-    gmxPriceFromAvalanch: bigNumberify(0)
-  }
+    gmxPriceFromAvalanch: bigNumberify(0),
+  };
   const arbitrumLibrary = libraries && libraries.arbitrum ? libraries.arbitrum : undefined;
   const { data: gmxPriceFromArbitrum, mutate: mutateFromArbitrum } = useGmxPriceFromArbitrum(arbitrumLibrary, active);
   const { data: gmxPriceFromAvalanche, mutate: mutateFromAvalanche } = useGmxPriceFromAvalanche();
@@ -587,8 +607,8 @@ export function useGmxPrice(chainId, libraries, active) {
 // use only the supply endpoint on arbitrum, it includes the supply on avalanche
 export function useTotalGmxSupply() {
   return {
-    total: bigNumberify(0)
-  }
+    total: bigNumberify(0),
+  };
   const gmxSupplyUrlArbitrum = getServerUrl(ARBITRUM, "/gmx_supply");
 
   const { data: gmxSupply, mutate: updateGmxSupply } = useSWR([gmxSupplyUrlArbitrum], {
@@ -1133,19 +1153,20 @@ export async function callContract(chainId, contract, method, params, opts) {
   }
 }
 
-export const BIG_ZERO = new BigNumber(0)
-export const BIG_ONE = new BigNumber(1)
-export const BIG_NINE = new BigNumber(9)
-export const BIG_TEN = new BigNumber(10)
-const token = "0x0d5665A2319526A117E68E38EBEA4610aA8298F8"
-const masterchef = getContract(137, "MasterChef")
+export const BIG_ZERO = new BigNumber(0);
+export const BIG_ONE = new BigNumber(1);
+export const BIG_NINE = new BigNumber(9);
+export const BIG_TEN = new BigNumber(10);
+const token = "0x0d5665A2319526A117E68E38EBEA4610aA8298F8";
 
 const fetchMLPData = async (library, chainId) => {
+  const masterchef = getContract(chainId, "MasterChef");
+
   // const { pid, lpAddress, token, quoteToken, dualMasterchef } = farm
 
   const provider = getProvider(library, chainId);
   const mscontract = new ethers.Contract(masterchef, MasterchefABI, provider);
-  
+
   // const calls = [
   //   // Balance of token in the LP contract
   //   {
@@ -1241,4 +1262,4 @@ const fetchMLPData = async (library, chainId) => {
   //   lpTokenBalanceMC: new BigNumber(lpTokenBalanceMC).toJSON(),
   //   quoteTokenAmountMc: quoteTokenAmountMc.toJSON(),
   // }
-}
+};

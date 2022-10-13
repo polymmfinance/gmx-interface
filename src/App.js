@@ -48,6 +48,7 @@ import {
   DISABLE_ORDER_VALIDATION_KEY,
   shouldShowRedirectModal,
   POLYGON,
+  CRONOS,
 } from "./Helpers";
 
 import Home from "./views/Home/Home";
@@ -136,6 +137,8 @@ const Zoom = cssTransition({
 // const avaxWsProvider = new ethers.providers.JsonRpcProvider("https://api.avax.network/ext/bc/C/rpc");
 
 const polygonWsProvider = new ethers.providers.JsonRpcProvider("https://polygon-rpc.com");
+const cronosWsProvider = new ethers.providers.JsonRpcProvider("https://cronosrpc-1.xstaking.sg");
+
 // getuser()
 
 function getWsProvider(active, chainId) {
@@ -152,6 +155,9 @@ function getWsProvider(active, chainId) {
 
   if (chainId === POLYGON) {
     return polygonWsProvider;
+  }
+  if (chainId === CRONOS) {
+    return cronosWsProvider;
   }
 }
 
@@ -246,6 +252,12 @@ function AppHeaderUser({
       value: POLYGON,
       icon: "ic_polygon_24.svg",
       color: "#7740dc",
+    },
+    {
+      label: "Cronos",
+      value: CRONOS,
+      icon: "ic_cronos_24.svg",
+      color: "#0774C2",
     },
   ];
 

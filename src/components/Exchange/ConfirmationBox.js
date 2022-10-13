@@ -244,7 +244,7 @@ export default function ConfirmationBox(props) {
   };
 
   const isPrimaryEnabled = () => {
-    //TODO: DISABLE CREATING ORDER
+    // DISABLE CREATING ORDER
     // if (isSwap) {
     //   return true;
     // }

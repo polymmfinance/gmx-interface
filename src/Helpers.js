@@ -28,6 +28,7 @@ export const PLACEHOLDER_ACCOUNT = ethers.Wallet.createRandom().address;
 
 export const MAINNET = 56;
 export const POLYGON = 137;
+export const CRONOS = 25;
 export const AVALANCHE = 43114;
 export const TESTNET = 97;
 export const ARBITRUM_TESTNET = 421611;
@@ -46,18 +47,21 @@ const CHAIN_NAMES_MAP = {
   [ARBITRUM_TESTNET]: "Arbitrum Testnet",
   [ARBITRUM]: "Arbitrum",
   [POLYGON]: "Polygon",
+  [CRONOS]: "Cronos",
   [AVALANCHE]: "Avalanche",
 };
 
 const GAS_PRICE_ADJUSTMENT_MAP = {
   [ARBITRUM]: "0",
   [POLYGON]: "50000000000", // 50 gwei
+  [CRONOS]: "50000000000", // 50 gwei
   [AVALANCHE]: "3000000000", // 3 gwei
 };
 
 const MAX_GAS_PRICE_MAP = {
   [AVALANCHE]: "200000000000", // 200 gwei
   [POLYGON]: "400000000000",
+  [CRONOS]: "400000000000",
 };
 
 const alchemyWhitelistedDomains = ["madmex.io", "app.madmex.io"];
@@ -89,6 +93,8 @@ const POLYGON_RPC_PROVIDERS = [
   "https://rpc-mainnet.matic.quiknode.pro",
   "https://polygonapi.terminet.io/rpc",
 ];
+
+const CRONOS_RPC_PROVIDERS = ["https://evm.cronos.org", "https://cronosrpc-1.xstaking.sg"];
 const AVALANCHE_RPC_PROVIDERS = [""];
 export const WALLET_CONNECT_LOCALSTORAGE_KEY = "walletconnect";
 export const WALLET_LINK_LOCALSTORAGE_PREFIX = "-walletlink";
@@ -163,6 +169,7 @@ export const MIN_PROFIT_BIPS = 0;
 
 export const GLPPOOLCOLORS = {
   MATIC: "#b638e8",
+  CRO: "#0379CA",
   ETH: "#6062a6",
   BTC: "#F7931A",
   "BTC.b": "#F7931A",
@@ -181,6 +188,7 @@ export const HIGH_EXECUTION_FEES_MAP = {
   [ARBITRUM]: 3, // 3 USD
   [AVALANCHE]: 3, // 3 USD
   [POLYGON]: 3, // 3 USD
+  [CRONOS]: 3, // 3 USD
 };
 
 export const ICONLINKS = {
@@ -264,6 +272,28 @@ export const ICONLINKS = {
       avalanche: "https://snowtrace.io/address/0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e",
     },
   },
+  25: {
+    CRO: {
+      coingecko: "https://www.coingecko.com/en/coins/cronos",
+      cronos: "https://cronoscan.com/token/0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23",
+    },
+    MLP: {
+      coingecko: "https://www.coingecko.com/",
+      cronos: "https://polygonscan.com/token/0x0d5665A2319526A117E68E38EBEA4610aA8298F8",
+    },
+    ETH: {
+      coingecko: "https://www.coingecko.com/en/coins/weth",
+      cronos: "https://cronoscan.com/token/0xe44fd7fcb2b1581822d0c862b68222998a0c299a",
+    },
+    BTC: {
+      coingecko: "https://www.coingecko.com/en/coins/wrapped-bitcoin",
+      cronos: "https://cronoscan.com/token/0x062e66477faf219f25d27dced647bf57c3107d52",
+    },
+    USDC: {
+      coingecko: "https://www.coingecko.com/en/coins/usd-coin",
+      cronos: "https://cronoscan.com/token/0xc21223249ca28397b4b6541dffaecc539bff0c59",
+    },
+  },
   137: {
     MATIC: {
       coingecko: "https://www.coingecko.com/en/coins/polygon",
@@ -294,6 +324,17 @@ export const ICONLINKS = {
 };
 
 export const platformTokens = {
+  25: {
+    // cronos
+
+    MLP: {
+      name: "MLP",
+      symbol: "MLP",
+      decimals: 18,
+      address: getContract(CRONOS, "MLP"),
+      imageUrl: "https://polymm.finance/images/tokens/0x0d5665A2319526A117E68E38EBEA4610aA8298F8.svg",
+    },
+  },
   137: {
     // polygon
 
@@ -342,7 +383,7 @@ export const platformTokens = {
 };
 
 // const supportedChainIds = [ARBITRUM, AVALANCHE, POLYGON];
-const supportedChainIds = [POLYGON];
+const supportedChainIds = [POLYGON, CRONOS];
 const injectedConnector = new InjectedConnector({
   supportedChainIds,
 });
@@ -354,6 +395,7 @@ const getWalletConnectConnector = () => {
       // [AVALANCHE]: AVALANCHE_RPC_PROVIDERS[0],
       // [ARBITRUM]: ARBITRUM_RPC_PROVIDERS[0],
       [POLYGON]: POLYGON_RPC_PROVIDERS[0],
+      [CRONOS]: CRONOS_RPC_PROVIDERS[0],
     },
     qrcode: true,
     chainId,
@@ -504,7 +546,7 @@ export function getServerBaseUrl(chainId) {
   // }
   // return "https://gmx-server-mainnet.uw.r.appspot.com";
   // return isLocal() ? "http://localhost:3113" : "https://stats.madmex.io";
-  return "https://api.madmex.io"
+  return "https://api.madmex.io";
 }
 
 export function getServerUrl(chainId, path) {
@@ -1312,6 +1354,7 @@ const RPC_PROVIDERS = {
   [ARBITRUM]: ARBITRUM_RPC_PROVIDERS,
   [AVALANCHE]: AVALANCHE_RPC_PROVIDERS,
   [POLYGON]: POLYGON_RPC_PROVIDERS,
+  [CRONOS]: CRONOS_RPC_PROVIDERS,
 };
 
 const FALLBACK_PROVIDERS = {
@@ -1989,6 +2032,8 @@ export function getExplorerUrl(chainId) {
     return "https://snowtrace.io/";
   } else if (chainId === POLYGON) {
     return "https://polygonscan.com/";
+  } else if (chainId === CRONOS) {
+    return "https://cronoscan.com/";
   }
   return "https://etherscan.io/";
 }
@@ -2220,6 +2265,17 @@ const NETWORK_METADATA = {
     },
     rpcUrls: POLYGON_RPC_PROVIDERS,
     blockExplorerUrls: [getExplorerUrl(POLYGON)],
+  },
+  [CRONOS]: {
+    chainId: "0x" + CRONOS.toString(16),
+    chainName: "Cronos",
+    nativeCurrency: {
+      name: "CRO",
+      symbol: "CRO",
+      decimals: 18,
+    },
+    rpcUrls: CRONOS_RPC_PROVIDERS,
+    blockExplorerUrls: [getExplorerUrl(CRONOS)],
   },
 };
 

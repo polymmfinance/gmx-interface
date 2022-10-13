@@ -4,7 +4,7 @@ function SEO(props) {
   const { children, ...customMeta } = props;
   const meta = {
     title: "Madmex | Decentralized Perpetual Exchange",
-    description: `Trade spot or perpetual BTC, ETH, MATIC and other top cryptocurrencies with up to 30x leverage directly from your wallet on Polygon.`,
+    description: `Trade spot or perpetual BTC, ETH, MATIC, CRO and other top cryptocurrencies with up to 30x leverage directly from your wallet on Polygon & Cronos.`,
     image: "https://madmex.io/og.png",
     type: "exchange",
     ...customMeta,

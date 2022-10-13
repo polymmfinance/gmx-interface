@@ -5,6 +5,7 @@ import {
   USD_DECIMALS,
   MAX_REFERRAL_CODE_LENGTH,
   POLYGON,
+  CRONOS,
 } from "../../Helpers";
 import { encodeReferralCode, getReferralCodeOwner } from "../../Api/referrals";
 
@@ -20,16 +21,23 @@ export function isRecentReferralCodeNotExpired(referralCodeInfo) {
 
 export async function getReferralCodeTakenStatus(account, referralCode, chainId) {
   const referralCodeBytes32 = encodeReferralCode(referralCode);
-  const [ownerPolygon] = await Promise.all([getReferralCodeOwner(POLYGON, referralCodeBytes32)]);
+  const [ownerPolygon, ownerCronos] = await Promise.all([
+    getReferralCodeOwner(POLYGON, referralCodeBytes32),
+    getReferralCodeOwner(CRONOS, referralCodeBytes32),
+  ]);
 
   const takenOnPolygon =
     !isAddressZero(ownerPolygon) && (ownerPolygon !== account || (ownerPolygon === account && chainId === POLYGON));
 
+  const takenOnCronos =
+    !isAddressZero(ownerCronos) && (ownerCronos !== account || (ownerCronos === account && chainId === CRONOS));
+
   const referralCodeTakenInfo = {
     [POLYGON]: takenOnPolygon,
-    both: takenOnPolygon,
-
+    [CRONOS]: takenOnCronos,
+    both: takenOnPolygon && takenOnCronos,
     ownerPolygon,
+    ownerCronos,
   };
 
   if (referralCodeTakenInfo.both) {
@@ -37,6 +45,9 @@ export async function getReferralCodeTakenStatus(account, referralCode, chainId)
   }
   if (referralCodeTakenInfo[chainId]) {
     return { status: "current", info: referralCodeTakenInfo };
+  }
+  if (chainId === POLYGON ? referralCodeTakenInfo[POLYGON] : referralCodeTakenInfo[CRONOS]) {
+    return { status: "other", info: referralCodeTakenInfo };
   }
   return { status: "none", info: referralCodeTakenInfo };
 }

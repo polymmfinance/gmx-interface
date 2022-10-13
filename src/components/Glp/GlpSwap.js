@@ -38,6 +38,7 @@ import {
   ARBITRUM,
   PLACEHOLDER_ACCOUNT,
   importImage,
+  CRONOS,
 } from "../../Helpers";
 
 import { callContract, useGmxPrice, useInfoTokens } from "../../Api";
@@ -60,6 +61,8 @@ import glp40Icon from "../../img/ic_glp_40.svg";
 import arrowIcon from "../../img/ic_convert_down.svg";
 
 import polygon16Icon from "../../img/ic_polygon_16.svg";
+import cronos16Icon from "../../img/ic_cronos_16.svg";
+
 import arbitrum16Icon from "../../img/ic_arbitrum_16.svg";
 
 import "./GlpSwap.css";
@@ -672,8 +675,8 @@ export default function GlpSwap(props) {
             <div className="App-card-title-mark">
               <div className="App-card-title-mark-icon">
                 <img src={glp40Icon} alt="glp40Icon" />
-                {chainId === ARBITRUM ? (
-                  <img src={arbitrum16Icon} alt="arbitrum16Icon" className="selected-network-symbol" />
+                {chainId === CRONOS ? (
+                  <img src={cronos16Icon} alt="cronos16Icon" className="selected-network-symbol" />
                 ) : (
                   <img src={polygon16Icon} alt="polygon16Icon" className="selected-network-symbol" />
                 )}
@@ -1010,7 +1013,6 @@ export default function GlpSwap(props) {
                 availableAmountUsd = tokenInfo.availableAmount
                   .mul(tokenInfo.minPrice)
                   .div(expandDecimals(1, token.decimals));
-                
               }
               let balanceUsd;
               if (tokenInfo && tokenInfo.minPrice && tokenInfo.balance) {

@@ -6,7 +6,7 @@ import cx from "classnames";
 // import gmxBigIcon from "../../img/ic_gmx_custom.svg";
 import glpBigIcon from "../../img/ic_glp_custom.svg";
 
-import { ARBITRUM, AVALANCHE, switchNetwork, useChainId, isHomeSite, POLYGON } from "../../Helpers";
+import { ARBITRUM, AVALANCHE, switchNetwork, useChainId, isHomeSite, POLYGON, CRONOS } from "../../Helpers";
 
 import { useWeb3React } from "@web3-react/core";
 
@@ -94,7 +94,7 @@ export default function TokenCard({ showRedirectModal }) {
           <div className="Home-token-card-option-apr">
             {/* Arbitrum APR: <APRLabel chainId={ARBITRUM} label="glpAprTotal" key="ARBITRUM" />, Avalanche APR:{" "}
             <APRLabel chainId={AVALANCHE} label="glpAprTotal" key="AVALANCHE" /> */}
-            APR: <APRLabel chainId={POLYGON} label="mlpAprTotal" key="POLYGON" />
+            APR: <APRLabel chainId={chainId} label="mlpAprTotal" key={chainId} />
           </div>
           <div className="Home-token-card-option-action">
             <div className="buy">
@@ -104,7 +104,7 @@ export default function TokenCard({ showRedirectModal }) {
               <BuyLink to="/buy_mlp" className="default-btn" network={AVALANCHE}>
                 Buy on Avalanche
               </BuyLink> */}
-              <BuyLink to="/buy_mlp" className="default-btn" network={POLYGON}>
+              <BuyLink to="/buy_mlp" className="default-btn" network={chainId}>
                 Buy
               </BuyLink>
             </div>

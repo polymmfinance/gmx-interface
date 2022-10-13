@@ -1,6 +1,7 @@
 import { FEES_42161 } from "./FEES_42161";
 import { FEES_43113 } from "./FEES_43113";
 import { FEES_137 } from "./FEES_137";
+import { FEES_25 } from "./FEES_25";
 
 const SECONDS_PER_WEEK = 604800;
 
@@ -22,6 +23,7 @@ const FEES = {
   42161: createFeeList(FEES_42161),
   43114: createFeeList(FEES_43113),
   137: createFeeList(FEES_137),
+  25: createFeeList(FEES_25),
 };
 
 export function getFeeHistory(chainId) {

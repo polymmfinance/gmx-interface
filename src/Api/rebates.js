@@ -17,15 +17,21 @@ import {
   isHashZero,
   REFERRAL_CODE_KEY,
   POLYGON,
+  CRONOS,
   PLACEHOLDER_ACCOUNT,
   getExplorerUrl,
 } from "../Helpers";
-import { arbitrumReferralsGraphClient, avalancheReferralsGraphClient, polygonReferralGraphClient } from "./common";
+import {
+  arbitrumReferralsGraphClient,
+  avalancheReferralsGraphClient,
+  polygonReferralGraphClient,
+  cronosReferralGraphClient,
+} from "./common";
 import { getContract } from "../Addresses";
 import { callContract } from ".";
 import { REGEX_VERIFY_BYTES32 } from "../components/Referrals/referralsHelper";
 
-const ACTIVE_CHAINS = [POLYGON];
+const ACTIVE_CHAINS = [POLYGON, CRONOS];
 const DISTRIBUTION_TYPE_REBATES = "1";
 const DISTRIBUTION_TYPE_DISCOUNT = "2";
 
@@ -35,8 +41,9 @@ function getGraphClient(chainId) {
   } else if (chainId === AVALANCHE) {
     return avalancheReferralsGraphClient;
   } else if (chainId === POLYGON) {
-    // TODO: @jerry need replace this referral graph client
     return polygonReferralGraphClient;
+  } else if (chainId === CRONOS) {
+    return cronosReferralGraphClient;
   }
   throw new Error(`Unsupported chain ${chainId}`);
 }
@@ -207,4 +214,3 @@ export async function withdrawMMF(chainId, withdrawAmount, library, opts) {
   // }
   return callContract(chainId, contract, "withdrawMMF", [withdrawAmount], opts);
 }
-

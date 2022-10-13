@@ -16,13 +16,19 @@ import {
   isHashZero,
   REFERRAL_CODE_KEY,
   POLYGON,
+  CRONOS,
 } from "../Helpers";
-import { arbitrumReferralsGraphClient, avalancheReferralsGraphClient, polygonReferralGraphClient } from "./common";
+import {
+  arbitrumReferralsGraphClient,
+  avalancheReferralsGraphClient,
+  polygonReferralGraphClient,
+  cronosReferralGraphClient,
+} from "./common";
 import { getContract } from "../Addresses";
 import { callContract } from ".";
 import { REGEX_VERIFY_BYTES32 } from "../components/Referrals/referralsHelper";
 
-const ACTIVE_CHAINS = [POLYGON];
+const ACTIVE_CHAINS = [POLYGON, CRONOS];
 const DISTRIBUTION_TYPE_REBATES = "1";
 const DISTRIBUTION_TYPE_DISCOUNT = "2";
 
@@ -32,8 +38,9 @@ function getGraphClient(chainId) {
   } else if (chainId === AVALANCHE) {
     return avalancheReferralsGraphClient;
   } else if (chainId === POLYGON) {
-    // TODO: @jerry need replace this referral graph client
-    return polygonReferralGraphClient
+    return polygonReferralGraphClient;
+  } else if (chainId === CRONOS) {
+    return cronosReferralGraphClient;
   }
   throw new Error(`Unsupported chain ${chainId}`);
 }
@@ -103,7 +110,7 @@ export function useUserCodesOnAllChain(account) {
   `;
   useEffect(() => {
     async function main() {
-      const [polygonCodes] = await Promise.all(
+      const [polygonCodes, cronosCodes] = await Promise.all(
         ACTIVE_CHAINS.map((chainId) => {
           return getGraphClient(chainId)
             .query({ query, variables: { account: (account || "").toLowerCase() } })
@@ -112,10 +119,17 @@ export function useUserCodesOnAllChain(account) {
             });
         })
       );
-      const [codeOwnersOnPolygon = []] = await Promise.all([getCodeOwnersData(POLYGON, account, polygonCodes)]);
+      const [codeOwnersOnPolygon = [], codeOwnersOnCronos = []] = await Promise.all([
+        getCodeOwnersData(POLYGON, account, polygonCodes),
+        getCodeOwnersData(CRONOS, account, cronosCodes),
+      ]);
 
       setData({
         [POLYGON]: codeOwnersOnPolygon.reduce((acc, cv) => {
+          acc[cv.code] = cv;
+          return acc;
+        }, {}),
+        [CRONOS]: codeOwnersOnCronos.reduce((acc, cv) => {
           acc[cv.code] = cv;
           return acc;
         }, {}),

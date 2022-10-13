@@ -5,6 +5,7 @@ export default function TooltipCard({
   total,
   avax,
   polygon,
+  cronos,
   arbitrum,
   showDollar = true,
   decimalsForConversion = USD_DECIMALS,
@@ -25,13 +26,13 @@ export default function TooltipCard({
           {formatAmount(polygon, decimalsForConversion, 0, true)}
         </span>
       </p>
-      {/* <p className="Tooltip-row">
-        <span className="label">{title} on Avalanche:</span>
+      <p className="Tooltip-row">
+        <span className="label">{title} on Cronos:</span>
         <span className="amount">
           {showDollar && "$"}
-          {formatAmount(avax, decimalsForConversion, 0, true)}
+          {formatAmount(cronos, decimalsForConversion, 0, true)}
         </span>
-      </p> */}
+      </p>
       <div className="Tooltip-divider" />
       <p className="Tooltip-row">
         <span className="label">Total:</span>

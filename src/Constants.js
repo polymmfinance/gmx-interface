@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 
-import { MAINNET, TESTNET, ARBITRUM_TESTNET, ARBITRUM, AVALANCHE, POLYGON } from "./Helpers";
+import { MAINNET, TESTNET, ARBITRUM_TESTNET, ARBITRUM, AVALANCHE, POLYGON, CRONOS } from "./Helpers";
 
 const { parseEther } = ethers.utils;
 
@@ -60,6 +60,19 @@ const constants = {
   [POLYGON]: {
     nativeTokenSymbol: "MATIC",
     wrappedTokenSymbol: "WMATIC",
+    defaultCollateralSymbol: "USDC",
+    defaultFlagOrdersEnabled: false,
+    positionReaderPropsLength: 9,
+    v2: true,
+
+    SWAP_ORDER_EXECUTION_GAS_FEE: parseEther("0.17"),
+    INCREASE_ORDER_EXECUTION_GAS_FEE: parseEther("0.17"),
+    // contract requires that execution fee be strictly greater than instead of gte
+    DECREASE_ORDER_EXECUTION_GAS_FEE: parseEther("0.17"),
+  },
+  [CRONOS]: {
+    nativeTokenSymbol: "CRO",
+    wrappedTokenSymbol: "WCRO",
     defaultCollateralSymbol: "USDC",
     defaultFlagOrdersEnabled: false,
     positionReaderPropsLength: 9,

@@ -1,8 +1,13 @@
 import { gql } from "@apollo/client";
 import { ethers } from "ethers";
 import { getContract } from "../Addresses";
-import { bigNumberify, formatAmount, getServerUrl, POLYGON } from "../Helpers";
-import { polygonRebatesClient, polygonVaultActionGraphClient } from "./common";
+import { bigNumberify, formatAmount, getServerUrl, POLYGON, CRONOS } from "../Helpers";
+import {
+  polygonRebatesClient,
+  polygonVaultActionGraphClient,
+  cronosRebatesClient,
+  cronosVaultActionGraphClient,
+} from "./common";
 import erc20 from "../abis/erc20.json";
 import BigNumber from "bignumber.js";
 
@@ -10,7 +15,7 @@ function getPreviousWednesdayEnd(offsetWeek) {
   const x = new Date();
   const date = new Date();
 
-  x.setDate(date.getDate() - (offsetWeek * 7) - ((date.getDay() + 3) % 7));
+  x.setDate(date.getDate() - offsetWeek * 7 - ((date.getDay() + 3) % 7));
 
   return x.setUTCHours(0, 0, 0, 0);
 }
@@ -37,23 +42,25 @@ function getTradingDiscount(balance) {
 function generateUserRebatesQueries(n) {
   let data = [];
   for (let i = 0; i < n + 1; i++) {
-    let query = gql(`${`{
+    let query = gql(
+      `${`{
       userRebates(orderBy: timestamp, skip: ${i * 100}) {
         address
         state
         timestamp
       }
-  }`}`);
-    data.push(query)
+  }`}`
+    );
+    data.push(query);
   }
-  return data
+  return data;
 }
 
 function generateUserFeesQueries(n, from, to) {
   let data = [];
   for (let i = 0; i < n + 1; i++) {
-
-    let query = gql(`${`{
+    let query = gql(
+      `${`{
     feeStatByUsers(
       first: 100,
       orderBy: id,
@@ -64,14 +71,16 @@ function generateUserFeesQueries(n, from, to) {
       margin
       address
     }
-}`}`);
-    data.push(query)
+}`}`
+    );
+    data.push(query);
   }
-  return data
+  return data;
 }
 
 async function generateUserFeesQueriesByAddress(n, from, to, address) {
-  let query = gql(`${`{
+  let query = gql(
+    `${`{
     feeStatByUsers(
       orderBy: id,
       orderDirection: desc,
@@ -80,9 +89,11 @@ async function generateUserFeesQueriesByAddress(n, from, to, address) {
       margin
       address
     }
-}`}`);
+}`}`
+  );
+  //TODO: Refactor to Chain Agnostic
   let data = await polygonVaultActionGraphClient.query({ query: query });
-  return data
+  return data;
 }
 
 window.generateUserFeesQueriesByAddress = generateUserFeesQueriesByAddress;
@@ -90,28 +101,29 @@ window.generateUserFeesQueriesByAddress = generateUserFeesQueriesByAddress;
 // all users with toggle feature on
 async function getAllStates() {
   const queries = generateUserRebatesQueries(3);
-  let data = await Promise.all(queries.map(x => polygonRebatesClient.query({ query: x })))
-  data = data.map(x => x.data.userRebates).flatMap(x => x);
+  //TODO: Refactor to Chain Agnostic
+  let data = await Promise.all(queries.map((x) => polygonRebatesClient.query({ query: x })));
+  data = data.map((x) => x.data.userRebates).flatMap((x) => x);
   // console.log(data)
-  return data
+  return data;
 }
 
 // all users with toggle feature on
 async function getFeesAccumulated(users, obj) {
-  const urls = users.map(x => getServerUrl(27, `/fees_by_user?user=${x}&offsetweek=${1}`))
-  let data = await Promise.all(urls.map(x => fetch(x)))
+  const urls = users.map((x) => getServerUrl(27, `/fees_by_user?user=${x}&offsetweek=${1}`));
+  let data = await Promise.all(urls.map((x) => fetch(x)))
     .then((res) => {
-      return Promise.all(res.map(x => x.json()))
+      return Promise.all(res.map((x) => x.json()));
     })
-    .then(res => {
-      return res
+    .then((res) => {
+      return res;
     })
     .catch(console.error);
 
   users.forEach((x, i) => {
-    obj[x].fees = data[i].total
-  })
-  return obj
+    obj[x].fees = data[i].total;
+  });
+  return obj;
 }
 
 // Get fees for all users
@@ -119,55 +131,57 @@ async function getFeesAccumulated(users, obj) {
 async function getFeesAccumulatedBySubgraph(offsetweek = 1) {
   // const from = parseInt(getPreviousWednesdayEnd(offsetweek) / 1000)
   let date = new Date(2022, 8, 12);
-  const from = parseInt(date.setUTCHours(0, 0, 0, 0))/1000;
-  console.log(from)
+  const from = parseInt(date.setUTCHours(0, 0, 0, 0)) / 1000;
+  console.log(from);
 
   let to = parseInt(Date.now() / 1000);
   if (offsetweek > 0) {
-    to = parseInt(getPreviousWednesdayEnd(offsetweek - 1) / 1000)
+    to = parseInt(getPreviousWednesdayEnd(offsetweek - 1) / 1000);
   }
 
   // This parameter represents the expected number of API calls required
   const expectedUsersAverage = 50;
   const queries = generateUserFeesQueries(expectedUsersAverage, from, to);
-  let data = await Promise.all(queries.map(x => polygonVaultActionGraphClient.query({ query: x })))
+  //TODO: Refactor to Chain Agnostic
+  let data = await Promise.all(queries.map((x) => polygonVaultActionGraphClient.query({ query: x })));
   if (data.length > expectedUsersAverage * 90) {
     console.warn("Please increase the expectedUsersAverage");
   }
-  data = data.map(x => x.data.feeStatByUsers).flatMap(x => x);
+  data = data.map((x) => x.data.feeStatByUsers).flatMap((x) => x);
   console.log(data);
-  return data
+  return data;
 }
 
 async function getAllMMFHoldings(obj) {
   const provider = new ethers.providers.JsonRpcProvider("https://rpc-mainnet.maticvigil.com");
+  //TODO: Refactor to Chain Agnostic
   const rebateAddress = getContract(POLYGON, "TradingFeeRebates");
   const contract = new ethers.Contract(rebateAddress, erc20, provider);
   const keys = Object.keys(obj);
-  console.log("getttings MMF balance of users:", keys.length)
-  let balance = await Promise.all(keys.map(x => contract.balanceOf(x)));
+  console.log("getttings MMF balance of users:", keys.length);
+  let balance = await Promise.all(keys.map((x) => contract.balanceOf(x)));
   balance.forEach((x, index) => {
     let t = bigNumberify(x).div(bigNumberify(10).pow(18)).toString(10);
     obj[keys[index]] = {
       ...obj[keys[index]],
       mmfBalance: t,
       tier: getTradingDiscount(t),
-      discount: getTradingDiscount(t) / 100 * obj[keys[index]].marginFees
-    }
-  })
-  return obj
+      discount: (getTradingDiscount(t) / 100) * obj[keys[index]].marginFees,
+    };
+  });
+  return obj;
 }
 
 async function currentUserStates() {
   let data = await getAllStates();
   let obj = {};
-  data.forEach(x => {
+  data.forEach((x) => {
     obj[x.address] = {
       address: x.address,
       lastState: x.state,
-      marginFees: 0
-    }
-  })
+      marginFees: 0,
+    };
+  });
 
   // This path uses the data from server
   // // let length = data.length;
@@ -176,12 +190,11 @@ async function currentUserStates() {
   //   await getFeesAccumulated(Object.keys(obj).slice(0 + i * 10, 10 + i * 10), obj);
   // }
 
-
   data = await getFeesAccumulatedBySubgraph();
 
   // filter users with >0 fees
-  let obj2 = {}
-  data.forEach(x => {
+  let obj2 = {};
+  data.forEach((x) => {
     // add only if user has toggle on
     if (obj[x.address]) {
       let oldfees = (obj2[x.address] && obj2[x.address].marginFees) || new BigNumber(0);
@@ -189,21 +202,21 @@ async function currentUserStates() {
         address: x.address,
         lastState: obj[x.address].lastState,
         marginFees: new BigNumber(oldfees).plus(new BigNumber(formatAmount(x.margin, 30))).toString(),
-        mmfBalance: 0
-      }
+        mmfBalance: 0,
+      };
     }
-  })
+  });
   obj = obj2;
 
   // get MMF holdings for all above users
   data = await getAllMMFHoldings(obj);
 
-  const finalObj = Object.keys(data).map(key => {
+  const finalObj = Object.keys(data).map((key) => {
     return data[key];
-  })
+  });
 
   console.log(JSON.stringify(finalObj));
-  return finalObj
+  return finalObj;
 }
 
 window.currentUserStates = currentUserStates;

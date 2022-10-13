@@ -2,21 +2,24 @@ import React from "react";
 import SEO from "../../components/Common/SEO";
 
 import Footer from "../../Footer";
-import { getPageTitle, ARBITRUM, AVALANCHE, POLYGON } from "../../Helpers";
+import { getPageTitle, ARBITRUM, AVALANCHE, POLYGON, CRONOS } from "../../Helpers";
 
 import arbitrumIcon from "../../img/ic_arbitrum_16.svg";
 import polygonIcon from "../../img/ic_polygon_16.svg";
+import cronosIcon from "../../img/ic_cronos_16.svg";
 
 import "./Ecosystem.css";
 
 const NETWORK_ICONS = {
   [ARBITRUM]: arbitrumIcon,
   [POLYGON]: polygonIcon,
+  [CRONOS]: cronosIcon,
 };
 
 const NETWORK_ICON_ALTS = {
   [ARBITRUM]: "Arbitrum Icon",
   [POLYGON]: "Polygon Icon",
+  [CRONOS]: "Cronos Icon",
 };
 
 export default function Ecosystem() {
@@ -31,7 +34,7 @@ export default function Ecosystem() {
       title: "MMX Stats",
       link: "https://stats.madmex.io/",
       about: "MMX Stats Page",
-      chainIds: [POLYGON],
+      chainIds: [POLYGON, CRONOS],
     },
     // {
     //   title: "MMX Proposals",
@@ -43,7 +46,7 @@ export default function Ecosystem() {
       title: "MMX Announcements",
       link: "https://t.me/MMFann",
       about: "MMX Announcements and Updates",
-      chainIds: [POLYGON],
+      chainIds: [POLYGON, CRONOS],
     },
   ];
 

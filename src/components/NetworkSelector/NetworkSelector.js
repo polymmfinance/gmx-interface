@@ -19,6 +19,8 @@ function getDotColor(network) {
     //   return "#E84142";
     case "Polygon":
       return "#7740dc";
+    case "Cronos":
+      return "#0379CA";
     default:
       return "";
   }

@@ -4,6 +4,8 @@ import "./AssetDropdown.css";
 import coingeckoIcon from "../../img/ic_coingecko_16.svg";
 import arbitrumIcon from "../../img/ic_arbitrum_16.svg";
 import polygonIcon from "../../img/ic_polygon_16.svg";
+import cronosIcon from "../../img/ic_cronos_16.svg";
+
 import metamaskIcon from "../../img/ic_metamask_16.svg";
 import { addTokenToMetamask, ICONLINKS, platformTokens, useChainId } from "../../Helpers";
 import { useWeb3React } from "@web3-react/core";
@@ -11,11 +13,12 @@ import { useWeb3React } from "@web3-react/core";
 function AssetDropdown({ assetSymbol, assetInfo }) {
   const { active } = useWeb3React();
   const { chainId } = useChainId();
-  let { coingecko, arbitrum, avalanche, polygon } = ICONLINKS[chainId][assetSymbol];
+  let { coingecko, arbitrum, avalanche, polygon, cronos } = ICONLINKS[chainId][assetSymbol];
   const unavailableTokenSymbols = {
     42161: ["ETH"],
     43114: ["AVAX"],
     137: ["MATIC"],
+    25: ["CRO"],
   };
 
   return (
@@ -45,6 +48,12 @@ function AssetDropdown({ assetSymbol, assetInfo }) {
             {polygon && (
               <a target="_blank" rel="noopener noreferrer" href={polygon} className="asset-item">
                 <img src={polygonIcon} alt="Open in explorer" />
+                <p>Open in Explorer</p>
+              </a>
+            )}
+            {cronos && (
+              <a target="_blank" rel="noopener noreferrer" href={cronos} className="asset-item">
+                <img src={cronosIcon} alt="Open in explorer" />
                 <p>Open in Explorer</p>
               </a>
             )}

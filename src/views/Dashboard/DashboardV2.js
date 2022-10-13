@@ -35,6 +35,7 @@ import {
   importImage,
   arrayURLFetcher,
   POLYGON,
+  CRONOS,
 } from "../../Helpers";
 import { useTotalGmxInLiquidity, useGmxPrice, useTotalGmxStaked, useTotalGmxSupply, useInfoTokens } from "../../Api";
 
@@ -50,16 +51,19 @@ import "./DashboardV2.css";
 // import gmx40Icon from "../../img/ic_gmx_40.svg";
 import glp40Icon from "../../img/ic_glp_40.svg";
 import polygon16Icon from "../../img/ic_polygon_16.svg";
+import cronos16Icon from "../../img/ic_cronos_16.svg";
+
 import arbitrum16Icon from "../../img/ic_arbitrum_16.svg";
 import arbitrum24Icon from "../../img/ic_arbitrum_24.svg";
 import polygon24Icon from "../../img/ic_polygon_24.svg";
+import cronos24Icon from "../../img/ic_cronos_24.svg";
 
 import AssetDropdown from "./AssetDropdown";
 import SEO from "../../components/Common/SEO";
 import TooltipCard, { TooltipCardRow } from "./TooltipCard";
 import useTotalVolume from "../../hooks/useTotalVolume";
 // const ACTIVE_CHAIN_IDS = [ARBITRUM, AVALANCHE, POLYGON];
-const ACTIVE_CHAIN_IDS = [POLYGON];
+const ACTIVE_CHAIN_IDS = [POLYGON, CRONOS];
 
 const { AddressZero } = ethers.constants;
 
@@ -170,6 +174,9 @@ export default function DashboardV2() {
     }
   );
 
+  console.log(hourlyVolumes, "hourlyVolumes");
+  console.log(totalFees2, "totalFees2");
+
   // console.log(`$${formatAmount(totalFees2 && parseInt(totalFees2[0].totalFees.total), 0, 0, true)}`)
   // let { total: totalGmxSupply } = useTotalGmxSupply();
 
@@ -222,6 +229,7 @@ export default function DashboardV2() {
   const { infoTokens } = useInfoTokens(library, chainId, active, undefined, undefined);
   const { infoTokens: infoTokensArbitrum } = useInfoTokens(null, ARBITRUM, active, undefined, undefined);
   const { infoTokens: infoTokensPolygon } = useInfoTokens(null, POLYGON, active, undefined, undefined);
+  const { infoTokens: infoTokensCronos } = useInfoTokens(null, CRONOS, active, undefined, undefined);
 
   const { data: currentFees } = useSWR(
     infoTokensArbitrum[AddressZero].contractMinPrice && infoTokensPolygon[AddressZero].contractMinPrice
@@ -245,7 +253,7 @@ export default function DashboardV2() {
               const feeUSD = getCurrentFeesUsd(
                 getWhitelistedTokenAddresses(ACTIVE_CHAIN_IDS[i]),
                 cv,
-                ACTIVE_CHAIN_IDS[i] === ARBITRUM ? infoTokensArbitrum : infoTokensPolygon
+                ACTIVE_CHAIN_IDS[i] === POLYGON ? infoTokensPolygon : infoTokensCronos
               );
               acc[ACTIVE_CHAIN_IDS[i]] = feeUSD;
               acc.total = acc.total.add(feeUSD);
@@ -352,6 +360,7 @@ export default function DashboardV2() {
       !tokenInfo.usdgAmount ||
       !adjustedUsdgSupply ||
       adjustedUsdgSupply.eq(0) ||
+      tokenInfo.weight.eq(0) ||
       !totalTokenWeights
     ) {
       return "...";
@@ -463,7 +472,7 @@ export default function DashboardV2() {
     },
   ];
 
-  const totalStatsStartDate = chainId === POLYGON ? "01 Sep 2022" : "01 Sep 2022";
+  const totalStatsStartDate = chainId === POLYGON ? "01 Sep 2022" : "15 Oct 2022";
 
   let stableGlp = 0;
   let totalGlp = 0;
@@ -568,11 +577,16 @@ export default function DashboardV2() {
           <div className="section-title-content">
             <div className="Page-title">
               Stats {chainId === POLYGON && <img src={polygon24Icon} alt="polygon24Icon" />}
-              {chainId === ARBITRUM && <img src={arbitrum24Icon} alt="arbitrum24Icon" />}
+              {chainId === CRONOS && <img src={cronos24Icon} alt="cronos24Icon" />}
             </div>
             <div className="Page-description">
               {chainName} Total Stats start from {totalStatsStartDate}.<br /> For detailed stats:{" "}
               {chainId === POLYGON && (
+                <a href="https://stats.madmex.io" target="_blank" rel="noopener noreferrer">
+                  https://stats.madmex.io
+                </a>
+              )}
+              {chainId === CRONOS && (
                 <a href="https://stats.madmex.io" target="_blank" rel="noopener noreferrer">
                   https://stats.madmex.io
                 </a>
@@ -748,7 +762,7 @@ export default function DashboardV2() {
                           <TooltipCard
                             title="Volume"
                             polygon={currentVolumeInfo?.totalVolume}
-                            // avax={currentVolumeInfo?.[AVALANCHE].totalVolume}
+                            cronos={currentVolumeInfo?.totalVolume}
                             decimalsForConversion={0}
                             total={currentVolumeInfo?.totalVolume}
                           />
@@ -767,6 +781,7 @@ export default function DashboardV2() {
                           <TooltipCard
                             title="Long Positions"
                             polygon={positionStatsInfo?.[POLYGON].totalLongPositionSizes}
+                            cronos={positionStatsInfo?.[CRONOS].totalLongPositionSizes}
                             total={positionStatsInfo?.totalLongPositionSizes}
                             decimalsForConversion={0}
                           />
@@ -785,7 +800,7 @@ export default function DashboardV2() {
                           <TooltipCard
                             title="Short Positions"
                             polygon={positionStatsInfo?.[POLYGON].totalShortPositionSizes}
-                            // avax={positionStatsInfo?.[AVALANCHE].totalShortPositionSizes}
+                            cronos={positionStatsInfo?.[CRONOS].totalShortPositionSizes}
                             total={positionStatsInfo?.totalShortPositionSizes}
                             decimalsForConversion={0}
                           />
@@ -835,7 +850,7 @@ export default function DashboardV2() {
                             // arbitrum={totalFees?.[ARBITRUM]}
                             // avax={totalFees?.[AVALANCHE]}
                             polygon={totalFees2 && parseInt(totalFees2[0].totalFees.total)}
-                            // polygon={totalFees?.[POLYGON]}
+                            cronos={totalFees2 && parseInt(totalFees2[0].totalFees.total)}
                             // total={totalFees?.total}
                             total={totalFees2 && parseInt(totalFees2[0].totalFees.total)}
                             decimalsForConversion={0}
@@ -857,6 +872,7 @@ export default function DashboardV2() {
                             // arbitrum={totalVolume?.[ARBITRUM]}
                             // avax={totalVolume?.[AVALANCHE]}
                             polygon={totalVolume?.[POLYGON]}
+                            cronos={totalVolume?.[CRONOS]}
                             total={totalVolume?.total}
                             decimalsForConversion={0}
                           />
@@ -877,10 +893,10 @@ export default function DashboardV2() {
                   <div className="App-card-title-mark">
                     <div className="App-card-title-mark-icon">
                       <img src={glp40Icon} alt="glp40Icon" />
-                      {chainId === ARBITRUM ? (
-                        <img src={arbitrum16Icon} alt="arbitrum16Icon" className="selected-network-symbol" />
-                      ) : (
+                      {chainId === POLYGON ? (
                         <img src={polygon16Icon} alt="polygon16Icon" className="selected-network-symbol" />
+                      ) : (
+                        <img src={cronos16Icon} alt="cronos16Icon" className="selected-network-symbol" />
                       )}
                     </div>
                     <div className="App-card-title-mark-info">
@@ -963,16 +979,15 @@ export default function DashboardV2() {
           <div className="Tab-title-section">
             <div className="Page-title">
               Tokens {chainId === POLYGON && <img src={polygon24Icon} alt="polygon24Icon" />}
-              {chainId === ARBITRUM && <img src={arbitrum24Icon} alt="arbitrum24Icon" />}
+              {chainId === CRONOS && <img src={cronos24Icon} alt="arbitrum24Icon" />}
             </div>
             <div className="Page-description">MLP index token statistics.</div>
           </div>
           <div className="DashboardV2-token-cards">
             <div className="token-table-wrapper App-card">
               <div className="App-card-title">
-                MLP Index Composition{" "}
-                {chainId === POLYGON && <img src={polygon16Icon} alt="avapolygon16Iconlanche16Icon" />}
-                {chainId === ARBITRUM && <img src={arbitrum16Icon} alt="arbitrum16Icon" />}
+                MLP Index Composition {chainId === POLYGON && <img src={polygon16Icon} alt="polygon16Icon" />}
+                {chainId === CRONOS && <img src={cronos16Icon} alt="cronos16Icon" />}
               </div>
               <div className="App-card-divider"></div>
               <table className="token-table">

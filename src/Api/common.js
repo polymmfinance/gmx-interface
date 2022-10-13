@@ -10,11 +10,27 @@ export const arbitrumReferralsGraphClient = createClient(
 export const avalancheReferralsGraphClient = createClient(
   "https://api.thegraph.com/subgraphs/name/gmx-io/gmx-avalanche-referrals"
 );
-export const polygonGraphClient = createClient("https://api.thegraph.com/subgraphs/name/polymmfinance/dsf-subgraph-stats")
-export const polygonReferralGraphClient = createClient("https://api.thegraph.com/subgraphs/name/polymmfinance/mlp-referral")
-export const polygonVaultActionGraphClient = createClient("https://api.thegraph.com/subgraphs/name/polymmfinance/test-subgraph-mm")
-export const polygonRebatesClient = createClient("https://api.thegraph.com/subgraphs/name/polymmfinance/user-rebates")
+export const polygonGraphClient = createClient(
+  "https://api.thegraph.com/subgraphs/name/polymmfinance/dsf-subgraph-stats"
+);
+export const polygonReferralGraphClient = createClient(
+  "https://api.thegraph.com/subgraphs/name/polymmfinance/mlp-referral"
+);
+export const polygonVaultActionGraphClient = createClient(
+  "https://api.thegraph.com/subgraphs/name/polymmfinance/test-subgraph-mm"
+);
+export const polygonRebatesClient = createClient("https://api.thegraph.com/subgraphs/name/polymmfinance/user-rebates");
 
+export const cronosGraphClient = createClient(
+  "https://api.thegraph.com/subgraphs/name/polymmfinance/dsf-subgraph-stats"
+);
+export const cronosReferralGraphClient = createClient(
+  "https://api.thegraph.com/subgraphs/name/polymmfinance/mlp-referral"
+);
+export const cronosVaultActionGraphClient = createClient(
+  "https://api.thegraph.com/subgraphs/name/polymmfinance/test-subgraph-mm"
+);
+export const cronosRebatesClient = createClient("https://api.thegraph.com/subgraphs/name/polymmfinance/user-rebates");
 
 function createClient(uri) {
   return new ApolloClient({

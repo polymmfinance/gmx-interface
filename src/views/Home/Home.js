@@ -12,6 +12,7 @@ import totaluserIcon from "../../img/ic_totaluser.svg";
 
 import arbitrumIcon from "../../img/ic_arbitrum_96.svg";
 import polyIcon from "../../img/ic_polygon_96.svg";
+import cronosIcon from "../../img/ic_cronos_96.svg";
 
 import statsIcon from "../../img/ic_stats.svg";
 import tradingIcon from "../../img/ic_trading.svg";
@@ -24,10 +25,11 @@ import {
   numberWithCommas,
   getServerUrl,
   USD_DECIMALS,
-  ARBITRUM,
+  // ARBITRUM,
   // AVALANCHE,
   getTotalVolumeSum,
   POLYGON,
+  CRONOS,
 } from "../../Helpers";
 
 import { useUserStat } from "../../Api";
@@ -74,7 +76,7 @@ export default function Home({ showRedirectModal, redirectPopupTimestamp }) {
   //   fetcher: (...args) => fetch(...args).then((res) => res.json()),
   // });
 
-  // AVALANCHE
+  // POLYGON
 
   const polygonPositionStatsUrl = getServerUrl(POLYGON, "/api/position_stats");
   const { data: polygonPositionStats } = useSWR([polygonPositionStatsUrl], {
@@ -86,28 +88,32 @@ export default function Home({ showRedirectModal, redirectPopupTimestamp }) {
     fetcher: (...args) => fetch(...args).then((res) => res.json()),
   });
 
+  // CRONOS
+
+  const cronosPositionStatsUrl = getServerUrl(CRONOS, "/api/position_stats");
+  const { data: cronosPositionStats } = useSWR([cronosPositionStatsUrl], {
+    fetcher: (...args) => fetch(...args).then((res) => res.json()),
+  });
+
+  const cronosTotalVolumeUrl = getServerUrl(CRONOS, "/total_volume");
+  const { data: cronosTotalVolume } = useSWR([cronosTotalVolumeUrl], {
+    fetcher: (...args) => fetch(...args).then((res) => res.json()),
+  });
+
   // Total Volume
 
-  // const arbitrumTotalVolumeSum = getTotalVolumeSum(arbitrumTotalVolume);
+  const cronosTotalVolumeSum = getTotalVolumeSum(cronosTotalVolume);
   const polygonTotalVolumeSum = getTotalVolumeSum(polygonTotalVolume);
 
   let totalVolumeSum = bigNumberify(0);
-  if (polygonTotalVolumeSum) {
-    // totalVolumeSum = totalVolumeSum.add(arbitrumTotalVolumeSum);
+  if (polygonTotalVolumeSum && cronosTotalVolumeSum) {
+    totalVolumeSum = totalVolumeSum.add(cronosTotalVolumeSum);
     totalVolumeSum = totalVolumeSum.add(polygonTotalVolumeSum);
   }
 
   // Open Interest
 
   let openInterest = bigNumberify(0);
-  // if (
-  //   arbitrumPositionStats &&
-  //   arbitrumPositionStats.totalLongPositionSizes &&
-  //   arbitrumPositionStats.totalShortPositionSizes
-  // ) {
-  //   openInterest = openInterest.add(arbitrumPositionStats.totalLongPositionSizes);
-  //   openInterest = openInterest.add(arbitrumPositionStats.totalShortPositionSizes);
-  // }
 
   if (
     polygonPositionStats &&
@@ -118,17 +124,27 @@ export default function Home({ showRedirectModal, redirectPopupTimestamp }) {
     openInterest = openInterest.add(polygonPositionStats.totalShortPositionSizes);
   }
 
-  // user stat
-  const arbitrumUserStats = useUserStat(ARBITRUM);
-  const polygonUserStats = useUserStat(POLYGON);
-  let totalUsers = 0;
-
-  if (arbitrumUserStats && arbitrumUserStats.uniqueCount) {
-    totalUsers += arbitrumUserStats.uniqueCount;
+  if (
+    cronosPositionStats &&
+    cronosPositionStats.totalLongPositionSizes &&
+    cronosPositionStats.totalShortPositionSizes
+  ) {
+    openInterest = openInterest.add(cronosPositionStats.totalLongPositionSizes);
+    openInterest = openInterest.add(cronosPositionStats.totalShortPositionSizes);
   }
+
+  // user stat
+  const polygonUserStats = useUserStat(POLYGON);
+  const cronosUserStats = useUserStat(CRONOS);
+
+  let totalUsers = 0;
 
   if (polygonUserStats && polygonUserStats.uniqueCount) {
     totalUsers += polygonUserStats.uniqueCount;
+  }
+
+  if (cronosUserStats && cronosUserStats.uniqueCount) {
+    totalUsers += cronosUserStats.uniqueCount;
   }
 
   const LaunchExchangeButton = () => {
