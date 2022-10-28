@@ -313,6 +313,8 @@ export default function DashboardV2() {
       aum && aum.gt(0) && glpSupply.gt(0)
         ? aum.mul(expandDecimals(1, GLP_DECIMALS)).div(glpSupply)
         : expandDecimals(1, USD_DECIMALS);
+    // console.log(glpPrice.toString(10), glpSupply.toString(10), glpSupply.toString(10), aum.toString(10));
+    // console.log(totalSupplies[1].toString(10), totalSupplies[3].toString(10), totalSupplies[5].toString(10));
     glpMarketCap = glpPrice.mul(glpSupply).div(expandDecimals(1, GLP_DECIMALS));
   }
 

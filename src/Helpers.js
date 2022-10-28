@@ -87,7 +87,7 @@ const ARBITRUM_RPC_PROVIDERS = [getDefaultArbitrumRpcUrl()];
 const POLYGON_RPC_PROVIDERS = [
   "https://polygon-rpc.com",
   "https://rpc-mainnet.matic.quiknode.pro",
-  "https://polygonapi.terminet.io/rpc",
+  // "https://polygonapi.terminet.io/rpc",
 ];
 const AVALANCHE_RPC_PROVIDERS = [""];
 export const WALLET_CONNECT_LOCALSTORAGE_KEY = "walletconnect";
