@@ -1068,9 +1068,9 @@ export default function SwapBox(props) {
     if (chainId === AVALANCHE) {
       externalSwapUrl = `https://traderjoexyz.com/trade?outputCurrency=${outputCurrency}#/`;
     } else {
-      externalSwapUrl = `https://app.uniswap.org/#/swap?inputCurrency=${inputCurrency}&outputCurrency=${outputCurrency}`;
+      externalSwapUrl = `https://polymm.finance/swap?inputCurrency=${inputCurrency}&outputCurrency=${outputCurrency}`;
     }
-    let externalSwapName = chainId === AVALANCHE ? "Trader Joe" : "Uniswap";
+    let externalSwapName = chainId === AVALANCHE ? "Trader Joe" : "MM Finance";
     const label =
       modalError === "BUFFER" ? `${shortCollateralToken.symbol} Required` : `${fromToken.symbol} Capacity Reached`;
     const swapTokenSymbol = isLong ? toToken.symbol : shortCollateralToken.symbol;
