@@ -548,7 +548,7 @@ export default function DashboardV2() {
           </defs>
         </Wave>
         <div className="background-text" style={{ textAlign: "center" }}>
-          Stake MLP & Earn Up to 55% APR
+          Stake MLP & Earn Up to 116% APR
           <div style={{ fontSize: "18px" }}>MLP is an index of BTCᳳETHᳳMATICᳳUSDC</div>
         </div>
 
