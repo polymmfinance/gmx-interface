@@ -48,6 +48,7 @@ import {
   DISABLE_ORDER_VALIDATION_KEY,
   shouldShowRedirectModal,
   POLYGON,
+  CRONOS,
 } from "./Helpers";
 
 import Home from "./views/Home/Home";
@@ -246,6 +247,12 @@ function AppHeaderUser({
       value: POLYGON,
       icon: "ic_polygon_24.svg",
       color: "#7740dc",
+    },
+    {
+      label: "Cronos",
+      value: CRONOS,
+      icon: "ic_cronos_24.svg",
+      color: "#0774C2",
     },
   ];
 

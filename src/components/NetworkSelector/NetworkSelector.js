@@ -48,16 +48,20 @@ export default function NetworkSelector(props) {
   }
 
   const onSelect = async (token) => {
-    setIsModalVisible(false);
-    props.showModal(false);
-    let network;
-    try {
-      network = await props.onSelect(token);
-      setSelectedLabel(network);
-    } catch (error) {
-      console.error(error);
+    if (token?.label === "Cronos") {
+      window.location.replace("https://cronos.madmex.io");
+    } else {
+      setIsModalVisible(false);
+      props.showModal(false);
+      let network;
+      try {
+        network = await props.onSelect(token);
+        setSelectedLabel(network);
+      } catch (error) {
+        console.error(error);
+      }
+      setNetworkChanged(true);
     }
-    setNetworkChanged(true);
   };
 
   const DropdownIndicator = (props) => {

@@ -28,6 +28,7 @@ export const PLACEHOLDER_ACCOUNT = ethers.Wallet.createRandom().address;
 
 export const MAINNET = 56;
 export const POLYGON = 137;
+export const CRONOS = 25;
 export const AVALANCHE = 43114;
 export const TESTNET = 97;
 export const ARBITRUM_TESTNET = 421611;
@@ -504,7 +505,7 @@ export function getServerBaseUrl(chainId) {
   // }
   // return "https://gmx-server-mainnet.uw.r.appspot.com";
   // return isLocal() ? "http://localhost:3113" : "https://stats.madmex.io";
-  return "https://api.madmex.io"
+  return "https://api.madmex.io";
 }
 
 export function getServerUrl(chainId, path) {
