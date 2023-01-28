@@ -135,7 +135,7 @@ async function getFeesAccumulatedBySubgraph(offsetweek = 1) {
     console.warn("Please increase the expectedUsersAverage");
   }
   data = data.map(x => x.data.feeStatByUsers).flatMap(x => x);
-  console.log(data);
+  // console.log(data);
   return data
 }
 
@@ -144,7 +144,7 @@ async function getAllMMFHoldings(obj) {
   const rebateAddress = getContract(POLYGON, "TradingFeeRebates");
   const contract = new ethers.Contract(rebateAddress, erc20, provider);
   const keys = Object.keys(obj);
-  console.log("getttings MMF balance of users:", keys.length)
+  console.log("getting MMF balance of users:", keys.length)
   let balance = await Promise.all(keys.map(x => contract.balanceOf(x)));
   balance.forEach((x, index) => {
     let t = bigNumberify(x).div(bigNumberify(10).pow(18)).toString(10);
@@ -158,7 +158,7 @@ async function getAllMMFHoldings(obj) {
   return obj
 }
 
-async function currentUserStates() {
+async function currentUserStates(offsetWeek = 1) {
   let data = await getAllStates();
   let obj = {};
   data.forEach(x => {
@@ -177,7 +177,7 @@ async function currentUserStates() {
   // }
 
 
-  data = await getFeesAccumulatedBySubgraph();
+  data = await getFeesAccumulatedBySubgraph(offsetWeek);
 
   // filter users with >0 fees
   let obj2 = {}
@@ -202,7 +202,10 @@ async function currentUserStates() {
     return data[key];
   })
 
-  console.log(JSON.stringify(finalObj));
+  // console.log(JSON.stringify(finalObj));
+  // let thisUser = "0x71f4Bab946951a9505A4E7087eA760A72FaCe099";
+  // let thisWeek = finalObj.filter(x => x.address.toLocaleLowerCase() === thisUser.toLocaleLowerCase());
+  // console.log(thisWeek);
   return finalObj
 }
 
