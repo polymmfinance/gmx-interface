@@ -37,23 +37,23 @@ function Rebates({ connectWallet, setPendingTxns, pendingTxns }) {
   const { chainId } = useChainId();
 
   const smallCaseAddress = (walletAccount || "").toLocaleLowerCase();
-  const userFeesURL = useMemo(() => { 
+  const userFeesURL = useMemo(() => {
     let data = [];
     const weeks = weeksBetween(new Date(), new Date(2022, 8, 12));
-    for (let i = 0; i < 1; i++){
+    for (let i = 0; i < 1; i++) {
       data.push(getServerUrl(chainId, `/rebates_by_user?user=${smallCaseAddress}&offsetweek=${i}`));
     }
-    return data
-  }, [chainId, smallCaseAddress])
+    return data;
+  }, [chainId, smallCaseAddress]);
 
   const { data: feesdata, mutate: updateFeeStats } = useSWR([userFeesURL], {
     fetcher: (...args) =>
-      Promise.all(userFeesURL.map(x => fetch(x)))
+      Promise.all(userFeesURL.map((x) => fetch(x)))
         .then((res) => {
-          return Promise.all(res.map(x => x.json()))
+          return Promise.all(res.map((x) => x.json()));
         })
-        .then(res => {
-          return res
+        .then((res) => {
+          return res;
         })
         .catch(console.error),
   });
@@ -117,7 +117,11 @@ function Rebates({ connectWallet, setPendingTxns, pendingTxns }) {
           <div className="section-title-icon"></div>
           <div className="section-title-content">
             <div className="Page-title">Rebates</div>
-            <div className="Page-description">
+            <div style={{ marginBottom: "4px" }}>
+              Fee Rebates has ended. <br />
+              Please withdraw your MMF from the funding wallet.
+            </div>
+            {/* <div className="Page-description">
               <div style={{ marginBottom: "4px" }}>
                 Receive up to 50% trading fee rebates in the form of USDC when you stake MMF into the rebate funding
                 wallet.
@@ -140,7 +144,7 @@ function Rebates({ connectWallet, setPendingTxns, pendingTxns }) {
               >
                 Trading Rebate Program Details
               </a>
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="referral-tab-container">

@@ -67,7 +67,7 @@ function TradersStats({ referralsData, chainId, walletBalance, deductMMF, enable
   return (
     <div className="rebate-container">
       <div className="referral-stats">
-        <InfoCard
+        {/* <InfoCard
           label="Total Trading Fees Incurred"
           tooltipText="Trading fees incurred by this account in this trading window."
           data={`$${limitDecimals(referralsData?.margin ?? 0, 2)}`}
@@ -79,29 +79,32 @@ function TradersStats({ referralsData, chainId, walletBalance, deductMMF, enable
           }`}
           // data={getUSDValue(referralsData?.referralTotalStats?.discountUsd, 4)}
           data={`$${limitDecimals(enableFeature ? totalRebates ?? 0 : 0, 2)}`}
-        />
+        /> */}
         <InfoCard
           label="Funding Wallet Balance"
           data={
             <div className="active-rebates">
               <div className="edit">
-                <span className="button">
+                {/* <span className="button">
                   <Tooltip
                     handle={<FiMinus size={18} onClick={() => openWithdraw()} />}
                     position="right-bottom"
                     renderContent={() => `Click to withdraw MMF from wallet`}
                   />
-                </span>
+                </span> */}
                 <span>{formatAmount(walletBalance, 18, 2, true)} MMF</span>
-                <span className="button">
+                {/* <span className="button">
                   <Tooltip
                     handle={<FiPlus size={18} onClick={() => openDeposit()} />}
                     position="right-bottom"
                     renderContent={() => `Click to deposit MMF into wallet to receive your tier-ed discount`}
                   />
-                </span>
+                </span> */}
               </div>
-              {traderTier && (
+              <button className="App-button-option App-card-option" onClick={() => openWithdraw()}>
+                Withdraw
+              </button>
+              {/* {traderTier && (
                 <div className="tier">
                   <Tooltip
                     handle={`Tier ${getTierIdDisplay(traderTier, walletBalance)} (${
@@ -113,11 +116,11 @@ function TradersStats({ referralsData, chainId, walletBalance, deductMMF, enable
                     }
                   />
                 </div>
-              )}
+              )} */}
             </div>
           }
         />
-        <InfoCard
+        {/* <InfoCard
           label="Enable Fee Rebates"
           data={
             <div className="active-rebates">
@@ -165,7 +168,7 @@ function TradersStats({ referralsData, chainId, walletBalance, deductMMF, enable
               </div>
             </div>
           }
-        />
+        /> */}
 
         <Modal
           className="Connect-wallet-modal"
