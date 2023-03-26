@@ -1128,7 +1128,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
                 <div>
                   <Tooltip
                     handle={`$${(
-                      parseFloat(formatAmount(pendingMmfRewards, GLP_DECIMALS, 10, true)) * masterChefData?.mmfPrice
+                      parseFloat(ethers.utils.formatUnits(pendingMmfRewards ?? 0, 18)) * masterChefData?.mmfPrice
                     ).toFixed(2)}`}
                     position="right-bottom"
                     renderContent={() => {
@@ -1139,7 +1139,7 @@ export default function StakeV2({ setPendingTxns, connectWallet }) {
                             <span>
                               {formatAmount(pendingMmfRewards, GLP_DECIMALS, 3, true)} ($
                               {(
-                                parseFloat(formatAmount(pendingMmfRewards, GLP_DECIMALS, 10, true)) *
+                                parseFloat(ethers.utils.formatUnits(pendingMmfRewards ?? 0, 18)) *
                                 masterChefData?.mmfPrice
                               ).toFixed(2)}
                               )
