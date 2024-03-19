@@ -27,7 +27,7 @@ const socialLinks = [
   { link: "https://twitter.com/MMFcrypto", name: "Twitter", icon: twitterIcon },
   { link: "https://medium.com/@MMFinance", name: "Medium", icon: mediumIcon },
   // { link: "https://github.com/gmx-io", name: "Github", icon: githubIcon },
-  { link: "https://discord.com/invite/madmeerkat", name: "Discord", icon: discordIcon },
+  { link: "https://discord.gg/madmeerkatnft", name: "Discord", icon: discordIcon },
   { link: "https://t.me/MMFcrypto", name: "Telegram", icon: telegramIcon },
 ];
 
