@@ -685,6 +685,9 @@ function FullApp() {
 
   return (
     <>
+      <div className="announcement-bar">
+        Please withdraw your assets from the platform and convert it into MMF tokens before 7th July 2024.
+      </div>
       <div className="App">
         {/* <div className="App-background-side-1"></div>
         <div className="App-background-side-2"></div>

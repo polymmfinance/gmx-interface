@@ -1414,3 +1414,14 @@ button.App-button {
     transform: rotate(360deg);
   }
 }
+
+.announcement-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #000;
+  background-color: rgb(245, 158, 11);
+}
